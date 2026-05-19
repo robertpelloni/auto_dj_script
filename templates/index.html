@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Auto DJ v{{ version }} | Ultimate Console</title>
+    <script src="https://unpkg.com/wavesurfer.js@7"></script>
+    <style>
+        body { font-family: 'Inter', system-ui, sans-serif; background: #08080a; color: #f0f0f0; margin: 0; padding: 40px; }
+        .console { background: #111118; padding: 40px; border-radius: 20px; border: 1px solid #1f1f2a; box-shadow: 0 30px 60px rgba(0,0,0,0.7); max-width: 1200px; margin: auto; }
+        h1 { color: #a020f0; font-size: 3em; margin: 0; letter-spacing: -2px; font-weight: 800; }
+        .accent { color: #00ffcc; }
+        .status-pill { background: #1a1a24; padding: 8px 16px; border-radius: 30px; font-size: 0.9em; display: inline-block; margin-top: 10px; border: 1px solid #333; }
+        .progress-track { width: 100%; background: #1a1a24; height: 10px; border-radius: 10px; margin: 25px 0; overflow: hidden; }
+        .progress-fill { height: 100%; background: linear-gradient(90deg, #a020f0, #00ffcc); width: 0%; transition: width 0.5s ease; }
+        .grid { display: grid; grid-template-columns: 1.5fr 1fr; gap: 30px; margin-top: 40px; }
+        .log-area { background: #000; border-radius: 10px; padding: 20px; font-family: 'Fira Code', monospace; font-size: 0.85em; height: 400px; overflow-y: auto; color: #55ff55; border: 1px solid #111; line-height: 1.6; }
+        .controls-card { background: #1a1a24; padding: 25px; border-radius: 12px; border: 1px solid #252535; height: fit-content; }
+        .btn-prime { background: #a020f0; color: white; border: none; padding: 15px 40px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1em; box-shadow: 0 4px 15px rgba(160, 32, 240, 0.3); transition: all 0.2s; }
+        .btn-prime:hover:not(:disabled) { background: #b030ff; transform: translateY(-2px); }
+        .btn-prime:disabled { background: #333; cursor: not-allowed; opacity: 0.5; }
+        input[type="number"], select { background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 1em; }
+        #waveform { margin-top: 40px; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid #1f1f2a; }
+        .tracklist { margin-top: 40px; background: #111118; border-radius: 12px; padding: 20px; border: 1px solid #1f1f2a; }
+        .track-item { display: grid; grid-template-columns: 80px 1fr 120px 100px; padding: 12px; border-bottom: 1px solid #1a1a24; font-size: 0.9em; }
+        .track-item:last-child { border: none; }
+        .track-header { font-weight: 800; color: #888; text-transform: uppercase; font-size: 0.7em; }
+    </style>
+</head>
+<body>
+    <div class="console">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+            <div>
+                <h1>AUTO DJ <span class="accent">COMMAND</span></h1>
+                <div class="status-pill">SYSTEM STATE: <strong id="state-text">{{ status.status }}</strong></div>
+            </div>
+            <div style="text-align: right; color: #444; font-size: 0.8em;">CORE VERSION<br><strong style="color:#888;">{{ version }}</strong></div>
+        </div>
+
+        <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
+
+        <div class="grid">
+            <div class="log-area" id="terminal">
+                [SYSTEM] Kernel v{{ version }} active...<br>
+                [SYSTEM] Parallel Warp Engine standing by...<br>
+                [MIR] CQT Key Detection loaded.<br>
+                [DSP] True-Peak Look-ahead Limiter online.
+            </div>
+            <div class="controls-card">
+                <form id="launch-form">
+                    <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Set BPM Profile</label>
+                    <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
+                    <br><br>
+                    <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
+                    <select name="archetype">
+                        <option value="auto">Auto (Genre-Aware)</option>
+                        <option value="bass_swap">Bass-Swap (Psytrance/Techno)</option>
+                        <option value="hpf_sweep">HPF-Sweep (Build-up)</option>
+                        <option value="echo_out">Echo-Out (Wash)</option>
+                        <option value="classic">Classic Fade (Smooth)</option>
+                    </select>
+                    <br><br>
+                    <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
+                        <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
+                        Simulated Annealing Optimization
+                    </label>
+                    <br><br>
+                    <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
+                </form>
+                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
+                    <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        <span>⬇</span> DOWNLOAD MASTER EXPORT
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <div class="tracklist">
+            <h3 style="margin-top: 0; color: #a020f0;">LIVE TRACKLIST</h3>
+            <div class="track-item track-header">
+                <div>Time</div>
+                <div>Track Title</div>
+                <div>Key</div>
+                <div>Genre</div>
+            </div>
+            <div id="tracklist-container">
+                <!-- Tracks will be injected here -->
+            </div>
+        </div>
+
+        <div id="waveform"></div>
+    </div>
+
+    <script>
+        const ws = new WebSocket(`ws://${window.location.host}/ws`);
+        const term = document.getElementById('terminal');
+        const fill = document.getElementById('fill');
+        const state = document.getElementById('state-text');
+        const trackContainer = document.getElementById('tracklist-container');
+
+        ws.onmessage = (event) => {
+            const line = document.createElement('div');
+            line.innerHTML = `> ${event.data}`;
+            term.appendChild(line);
+            term.scrollTop = term.scrollHeight;
+        };
+
+        async function pollStatus() {
+            try {
+                const r = await fetch('/status');
+                const d = await r.json();
+                state.innerText = d.status.toUpperCase();
+                fill.style.width = d.progress + '%';
+
+                trackContainer.innerHTML = d.tracklist.map(t => `
+                    <div class="track-item">
+                        <div style="color: #00ffcc; font-weight: 700;">${t.timestamp}</div>
+                        <div>${t.file}</div>
+                        <div style="color: #888;">${t.key}</div>
+                        <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
+                    </div>
+                `).join('');
+
+                if (d.status === "Complete") {
+                    document.getElementById('launch-btn').disabled = false;
+                    wavesurfer.load('/download');
+                } else if (d.status !== "Idle") {
+                    setTimeout(pollStatus, 1000);
+                }
+            } catch (err) {
+                console.error("Polling error:", err);
+                setTimeout(pollStatus, 2000);
+            }
+        }
+
+        document.getElementById('launch-form').onsubmit = async (e) => {
+            e.preventDefault();
+            document.getElementById('launch-btn').disabled = true;
+            const fd = new FormData(e.target);
+            term.innerHTML += `<br><span style="color: #a020f0;">[SYSTEM] Mission initialized. Analyzing library...</span>`;
+            await fetch('/start', { method: 'POST', body: fd });
+            pollStatus();
+        };
+
+        const wavesurfer = WaveSurfer.create({
+            container: '#waveform',
+            waveColor: '#1a1a24',
+            progressColor: '#a020f0',
+            height: 120,
+            normalize: true,
+            cursorColor: '#00ffcc'
+        });
+    </script>
+</body>
+</html>
