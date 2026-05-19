@@ -1,0 +1,12 @@
+librosa==0.11.0
+numpy==2.4.6
+pydub==0.25.1
+soundfile==0.13.1
+scipy==1.17.1
+tqdm==4.67.3
+pyloudnorm==0.2.0
+fastapi==0.136.1
+uvicorn==0.47.0
+jinja2==3.1.6
+python-multipart==0.0.29
+pytest==9.0.3

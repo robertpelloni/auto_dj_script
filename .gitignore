@@ -1,0 +1,4 @@
+__pycache__/
+*.wav
+*.flac
+psyset_source/

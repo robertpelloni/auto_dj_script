@@ -1,0 +1,21 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "autodj"
+version = "5.5.0"
+description = "Automated seamless DJ transitions with frequency splitting and harmonic mixing."
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "librosa>=0.11.0",
+    "numpy>=2.4.6",
+    "pydub>=0.25.1",
+    "soundfile>=0.13.1",
+    "scipy>=1.17.1",
+    "tqdm>=4.67.3"
+]
+
+[project.scripts]
+auto-dj = "autodj.cli:main"
