@@ -1,4 +1,4 @@
-# 🚀 Deployment & Installation Guide (v5.1.0)
+# 🚀 Deployment & Installation Guide (v5.6.0)
 
 ## Prerequisites
 - **Python 3.12+** (Optimized for Python 3.12 performance).

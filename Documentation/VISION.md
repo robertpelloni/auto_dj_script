@@ -1,4 +1,4 @@
-# 🌌 Auto DJ Script: The Ultimate Vision (v5.1.0)
+# 🌌 Auto DJ Script: The Ultimate Vision (v5.6.0)
 
 ## The Core Vision
 To develop the world's most advanced, fully autonomous, and musically intelligent audio engine. We don't just "mix" tracks; we craft professional, studio-grade journeys through sound that are indistinguishable from (or superior to) human-mixed sets in the lossless domain.

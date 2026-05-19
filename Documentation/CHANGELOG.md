@@ -1,5 +1,9 @@
 # Changelog
 
+## [5.6.0] - 2024-05-21
+### Added
+- **Multi-band Compression**: Added advanced dynamics processing in the mastering chain. Applies `apply_multiband_compression` to the final master mix.
+
 ## [5.5.0] - 2024-05-21
 ### Added
 - **Manual Archetype Overrides**: Added a dropdown to the GUI to manually select mixing styles (Bass-Swap, Echo-Out, etc.).

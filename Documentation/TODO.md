@@ -20,4 +20,4 @@
 ## 🌠 Future Horizon (v6.x)
 - [ ] **AI Genre Inference**: Implement CNN for automatic transition style detection.
 - [ ] **Live Broadcast Node**: Direct Icecast/RTMP streaming.
-- [ ] **Multi-band Compression**: Advanced dynamics processing in the mastering chain.
+- [x] **Multi-band Compression**: Advanced dynamics processing in the mastering chain.

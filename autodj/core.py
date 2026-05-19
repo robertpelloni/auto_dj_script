@@ -19,7 +19,8 @@ from .analysis import (get_native_bpm, get_musical_key, analyze_geometry,
                        get_camelot_key, is_harmonically_compatible,
                        get_energy_profile, detect_phrases, get_genre_archetype)
 from .dsp import (apply_dsp_filter, trim_silence, normalize_lufs,
-                  apply_bass_swap, apply_echo_out, apply_hpf_sweep, apply_limiter)
+                  apply_bass_swap, apply_echo_out, apply_hpf_sweep, apply_limiter,
+                  apply_multiband_compression)
 from .utils import pydub_to_ndarray, ndarray_to_pydub
 from .version import __version__
 
@@ -205,6 +206,12 @@ def compile_master_set(args, status_obj=None):
         current_time_ms = len(master)
 
     if master:
+        # Apply Multi-band Compression for final mastering
+        if status_obj: status_obj["status"] = "Mastering Dynamics"
+        master_array = pydub_to_ndarray(master)
+        master_compressed = apply_multiband_compression(master_array, master.frame_rate)
+        master = ndarray_to_pydub(master_compressed, master.frame_rate)
+
         master.export(args.output, format="flac")
         if status_obj: status_obj["status"] = "Complete"
         tl_path = os.path.splitext(args.output)[0] + "_tracklist.txt"

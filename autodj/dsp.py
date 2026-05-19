@@ -112,6 +112,27 @@ def apply_limiter(audio_array, threshold=0.99):
         return out
     return audio_array
 
+def apply_multiband_compression(audio_array, sr, crossover=200.0, low_threshold=0.8, high_threshold=0.9):
+    """
+    Multi-band Compression for dynamic mastering.
+
+    Why:
+    Compressing the entire frequency spectrum at once often causes 'pumping'
+    where a loud bass hit ducks the volume of the high hats. By splitting the
+    signal into frequency bands and compressing them independently, we can maximize
+    loudness and punch without destructive ducking artifacts.
+    """
+    # 1. Split the signal
+    low_band = apply_dsp_filter(audio_array, sr, 'lowpass', crossover)
+    high_band = apply_dsp_filter(audio_array, sr, 'highpass', crossover)
+
+    # 2. Compress each band independently
+    low_compressed = apply_limiter(low_band, low_threshold)
+    high_compressed = apply_limiter(high_band, high_threshold)
+
+    # 3. Sum the bands
+    return low_compressed + high_compressed
+
 def apply_bass_swap(outro_array, intro_array, sr, crossover=150.0):
     """
     The 'Bass Swap' Archetype.
