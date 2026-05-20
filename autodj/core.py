@@ -202,13 +202,33 @@ def compile_master_set(args, status_obj=None):
         ms_trans = min(ms_trans, len(master))
         track_start_ms = current_time_ms - ms_trans
 
+        # Plugin-based Archetype Logic
+        mode = getattr(args, 'archetype', 'auto')
+        rationale = "User manual override"
+
+        if mode == 'auto':
+            # Intelligent Selection Heuristic
+            t1, t2 = meta_list[i-1], meta_list[i]
+            e_diff = t2['energy'] - t1['energy']
+
+            if t2['genre'] == 'High-Energy' and e_diff >= -0.02:
+                mode, rationale = 'bass_swap', "Energy Match/Increase (High-Energy)"
+            elif e_diff < -0.05:
+                mode, rationale = 'echo_out', "Significant Energy Drop detected"
+            elif t_bars >= 32:
+                mode, rationale = 'hpf_sweep', "Extended transition (Build-up)"
+            else:
+                mode, rationale = 'classic', "Balanced Flow"
+
         tracklist.append({
             'timestamp': ms_to_timestamp(track_start_ms),
             'file': os.path.basename(all_files[i]),
             'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
             'genre': meta_list[i]['genre'],
             'start_ms': track_start_ms,
-            'transition_bars': t_bars
+            'transition_bars': t_bars,
+            'archetype': mode,
+            'rationale': rationale
         })
 
         if status_obj:
@@ -217,12 +237,6 @@ def compile_master_set(args, status_obj=None):
 
         m_body, m_outro = master[:-ms_trans], master[-ms_trans:]
         n_intro, n_body = nxt[:ideal_p], nxt[ideal_p:]
-
-        # Plugin-based Archetype Logic
-        mode = getattr(args, 'archetype', 'auto')
-        if mode == 'auto':
-            # Default auto-genre mapping
-            mode = 'bass_swap' if meta_list[i]['genre'] == 'High-Energy' else 'classic'
 
         arch_plugin = ArchetypeRegistry.get(mode)
         if arch_plugin:

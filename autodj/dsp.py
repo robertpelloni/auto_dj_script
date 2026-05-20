@@ -169,7 +169,17 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5):
     high_c = apply_limiter(high_band, h_thresh)
 
     # 4. Re-summation
-    return low_c + mid_c + high_c
+    summed = low_c + mid_c + high_c
+
+    # 5. Auto-Gain Compensation (Make-up Gain)
+    # Ensure the compressed signal peak matches the original peak level
+    # to prevent volume drops at high intensity.
+    orig_peak = np.max(np.abs(audio_array))
+    summed_peak = np.max(np.abs(summed))
+    if summed_peak > 0:
+        summed *= (orig_peak / summed_peak)
+
+    return summed
 
 @ArchetypeRegistry.register
 class BassSwap(TransitionArchetype):

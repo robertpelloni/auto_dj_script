@@ -1,8 +1,8 @@
-# 📝 Immediate Tasks (v6.0.0)
+# 📝 Immediate Tasks (v6.1.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Plugin-based Archetype Architecture**: Transition archetypes are now modular plugins.
-- [x] **Low-Cut Build Archetype**: Demonstrate plugin system with a new style.
+- [x] **Intelligent Transition Selector**: Energy-aware style detection.
+- [x] **Auto-Gain Compensation**: Make-up gain for mastering.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).

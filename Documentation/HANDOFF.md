@@ -1,4 +1,4 @@
-# 🤝 Auto DJ Script: Transition & Handoff Brief (v6.0.0)
+# 🤝 Auto DJ Script: Transition & Handoff Brief (v6.1.0)
 
 ## 🎖 Current Status: "The Plugin & Cloud Era"
 The project is in a highly stable, modular, and performant state. We have transitioned from basic script-based mixing to a parallel, MIR-intelligent audio engine with a real-time web interface.
@@ -6,8 +6,8 @@ The project is in a highly stable, modular, and performant state. We have transi
 *Note: No previous conversation logs were found in the codebase. Additionally, model-specific instruction files (CLAUDE.md, GEMINI.md, GPT.md, copilot-instructions.md) were found in 'Model Instructions/' and were updated to reference the global directive.*
 
 ## 🔎 Project Audit
-1. **Completed features:** High-performance metadata extraction, Simulated Annealing sequencing, Smart Phrase Detection, LUFS Mastering, Real-time Command Console (v5.0), true-peak limiting, manual archetype overrides, parallel warp engine, Multi-band Compression (3-band), Interactive Tempo Ramping (End BPM), Enhanced Genre Inference (v2), Phrase-Aware Dynamic Transitions, Plugin-based Archetype Architecture.
-2. **Partially implemented features:** Dynamic mastering chain (now 3-band).
+1. **Completed features:** High-performance metadata extraction, Simulated Annealing sequencing, Smart Phrase Detection, LUFS Mastering, Real-time Command Console (v5.0), true-peak limiting, manual archetype overrides, parallel warp engine, Multi-band Compression (3-band), Interactive Tempo Ramping (End BPM), Enhanced Genre Inference (v2), Phrase-Aware Dynamic Transitions, Plugin-based Archetype Architecture, Intelligent Transition Selector, Auto-Gain Compensation.
+2. **Partially implemented features:** Dynamic mastering chain (now 3-band with auto-gain).
 3. **Backend features not wired to the frontend:** None.
 4. **UI features that are missing, hidden, underrepresented, or unpolished:** Missing transition visualizations or progress indicators for specific tracks in UI, beyond basic percent bar.
 5. **Bugs or fragile areas:** Fixed critical `get_native_bpm` signature mismatch. Potential high-frequency transient issues in `librosa.beat_track` causing octave errors for fast Psytrance.
@@ -48,13 +48,13 @@ The project is in a highly stable, modular, and performant state. We have transi
 - **Parallelism**: We use \`ProcessPoolExecutor\`. Do not nested pools within workers.
 - **Directives**: ALWAYS follow the \`GLOBAL_LLM_DIRECTIVE.md\`. "Don't stop the party!"
 
-## 📝 Session History (v6.0.0)
-- **Plugin-based Archetype Architecture**: Transition archetypes are now modular plugins, allowing for easy expansion and dynamic loading.
-- **Dynamic Transition Dropdown**: The Web Dashboard now automatically lists all registered transition plugins.
-- **Low-Cut Build Archetype**: Added a new transition style that applies tension using high-pass filters on both tracks.
-- **Synchronized Repository**: Performed a complex merge of `origin/main` into the current working branch, resolving conflicts in core orchestration and UI templates.
-- **Implemented Phrase-Aware Dynamic Transitions**: Created `calculate_dynamic_transition` in `analysis.py` to intelligently select transition lengths (8, 16, or 32 bars) based on musical activity.
-- **Documentation Overhaul**: Updated ROADMAP.md, TODO.md, VISION.md, and CHANGELOG.md to reflect the transition to v6.0.0.
+## 📝 Session History (v6.1.0)
+- **Intelligent Transition Selector**: Enhanced the 'auto' archetype logic to select transition styles based on energy differential and phrase activity.
+- **Auto-Gain Compensation**: Added peak-normalization to the mastering chain to prevent perceived volume loss during heavy compression.
+- **AI Rationale Dashboard**: Updated the UI to explain exactly why the engine chose a specific transition archetype.
+- **Plugin-based Archetype Architecture**: Modularized transition logic into extensible plugins.
+- **Phrase-Aware Dynamic Transitions**: Automated transition length calculation based on musical boundaries.
+- **Documentation Overhaul**: Updated ROADMAP.md, TODO.md, VISION.md, and CHANGELOG.md to reflect the transition to v6.1.0.
 
 ## 🚀 The Next Frontier (Next Steps):
 - [ ] **AI Genre Inference**: Port the current heuristic to a CNN for even more robust stylistic classification.

@@ -176,7 +176,10 @@
                             <div style="color: #888;">${t.key}</div>
                         <div style="display: flex; flex-direction: column;">
                             <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
-                            <div style="color: #444; font-size: 0.7em;">${t.transition_bars ? t.transition_bars + ' bars' : '-'}</div>
+                            <div style="color: #444; font-size: 0.7em;">
+                                ${t.transition_bars ? t.transition_bars + ' bars' : '-'}
+                                ${t.rationale ? '<span style="color:#666; margin-left: 5px;">(' + t.rationale + ')</span>' : ''}
+                            </div>
                         </div>
                         </div>
                     `).join('');

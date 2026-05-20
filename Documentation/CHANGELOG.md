@@ -1,5 +1,11 @@
 # Changelog
 
+## [6.1.0] - 2024-05-26
+### Added
+- **Intelligent Transition Selector**: The engine now chooses transition archetypes based on energy dynamics (e.g., choosing Echo-Out for energy drops, Bass-Swap for energy matches).
+- **Auto-Gain Compensation**: Integrated make-up gain into the 3-band compressor to maintain consistent output volume regardless of compression depth.
+- **AI Rationale Display**: The Web Dashboard now displays the mathematical rationale behind each automatic transition choice.
+
 ## [6.0.0] - 2024-05-25
 ### Added
 - **Plugin-based Archetype Architecture**: Transition archetypes are now modular plugins, allowing for easy expansion and dynamic loading.
