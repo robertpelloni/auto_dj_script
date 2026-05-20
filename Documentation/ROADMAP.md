@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v5.8.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v5.9.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -14,6 +14,7 @@
 - [x] **Interactive Transition Override**: Manual selection of archetypes via GUI.
 - [x] **Interactive Tempo Ramping**: Set-wide BPM evolution via GUI.
 - [x] **Dynamic Mastering Chain**: Multi-band compression and true-peak limiting.
+- [x] **Phrase-Aware Dynamic Transitions**: Automated transition length calculation.
 
 ## 🌠 Version 6.x: The Cloud Era (FUTURE)
 - [ ] **Distributed Rendering**: Multi-node set compilation.

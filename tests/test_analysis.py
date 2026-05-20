@@ -22,3 +22,14 @@ def test_harmonic_compatibility():
 def test_wrap_around():
     # 12A (C# Minor) to 1A (G# Minor)
     assert is_harmonically_compatible('C# Minor', 'G# Minor') is True
+
+def test_dynamic_transition_logic():
+    from autodj.analysis import calculate_dynamic_transition
+    sr = 44100
+    bpm = 120
+    # Mock some audio arrays
+    y = np.zeros(sr * 5)
+
+    # Low activity (all zeros) -> 32 bars
+    res = calculate_dynamic_transition(y, y, sr, bpm, 4)
+    assert res == 32

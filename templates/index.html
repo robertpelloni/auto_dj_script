@@ -42,7 +42,8 @@
                 [SYSTEM] Kernel v{{ version }} active...<br>
                 [SYSTEM] Parallel Warp Engine standing by...<br>
                 [MIR] CQT Key Detection loaded.<br>
-                [DSP] True-Peak Look-ahead Limiter online.
+                [DSP] True-Peak Look-ahead Limiter online.<br>
+                [SYSTEM] WebSocket connecting...
             </div>
             <div class="controls-card">
                 <form id="launch-form">
@@ -70,6 +71,11 @@
                     <input type="range" name="mastering_intensity" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #a020f0;">
                     <br><br>
                     <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
+                        <input type="checkbox" name="dynamic_transitions" checked style="width: 20px; height: 20px; accent-color: #00ffcc;">
+                        Phrase-Aware Dynamic Transitions
+                    </label>
+                    <br>
+                    <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
                         <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
                         Simulated Annealing Optimization
                     </label>
@@ -90,7 +96,7 @@
                 <div>Time</div>
                 <div>Track Title</div>
                 <div>Key</div>
-                <div>Genre</div>
+            <div>Genre / Bars</div>
             </div>
             <div id="tracklist-container">
                 <!-- Tracks will be injected here -->
@@ -101,18 +107,61 @@
     </div>
 
     <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
         const term = document.getElementById('terminal');
         const fill = document.getElementById('fill');
         const state = document.getElementById('state-text');
         const trackContainer = document.getElementById('tracklist-container');
 
-        ws.onmessage = (event) => {
+        function logTerminal(msg, color = '#55ff55') {
             const line = document.createElement('div');
-            line.innerHTML = `> ${event.data}`;
+            line.innerHTML = `<span style="color:${color}">> ${msg}</span>`;
             term.appendChild(line);
             term.scrollTop = term.scrollHeight;
-        };
+        }
+
+        // WebSocket with auto-reconnect
+        let ws;
+        let wsRetryCount = 0;
+        const wsMaxRetries = 30;
+
+        function connectWS() {
+            const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+            const url = `${protocol}//${window.location.host}/ws`;
+            try {
+                ws = new WebSocket(url);
+            } catch (e) {
+                logTerminal('[SYSTEM] WebSocket creation failed. Using polling only.', '#ff5555');
+                return;
+            }
+
+            ws.onopen = () => {
+                wsRetryCount = 0;
+                logTerminal('[SYSTEM] WebSocket connected.', '#00ffcc');
+            };
+
+            ws.onmessage = (event) => {
+                logTerminal(event.data);
+            };
+
+            ws.onclose = (event) => {
+                if (wsRetryCount < wsMaxRetries) {
+                    wsRetryCount++;
+                    const delay = Math.min(500 * wsRetryCount, 5000);
+                    logTerminal(`[SYSTEM] WebSocket closed. Reconnecting in ${delay}ms (attempt ${wsRetryCount})...`, '#ffcc00');
+                    setTimeout(connectWS, delay);
+                } else {
+                    logTerminal('[SYSTEM] WebSocket retries exhausted. Status polling active.', '#ff5555');
+                }
+            };
+
+            ws.onerror = (err) => {
+                console.error('WebSocket error:', err);
+            };
+        }
+
+        connectWS();
+
+        let pollInterval = null;
 
         async function pollStatus() {
             try {
@@ -120,25 +169,33 @@
                 const d = await r.json();
                 state.innerText = d.status.toUpperCase();
                 fill.style.width = d.progress + '%';
-
-                trackContainer.innerHTML = d.tracklist.map(t => `
-                    <div class="track-item">
-                        <div style="color: #00ffcc; font-weight: 700;">${t.timestamp}</div>
-                        <div>${t.file}</div>
-                        <div style="color: #888;">${t.key}</div>
-                        <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
-                    </div>
-                `).join('');
-
-                if (d.status === "Complete") {
+                if (d.tracklist && d.tracklist.length > 0) {
+                    trackContainer.innerHTML = d.tracklist.map(t => `
+                        <div class="track-item">
+                            <div style="color: #00ffcc; font-weight: 700;">${t.timestamp}</div>
+                            <div>${t.file}</div>
+                            <div style="color: #888;">${t.key}</div>
+                        <div style="display: flex; flex-direction: column;">
+                            <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
+                            <div style="color: #444; font-size: 0.7em;">${t.transition_bars ? t.transition_bars + ' bars' : '-'}</div>
+                        </div>
+                        </div>
+                    `).join('');
+                }
+                if (d.status === 'Complete') {
                     document.getElementById('launch-btn').disabled = false;
-                    wavesurfer.load('/download');
-                } else if (d.status !== "Idle") {
-                    setTimeout(pollStatus, 1000);
+                    if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+                    try { wavesurfer.load('/download'); } catch(e) {}
                 }
             } catch (err) {
-                console.error("Polling error:", err);
-                setTimeout(pollStatus, 2000);
+                console.error('Polling error:', err);
+            }
+        }
+
+        function startPolling() {
+            if (!pollInterval) {
+                pollStatus();
+                pollInterval = setInterval(pollStatus, 1500);
             }
         }
 
@@ -146,9 +203,9 @@
             e.preventDefault();
             document.getElementById('launch-btn').disabled = true;
             const fd = new FormData(e.target);
-            term.innerHTML += `<br><span style="color: #a020f0;">[SYSTEM] Mission initialized. Analyzing library...</span>`;
+            logTerminal('[SYSTEM] Mission initialized. Analyzing library...', '#a020f0');
             await fetch('/start', { method: 'POST', body: fd });
-            pollStatus();
+            startPolling();
         };
 
         const wavesurfer = WaveSurfer.create({

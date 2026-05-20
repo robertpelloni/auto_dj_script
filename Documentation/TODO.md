@@ -1,8 +1,8 @@
-# 📝 Immediate Tasks (v5.7.0)
+# 📝 Immediate Tasks (v5.9.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Interactive Tempo Ramping**: Wire "End BPM" to the GUI.
-- [x] **Bug Fix: BPM Signature**: Resolve the `get_native_bpm` argument mismatch.
+- [x] **Phrase-Aware Dynamic Transitions**: Implement and wire to UI.
+- [x] **Repository Synchronization**: Resolve branch conflicts.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).
