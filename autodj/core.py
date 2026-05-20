@@ -1,11 +1,11 @@
 """
-Core Orchestration Engine | Auto DJ Script (v5.5.0)
+Core Orchestration Engine | Auto DJ Script (v5.8.0)
 ==================================================
 
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 5.5.x features: Manual Archetype Overrides.
+Version 5.8.x features: 3-band mastering and enhanced genre detection.
 """
 
 import os, glob, re, librosa, random, json
@@ -13,11 +13,12 @@ import soundfile as sf
 import numpy as np
 from pydub import AudioSegment
 from tqdm import tqdm
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ProcessPoolExecutor, ThreadPoolExecutor
 import config
 from .analysis import (get_native_bpm, get_musical_key, analyze_geometry,
                        get_camelot_key, is_harmonically_compatible,
-                       get_energy_profile, detect_phrases, get_genre_archetype)
+                       get_energy_profile, detect_phrases, get_genre_archetype,
+                       calculate_dynamic_transition)
 from .dsp import (apply_dsp_filter, trim_silence, normalize_lufs,
                   apply_bass_swap, apply_echo_out, apply_hpf_sweep, apply_limiter,
                   apply_multiband_compression)
@@ -68,12 +69,31 @@ def warp_worker(args):
     except Exception as e:
         return None, str(e)
 
-def find_optimal_order(files):
+def analyze_track_worker(f):
+    """Metadata extraction worker."""
+    try:
+        y, sr = librosa.load(f, sr=None)
+        bpm, _, _ = get_native_bpm(y, sr)
+        return {
+            'path': f,
+            'bpm': bpm,
+            'key': get_musical_key(y, sr),
+            'energy': get_energy_profile(y, sr),
+            'genre': get_genre_archetype(y, sr, bpm=bpm)
+        }
+    except Exception as e: return {'path': f, 'error': str(e)}
+
+def find_optimal_order(files, status_obj=None):
     """Sequencing optimization via Simulated Annealing."""
-    print(f"[*] Analyzing {len(files)} tracks in parallel...")
+    total = len(files)
+    print(f"[*] Analyzing {total} tracks in parallel...")
     with ProcessPoolExecutor() as executor:
-        from .core import analyze_track_worker
-        results = list(tqdm(executor.map(analyze_track_worker, files), total=len(files), desc="Analyzing", unit="track"))
+        results = list(tqdm(executor.map(analyze_track_worker, files), total=total, desc="Analyzing", unit="track"))
+
+    for i, r in enumerate(results):
+        if status_obj is not None:
+            status_obj["status"] = f"Analyzing Library ({i+1}/{total})"
+            status_obj["progress"] = int((i / total) * 50)
 
     meta = [r for r in results if 'error' not in r]
     if not meta: return files, None
@@ -106,35 +126,31 @@ def find_optimal_order(files):
             best_o, best_s = new_o, new_s
         temp = config.SA_INITIAL_TEMP / np.log(1 + _ + 1)
 
+    if status_obj is not None:
+        status_obj["status"] = "Optimizing track order..."
+        status_obj["progress"] = 50
+
     return [x['path'] for x in best_o], best_o
 
-def analyze_track_worker(f):
-    """Metadata extraction worker."""
-    try:
-        y, sr = librosa.load(f, sr=None)
-        bpm, _, _ = get_native_bpm(y, sr)
-        return {
-            'path': f,
-            'bpm': bpm,
-            'key': get_musical_key(y, sr),
-            'energy': get_energy_profile(y, sr),
-            'genre': get_genre_archetype(y, sr, bpm=bpm)
-        }
-    except Exception as e: return {'path': f, 'error': str(e)}
-
 def compile_master_set(args, status_obj=None):
-    """The High-Performance Mixing Pipeline (v5.5.0)."""
+    """The High-Performance Mixing Pipeline (v5.8.0)."""
     folder = args.input
     all_files = []
     for ext in config.SUPPORTED_EXTENSIONS:
         all_files.extend(glob.glob(os.path.join(folder, f"*{ext}")))
         all_files.extend(glob.glob(os.path.join(folder, f"*{ext.upper()}")))
-    if not all_files: return
+    if not all_files:
+        if status_obj: status_obj["status"] = "Error: No audio files found"
+        return
 
-    if status_obj: status_obj["status"] = "Analyzing Library"
-    all_files, meta_list = find_optimal_order(all_files)
+    # Phase 1: Analysis (0-50%)
+    all_files, meta_list = find_optimal_order(all_files, status_obj=status_obj)
+    if meta_list is None:
+        if status_obj: status_obj["status"] = "Error: Analysis failed"
+        return
     num_tracks = len(all_files)
 
+    # Phase 2: Warping (50-75%)
     if status_obj: status_obj["status"] = f"Warping {num_tracks} tracks"
     start_bpm, end_bpm = args.bpm, (args.end_bpm or args.bpm)
     warp_tasks = []
@@ -147,6 +163,7 @@ def compile_master_set(args, status_obj=None):
     with ProcessPoolExecutor() as executor:
         warped_results = list(tqdm(executor.map(warp_worker, warp_tasks), total=num_tracks, desc="Warping", unit="track"))
 
+    # Phase 3: Mixing (75-100%)
     if status_obj: status_obj["status"] = "Mixing Master Stream"
     tracklist, master, current_time_ms = [], None, 0
 
@@ -166,7 +183,15 @@ def compile_master_set(args, status_obj=None):
             continue
 
         t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
-        beats, ms_trans = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
+
+        # Dynamic Transition Logic
+        t_bars = args.transition_bars
+        if getattr(args, 'dynamic_transitions', False):
+            # Load previous track for analysis if available
+            prev_y_w, _ = warped_results[i-1]
+            t_bars = calculate_dynamic_transition(prev_y_w, y_w, sr, t_s_bpm, args.beats_per_bar)
+
+        beats, ms_trans = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, t_bars)
 
         ph = detect_phrases(y_w, sr)
         fixed_p = beats[min(args.transition_bars * args.beats_per_bar, len(beats)-1)]
@@ -178,11 +203,18 @@ def compile_master_set(args, status_obj=None):
         ms_trans = min(ms_trans, len(master))
         track_start_ms = current_time_ms - ms_trans
 
-        tracklist.append({'timestamp': ms_to_timestamp(track_start_ms), 'file': os.path.basename(all_files[i]), 'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})", 'genre': meta_list[i]['genre'], 'start_ms': track_start_ms})
+        tracklist.append({
+            'timestamp': ms_to_timestamp(track_start_ms),
+            'file': os.path.basename(all_files[i]),
+            'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
+            'genre': meta_list[i]['genre'],
+            'start_ms': track_start_ms,
+            'transition_bars': t_bars
+        })
 
         if status_obj:
             status_obj["tracklist"] = tracklist
-            status_obj["progress"] = int((i / (num_tracks-1)) * 100)
+            status_obj["progress"] = 75 + int((i / (num_tracks-1)) * 25)
 
         m_body, m_outro = master[:-ms_trans], master[-ms_trans:]
         n_intro, n_body = nxt[:ideal_p], nxt[ideal_p:]
@@ -208,14 +240,18 @@ def compile_master_set(args, status_obj=None):
 
     if master:
         # Apply Multi-band Compression for final mastering
-        if status_obj: status_obj["status"] = "Mastering Dynamics"
+        if status_obj:
+            status_obj["status"] = "Mastering Dynamics"
+            status_obj["progress"] = 98
         master_array = pydub_to_ndarray(master)
         intensity = getattr(args, 'mastering_intensity', 0.5)
         master_compressed = apply_multiband_compression(master_array, master.frame_rate, intensity=intensity)
         master = ndarray_to_pydub(master_compressed, master.frame_rate)
 
         master.export(args.output, format="flac")
-        if status_obj: status_obj["status"] = "Complete"
+        if status_obj:
+            status_obj["status"] = "Complete"
+            status_obj["progress"] = 100
         tl_path = os.path.splitext(args.output)[0] + "_tracklist.txt"
         with open(tl_path, "w") as f:
             f.write(f"Auto DJ v{__version__} Master Tracklist\n{'='*40}\n")

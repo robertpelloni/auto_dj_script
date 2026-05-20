@@ -77,6 +77,28 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
     beat_times_ms = (librosa.frames_to_time(beat_frames, sr=sr) * 1000).astype(int)
     return beat_times_ms, int(ms_per_transition)
 
+def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar):
+    """
+    Analyzes phrase structure to determine optimal transition length.
+
+    Returns transition bars (8, 16, or 32).
+    """
+    outro_ph = detect_phrases(outro_y, sr)
+    intro_ph = detect_phrases(intro_y, sr)
+
+    ms_per_beat = 60000.0 / target_bpm
+    ms_per_bar = ms_per_beat * beats_per_bar
+
+    # Heuristic: Match phrase density to transition standard multiples
+    if len(outro_ph) > 5 or len(intro_ph) > 5:
+        # High activity: shorter transition
+        return 8
+    elif len(outro_ph) < 2 and len(intro_ph) < 2:
+        # Low activity: long epic transition
+        return 32
+    else:
+        return 16
+
 def get_genre_archetype(y, sr, bpm=None):
     """
     Identifies the genre archetype using a multi-feature heuristic (v2).

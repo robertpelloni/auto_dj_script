@@ -1,5 +1,11 @@
 # Changelog
 
+## [5.9.0] - 2024-05-24
+### Added
+- **Phrase-Aware Dynamic Transitions**: The engine now analyzes phrase boundaries to automatically calculate the optimal transition length (8, 16, or 32 bars).
+- **Dynamic Transition UI**: Added a toggle to the Web Dashboard and integrated transition duration metadata into the live tracklist.
+- **Repository Synchronization**: Merged upstream changes and synchronized feature branches for unified development flow.
+
 ## [5.8.0] - 2024-05-23
 ### Added
 - **Enhanced Genre Inference (v2)**: Incorporated BPM and spectral flatness into the classification heuristic for superior stylistic detection.
