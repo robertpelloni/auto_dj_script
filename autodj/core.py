@@ -20,8 +20,7 @@ from .analysis import (get_native_bpm, get_musical_key, analyze_geometry,
                        get_energy_profile, detect_phrases, get_genre_archetype,
                        calculate_dynamic_transition)
 from .dsp import (apply_dsp_filter, trim_silence, normalize_lufs,
-                  apply_bass_swap, apply_echo_out, apply_hpf_sweep, apply_limiter,
-                  apply_multiband_compression)
+                  apply_limiter, apply_multiband_compression, ArchetypeRegistry)
 from .utils import pydub_to_ndarray, ndarray_to_pydub
 from .version import __version__
 
@@ -219,21 +218,25 @@ def compile_master_set(args, status_obj=None):
         m_body, m_outro = master[:-ms_trans], master[-ms_trans:]
         n_intro, n_body = nxt[:ideal_p], nxt[ideal_p:]
 
-        # Archetype Selection Logic
+        # Plugin-based Archetype Logic
         mode = getattr(args, 'archetype', 'auto')
+        if mode == 'auto':
+            # Default auto-genre mapping
+            mode = 'bass_swap' if meta_list[i]['genre'] == 'High-Energy' else 'classic'
 
-        if mode == 'bass_swap' or (mode == 'auto' and meta_list[i]['genre'] == 'High-Energy'):
-            f_m_h, f_n_l = apply_bass_swap(pydub_to_ndarray(m_outro), pydub_to_ndarray(n_intro), sr)
-            f_m, f_n = ndarray_to_pydub(f_m_h, sr), ndarray_to_pydub(f_n_l, sr)
-        elif mode == 'echo_out':
-            f_m = ndarray_to_pydub(apply_echo_out(pydub_to_ndarray(m_outro), sr), sr)
-            f_n = ndarray_to_pydub(pydub_to_ndarray(n_intro), sr)
-        elif mode == 'hpf_sweep':
-            f_m = ndarray_to_pydub(apply_hpf_sweep(pydub_to_ndarray(m_outro), sr), sr)
-            f_n = ndarray_to_pydub(pydub_to_ndarray(n_intro), sr)
-        else: # Classic Fade
-            f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, 'lowpass', args.lowpass), sr)
-            f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, 'highpass', args.highpass), sr)
+        arch_plugin = ArchetypeRegistry.get(mode)
+        if arch_plugin:
+            f_m_raw, f_n_raw = arch_plugin.apply(
+                pydub_to_ndarray(m_outro),
+                pydub_to_ndarray(n_intro),
+                sr,
+                lowpass=getattr(args, 'lowpass', config.LOWPASS_CUTOFF),
+                highpass=getattr(args, 'highpass', config.HIGHPASS_CUTOFF)
+            )
+            f_m, f_n = ndarray_to_pydub(f_m_raw, sr), ndarray_to_pydub(f_n_raw, sr)
+        else:
+            # Fallback to no-processing overlay
+            f_m, f_n = m_outro, n_intro
 
         master = m_body + f_m.fade_out(ms_trans).overlay(f_n.fade_in(ms_trans)) + n_body
         current_time_ms = len(master)

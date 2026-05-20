@@ -61,10 +61,9 @@
                     <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
                     <select name="archetype">
                         <option value="auto">Auto (Genre-Aware)</option>
-                        <option value="bass_swap">Bass-Swap (Psytrance/Techno)</option>
-                        <option value="hpf_sweep">HPF-Sweep (Build-up)</option>
-                        <option value="echo_out">Echo-Out (Wash)</option>
-                        <option value="classic">Classic Fade (Smooth)</option>
+                        {% for name, plugin in archetypes.items() %}
+                        <option value="{{ name }}">{{ plugin.display_name }}</option>
+                        {% endfor %}
                     </select>
                     <br><br>
                     <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Mastering Intensity (Compression)</label>

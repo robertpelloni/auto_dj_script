@@ -15,6 +15,32 @@ Key Innovations:
 import numpy as np
 from scipy.signal import butter, sosfilt
 import pyloudnorm as pyln
+from .utils import ndarray_to_pydub, pydub_to_ndarray
+
+class TransitionArchetype:
+    """Base class for all transition plugins."""
+    name = "Base"
+    display_name = "Base Archetype"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        raise NotImplementedError
+
+class ArchetypeRegistry:
+    _registry = {}
+
+    @classmethod
+    def register(cls, archetype_cls):
+        cls._registry[archetype_cls.name] = archetype_cls
+        return archetype_cls
+
+    @classmethod
+    def get_all(cls):
+        return cls._registry
+
+    @classmethod
+    def get(cls, name):
+        return cls._registry.get(name)
 
 def apply_dsp_filter(audio_array, sr, filter_type='highpass', cutoff=150.0):
     """
@@ -145,71 +171,85 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5):
     # 4. Re-summation
     return low_c + mid_c + high_c
 
-def apply_bass_swap(outro_array, intro_array, sr, crossover=150.0):
-    """
-    The 'Bass Swap' Archetype.
+@ArchetypeRegistry.register
+class BassSwap(TransitionArchetype):
+    name = "bass_swap"
+    display_name = "Bass-Swap (Psytrance/Techno)"
 
-    Musical Rationale:
-    Electronic music (Psytrance/Techno) relies on a dominant kick/bass. Having
-    two bass lines at once creates muddy destructive interference. This function
-    isolates the mid/highs of the outgoing track and the lows of the incoming
-    track, creating a seamless 'switch' that keeps the energy consistent.
-    """
-    outro_highs = apply_dsp_filter(outro_array, sr, 'highpass', crossover)
-    intro_lows = apply_dsp_filter(intro_array, sr, 'lowpass', crossover)
-    return outro_highs, intro_lows
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        crossover = kwargs.get('crossover', 150.0)
+        outro_highs = apply_dsp_filter(outro_array, sr, 'highpass', crossover)
+        intro_lows = apply_dsp_filter(intro_array, sr, 'lowpass', crossover)
+        return outro_highs, intro_lows
 
-def apply_echo_out(audio_array, sr, decay=0.5, delay_ms=500):
-    """
-    Echo-Out (Feedback Delay) Tail.
+@ArchetypeRegistry.register
+class EchoOut(TransitionArchetype):
+    name = "echo_out"
+    display_name = "Echo-Out (Wash)"
 
-    Musical Rationale:
-    Used to bridge tracks with wildly different genres or energy levels. By
-    creating a feedback tail, the outgoing track 'washes away,' providing
-    a rhythmic bridge for the new track to enter cleanly.
-    """
-    delay_samples = int(sr * (delay_ms / 1000))
-    out = np.copy(audio_array)
-    if audio_array.ndim == 2:
-        for ch in range(2):
-            for i in range(delay_samples, len(out[ch])):
-                # Recursive feedback: out = current + (previous * decay)
-                out[ch][i] += out[ch][i - delay_samples] * decay
-    else:
-        for i in range(delay_samples, len(out)):
-            out[i] += out[i - delay_samples] * decay
-    return out
-
-def apply_hpf_sweep(audio_array, sr, start_freq=20.0, end_freq=10000.0):
-    """
-    Exponential High-Pass Filter Sweep.
-
-    Musical Rationale:
-    Commonly used for 'build-ups.' By exponentially removing low frequencies,
-    tension is increased until the 'drop' where the filter is bypassed.
-    Exponential sweeps sound more natural than linear ones due to the
-    logarithmic nature of human hearing.
-    """
-    block_size = int(sr * 0.1) # 100ms processing blocks
-    num_blocks = (len(audio_array.T) if audio_array.ndim == 2 else len(audio_array)) // block_size
-
-    if num_blocks < 1:
-        return apply_dsp_filter(audio_array, sr, 'highpass', end_freq)
-
-    out = np.copy(audio_array)
-    for b in range(num_blocks):
-        start = b * block_size
-        end = (b + 1) * block_size
-        # Exponential curve: freq = start * (ratio ^ progress)
-        current_cutoff = start_freq * (end_freq / start_freq) ** (b / num_blocks)
-
-        if audio_array.ndim == 2:
-            chunk = out[:, start:end]
-            filtered = apply_dsp_filter(chunk, sr, 'highpass', current_cutoff)
-            out[:, start:end] = filtered
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        decay = kwargs.get('decay', 0.5)
+        delay_ms = kwargs.get('delay_ms', 500)
+        delay_samples = int(sr * (delay_ms / 1000))
+        out = np.copy(outro_array)
+        if out.ndim == 2:
+            for ch in range(2):
+                for i in range(delay_samples, len(out[ch])):
+                    out[ch][i] += out[ch][i - delay_samples] * decay
         else:
-            chunk = out[start:end]
-            filtered = apply_dsp_filter(chunk, sr, 'highpass', current_cutoff)
-            out[start:end] = filtered
+            for i in range(delay_samples, len(out)):
+                out[i] += out[i - delay_samples] * decay
+        return out, intro_array
 
-    return out
+@ArchetypeRegistry.register
+class HPFSweep(TransitionArchetype):
+    name = "hpf_sweep"
+    display_name = "HPF-Sweep (Build-up)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        start_freq = kwargs.get('start_freq', 20.0)
+        end_freq = kwargs.get('end_freq', 10000.0)
+        block_size = int(sr * 0.1)
+        num_blocks = (outro_array.shape[1] if outro_array.ndim == 2 else len(outro_array)) // block_size
+
+        if num_blocks < 1:
+            return apply_dsp_filter(outro_array, sr, 'highpass', end_freq), intro_array
+
+        out = np.copy(outro_array)
+        for b in range(num_blocks):
+            start, end = b * block_size, (b + 1) * block_size
+            current_cutoff = start_freq * (end_freq / start_freq) ** (b / num_blocks)
+            if outro_array.ndim == 2:
+                out[:, start:end] = apply_dsp_filter(out[:, start:end], sr, 'highpass', current_cutoff)
+            else:
+                out[start:end] = apply_dsp_filter(out[start:end], sr, 'highpass', current_cutoff)
+        return out, intro_array
+
+@ArchetypeRegistry.register
+class ClassicFade(TransitionArchetype):
+    name = "classic"
+    display_name = "Classic Fade (Smooth)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        lowpass = kwargs.get('lowpass', 200.0)
+        highpass = kwargs.get('highpass', 150.0)
+        f_m = apply_dsp_filter(outro_array, sr, 'lowpass', lowpass)
+        f_n = apply_dsp_filter(intro_array, sr, 'highpass', highpass)
+        return f_m, f_n
+
+@ArchetypeRegistry.register
+class LowCutBuild(TransitionArchetype):
+    name = "low_cut_build"
+    display_name = "Low-Cut Build (Tension)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        # Applies a static high-pass filter to both tracks during the transition
+        cutoff = kwargs.get('highpass', 300.0)
+        f_m = apply_dsp_filter(outro_array, sr, 'highpass', cutoff)
+        f_n = apply_dsp_filter(intro_array, sr, 'highpass', cutoff)
+        return f_m, f_n

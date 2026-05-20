@@ -1,8 +1,8 @@
-# 📝 Immediate Tasks (v5.9.0)
+# 📝 Immediate Tasks (v6.0.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Phrase-Aware Dynamic Transitions**: Implement and wire to UI.
-- [x] **Repository Synchronization**: Resolve branch conflicts.
+- [x] **Plugin-based Archetype Architecture**: Transition archetypes are now modular plugins.
+- [x] **Low-Cut Build Archetype**: Demonstrate plugin system with a new style.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).

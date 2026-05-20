@@ -11,6 +11,7 @@ import asyncio
 import config
 from .core import compile_master_set
 from .version import __version__
+from .dsp import ArchetypeRegistry
 
 app = FastAPI(title=f"Auto DJ v{__version__} Console")
 templates = Jinja2Templates(directory="templates")
@@ -54,7 +55,8 @@ async def index(request: Request):
         context={
             "version": __version__,
             "config": config,
-            "status": mixing_status
+            "status": mixing_status,
+            "archetypes": ArchetypeRegistry.get_all()
         }
     )
 

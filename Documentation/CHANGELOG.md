@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.0.0] - 2024-05-25
+### Added
+- **Plugin-based Archetype Architecture**: Transition archetypes are now modular plugins, allowing for easy expansion and dynamic loading.
+- **Low-Cut Build Archetype**: Added a new transition style that applies tension using high-pass filters on both tracks.
+- **Dynamic Transition Dropdown**: The Web Dashboard now automatically lists all registered transition plugins.
+### Refactored
+- Ported existing transition logic (Bass-Swap, Echo-Out, HPF-Sweep, Classic) to the new Plugin framework in `dsp.py`.
+
 ## [5.9.0] - 2024-05-24
 ### Added
 - **Phrase-Aware Dynamic Transitions**: The engine now analyzes phrase boundaries to automatically calculate the optimal transition length (8, 16, or 32 bars).
