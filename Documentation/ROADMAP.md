@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v6.1.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v6.2.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -19,9 +19,10 @@
 ## 🚀 Version 6.x: The Plugin & Cloud Era (CURRENT)
 - [x] **Plugin-based Archetypes**: Modular transition architecture.
 - [x] **Intelligent Transition Selector**: Energy-aware style detection.
+- [x] **AI-Enhanced Genre Classification (v3)**: Timbre and contrast awareness.
+- [x] **Genre-Aware Mastering Profiles**: Automatic dynamics tailoring.
 - [ ] **Distributed Rendering**: Multi-node set compilation.
-- [x] **Enhanced Genre Inference (v2)**: Heuristic-based BPM and spectral awareness.
-- [ ] **AI Genre Evolution**: Deep Learning for style inference.
+- [ ] **AI Genre Evolution**: Deep Learning (CNN) for style inference.
 - [ ] **VST Host Integration**: Support for pro-audio plugins.
 - [ ] **Live Broadcast Client**: Integrated Icecast/RTMP streaming.
 

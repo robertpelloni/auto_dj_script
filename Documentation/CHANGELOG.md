@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.2.0] - 2024-05-26
+### Added
+- **AI-Enhanced Genre Classification (v3)**: Integrated MFCC and Spectral Contrast for superior stylistic detection.
+- **Genre-Aware Mastering Profiles**: Automatic dynamics processing (Thresholds/Makeup Gain) tailored to the specific genre (Ambient, Techno, House, High-Energy).
+- **GUI Controls**: Added toggle for AI Genre-Aware Mastering in the Command Console.
+- **Library Inventory**: Added `Documentation/LIB_VERSIONS.md` for dependency tracking.
+
 ## [6.1.0] - 2024-05-26
 ### Added
 - **Intelligent Transition Selector**: The engine now chooses transition archetypes based on energy dynamics (e.g., choosing Echo-Out for energy drops, Bass-Swap for energy matches).

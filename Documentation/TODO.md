@@ -1,8 +1,8 @@
-# 📝 Immediate Tasks (v6.1.0)
+# 📝 Immediate Tasks (v6.2.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Intelligent Transition Selector**: Energy-aware style detection.
-- [x] **Auto-Gain Compensation**: Make-up gain for mastering.
+- [x] **AI-Enhanced Genre Classification (v3)**: Timbre-aware detection.
+- [x] **Genre-Aware Mastering Profiles**: Automated dynamics tailoring.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).

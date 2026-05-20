@@ -1,18 +1,21 @@
-# 📚 Library Reference & Usage (v5.5.0)
+# 📦 Library & Dependency Inventory (v6.2.0)
 
-This document lists the exact versions of libraries utilized in the project as of 2026-05-19.
+This document tracks all external libraries used in the Auto DJ Script, their versions, and their specific roles in the ecosystem.
 
-| Library | Exact Version | Role | Usage Explanation |
-| :--- | :--- | :--- | :--- |
-| **librosa** | 0.11.0 | Analysis/MIR | Used for CQT Key detection, Beat tracking, and Phase Vocoder warping. |
-| **numpy** | 2.4.6 | Math/Signal | The primary representation of audio data as floating-point matrices. |
-| **pydub** | 0.25.1 | Mechanics | Used for high-level audio slicing, fades, and export formatting. |
-| **soundfile** | 0.13.1 | High-Fidelity I/O | Handles 24-bit lossless file reading/writing with precision. |
-| **scipy** | 1.17.1 | Low-level DSP | Powering the 10th-order Butterworth filters (HPF/LPF). |
-| **fastapi** | 0.136.1 | Web/GUI | Powering the asynchronous Command Console. |
-| **tqdm** | 4.67.3 | UX | Providing high-resolution progress bars for CLI users. |
-| **websockets** | 16.0 | Telemetry | Real-time broadcast of engine logs to the dashboard. |
-| **pyloudnorm** | 0.2.0 | Loudness | ITU-R BS.1770-4 compliant loudness metering and normalization. |
+| Name | Version | Location | Purpose | Relationship to Project |
+| :--- | :--- | :--- | :--- | :--- |
+| **librosa** | 0.11.0 | MIR / Analysis | Audio feature extraction (BPM, Key, MFCC, CQT). | The "Brain" of the engine; used in `autodj/analysis.py`. |
+| **numpy** | 2.4.6 | Core DSP | High-performance array manipulation. | Essential for all DSP operations and float-domain processing. |
+| **pydub** | 0.25.1 | Mechanics | High-level audio slicing and crossfading. | Orchestrates the physical assembly of the master mix in `autodj/core.py`. |
+| **soundfile** | 0.13.1 | I/O | High-fidelity audio reading/writing (24-bit/32-bit). | Handles lossless file exports in `autodj/core.py`. |
+| **scipy** | 1.17.1 | DSP | Low-level signal processing (Butterworth filters). | Implements the surgical 10th-order filters in `autodj/dsp.py`. |
+| **fastapi** | 0.136.1 | Web / UI | Async web framework for the dashboard. | Power the Command Console in `autodj/gui.py`. |
+| **uvicorn** | 0.47.0 | Server | ASGI server for FastAPI. | Entry point for the web interface. |
+| **websockets** | 16.0 | Telemetry | Real-time bidirectional communication. | Streams mixing progress and tracklist updates to the frontend. |
+| **pyloudnorm** | 0.2.0 | Mastering | BS.1770-4 loudness normalization. | Ensures perception-based volume consistency across the mix. |
+| **tqdm** | 4.67.3 | UX | CLI Progress bars. | Provides visual feedback during the analysis/warp phases. |
+| **jinja2** | 3.1.6 | UI | HTML templating. | Renders the dashboard UI from `templates/index.html`. |
+| **python-multipart** | 0.0.29 | Web | Form parsing. | Handles user input from the dashboard. |
 
 ---
-*Magnificent! Extraordinary!*
+*Last Audit: v6.2.0 Cycle Start.*

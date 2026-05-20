@@ -101,34 +101,46 @@ def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar
 
 def get_genre_archetype(y, sr, bpm=None):
     """
-    Identifies the genre archetype using a multi-feature heuristic (v2).
+    Identifies the genre archetype using a multi-feature heuristic (v3 - Enhanced).
 
     Heuristic Logic:
     - High-Energy: BPM > 138 AND (Centroid > 2500 OR Rolloff > 5000).
-    - Techno: 120 < BPM <= 138 AND Centroid > 1500.
-    - House: 110 < BPM <= 128 AND Flatness > 0.01.
-    - Ambient: BPM <= 110 OR Centroid <= 1000.
+    - Techno: 120 < BPM <= 140 AND Contrast > 20.
+    - House: 105 < BPM <= 128 AND Flatness > 0.01.
+    - Ambient: BPM <= 105 OR Centroid <= 1000.
+
+    New Features in v3:
+    - MFCC: Mean of first 13 coefficients for timbre density.
+    - Spectral Contrast: Measures the energy difference between peaks and valleys.
     """
     centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
     rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
     flatness = np.mean(librosa.feature.spectral_flatness(y=y))
+    mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13), axis=1)
+    contrast = np.mean(librosa.feature.spectral_contrast(y=y, sr=sr))
 
     if bpm is None:
-        # Fallback to legacy centroid-only logic if BPM not provided
         if centroid > 3000 or rolloff > 6000: return 'High-Energy'
-        if centroid > 1500: return 'Techno'
+        if contrast > 20: return 'Techno'
         return 'Ambient'
 
-    if bpm > 138 and (centroid > 2500 or rolloff > 5000):
-        return 'High-Energy'
-    elif 120 < bpm <= 140 and centroid > 1500:
-        return 'Techno'
-    elif 105 < bpm <= 128 and flatness > 0.01:
-        return 'House'
-    elif bpm <= 105 or centroid <= 1000:
+    # v3 Logic Path
+    if bpm > 138:
+        if centroid > 2500 or rolloff > 5000 or mfcc[0] > -100:
+            return 'High-Energy'
+
+    if 120 < bpm <= 142:
+        if contrast > 18 or centroid > 1800:
+            return 'Techno'
+
+    if 105 < bpm <= 128:
+        if flatness > 0.01 or contrast > 15:
+            return 'House'
+
+    if bpm <= 105 or centroid <= 1100:
         return 'Ambient'
 
-    # Final density-based fallback
-    if centroid > 2500: return 'High-Energy'
-    if centroid > 1500: return 'Techno'
+    # Timbre-based fallback
+    if mfcc[0] > -150: return 'High-Energy'
+    if contrast > 18: return 'Techno'
     return 'Ambient'

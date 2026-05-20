@@ -33,3 +33,19 @@ def test_dynamic_transition_logic():
     # Low activity (all zeros) -> 32 bars
     res = calculate_dynamic_transition(y, y, sr, bpm, 4)
     assert res == 32
+
+def test_genre_archetype_v3():
+    from autodj.analysis import get_genre_archetype
+    sr = 22050
+    # Generate some white noise
+    y = np.random.uniform(-1, 1, sr * 5)
+
+    # High energy profile (high centroid from white noise)
+    # White noise has high centroid/rolloff
+    genre = get_genre_archetype(y, sr, bpm=145)
+    assert genre == 'High-Energy'
+
+    # Low BPM / low energy
+    y_low = np.sin(2 * np.pi * 440 * np.linspace(0, 5, sr * 5))
+    genre_low = get_genre_archetype(y_low, sr, bpm=90)
+    assert genre_low == 'Ambient'

@@ -138,42 +138,49 @@ def apply_limiter(audio_array, threshold=0.99):
         return out
     return audio_array
 
-def apply_multiband_compression(audio_array, sr, intensity=0.5):
+def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None):
     """
-    3-Band Multi-band Compression for professional mastering (v2).
+    3-Band Multi-band Compression with Genre-Aware Profiles (v3).
 
     Why 3 Bands?
     Isolating Low (<200Hz), Mid (200Hz-3kHz), and High (>3kHz) allows for
-    surgical control over the 'punch' of the kick, the 'clarity' of the vocals/leads,
-    and the 'shimmer' of the hats without cross-band pumping.
+    surgical control over different energy bands.
 
-    Intensity (0.0 to 1.0): Scales the thresholds for all three bands.
+    Genre-Awareness:
+    - Techno/High-Energy: Heavier low-end compression for "punch".
+    - House: Balanced mid-range focus.
+    - Ambient: Transparent limiting, minimal compression.
     """
     # 1. Frequency Splitting
     low_band = apply_dsp_filter(audio_array, sr, 'lowpass', 200.0)
-
     mid_high = apply_dsp_filter(audio_array, sr, 'highpass', 200.0)
     mid_band = apply_dsp_filter(mid_high, sr, 'lowpass', 3000.0)
-
     high_band = apply_dsp_filter(audio_array, sr, 'highpass', 3000.0)
 
-    # 2. Dynamic Threshold Mapping
-    # High intensity = Lower threshold = More compression
-    l_thresh = 1.0 - (0.4 * intensity)
-    m_thresh = 1.0 - (0.3 * intensity)
-    h_thresh = 1.0 - (0.2 * intensity)
+    # 2. Profile Selection
+    profiles = {
+        'High-Energy': {'l': 0.5, 'm': 0.3, 'h': 0.2},
+        'Techno':      {'l': 0.45, 'm': 0.25, 'h': 0.2},
+        'House':       {'l': 0.35, 'm': 0.35, 'h': 0.2},
+        'Ambient':     {'l': 0.1, 'm': 0.1, 'h': 0.1},
+        'Default':     {'l': 0.4, 'm': 0.3, 'h': 0.2}
+    }
+    p = profiles.get(genre_profile, profiles['Default'])
 
-    # 3. Compression
+    # 3. Dynamic Threshold Mapping (Intensity-scaled)
+    l_thresh = 1.0 - (p['l'] * intensity)
+    m_thresh = 1.0 - (p['m'] * intensity)
+    h_thresh = 1.0 - (p['h'] * intensity)
+
+    # 4. Compression
     low_c = apply_limiter(low_band, l_thresh)
     mid_c = apply_limiter(mid_band, m_thresh)
     high_c = apply_limiter(high_band, h_thresh)
 
-    # 4. Re-summation
+    # 5. Re-summation
     summed = low_c + mid_c + high_c
 
-    # 5. Auto-Gain Compensation (Make-up Gain)
-    # Ensure the compressed signal peak matches the original peak level
-    # to prevent volume drops at high intensity.
+    # 6. Auto-Gain Compensation (Make-up Gain)
     orig_peak = np.max(np.abs(audio_array))
     summed_peak = np.max(np.abs(summed))
     if summed_peak > 0:

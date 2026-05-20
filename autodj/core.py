@@ -260,9 +260,23 @@ def compile_master_set(args, status_obj=None):
         if status_obj:
             status_obj["status"] = "Mastering Dynamics"
             status_obj["progress"] = 98
+
         master_array = pydub_to_ndarray(master)
         intensity = getattr(args, 'mastering_intensity', 0.5)
-        master_compressed = apply_multiband_compression(master_array, master.frame_rate, intensity=intensity)
+
+        # Determine Dominant Genre for Mastering Profile
+        dom_genre = 'Default'
+        if meta_list:
+            from collections import Counter
+            counts = Counter([m['genre'] for m in meta_list])
+            dom_genre = counts.most_common(1)[0][0]
+
+        master_compressed = apply_multiband_compression(
+            master_array,
+            master.frame_rate,
+            intensity=intensity,
+            genre_profile=dom_genre if getattr(args, 'genre_aware_mastering', True) else None
+        )
         master = ndarray_to_pydub(master_compressed, master.frame_rate)
 
         master.export(args.output, format="flac")
