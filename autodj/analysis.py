@@ -46,9 +46,8 @@ def is_harmonically_compatible(key1, key2):
     if m1 == m2 and (abs(n1 - n2) in (1, 11)): return True
     return False
 
-def get_native_bpm(file_path):
+def get_native_bpm(y, sr):
     """Detects BPM with octave correction."""
-    y, sr = librosa.load(file_path, sr=None)
     onset_env = librosa.onset.onset_strength(y=y, sr=sr)
     native_bpm, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
     if isinstance(native_bpm, np.ndarray): native_bpm = native_bpm[0]

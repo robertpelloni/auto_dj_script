@@ -67,13 +67,13 @@ async def websocket_endpoint(websocket: WebSocket):
         manager.disconnect(websocket)
 
 @app.post("/start")
-async def start_mixing(background_tasks: BackgroundTasks, bpm: float = Form(...), reorder: bool = Form(False), archetype: str = Form("auto")):
+async def start_mixing(background_tasks: BackgroundTasks, bpm: float = Form(...), end_bpm: float = Form(None), reorder: bool = Form(False), archetype: str = Form("auto")):
     class Args:
         def __init__(self):
             self.input = config.INPUT_FOLDER
             self.output = config.OUTPUT_FILE
             self.bpm = bpm
-            self.end_bpm = None
+            self.end_bpm = end_bpm
             self.dbfs = config.TARGET_DBFS
             self.lowpass = config.LOWPASS_CUTOFF
             self.highpass = config.HIGHPASS_CUTOFF

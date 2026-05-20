@@ -1,5 +1,12 @@
 # Changelog
 
+## [5.7.0] - 2024-05-22
+### Added
+- **Interactive Tempo Ramping**: Added "End BPM" control to the Web Dashboard for set-wide tempo evolution.
+### Fixed
+- **BPM Analysis Signature**: Resolved a critical argument mismatch in `get_native_bpm` that prevented track analysis.
+- **Dependency Sync**: Synchronized `pyproject.toml` with `requirements.txt`.
+
 ## [5.6.0] - 2024-05-21
 ### Added
 - **Multi-band Compression**: Added advanced dynamics processing in the mastering chain. Applies `apply_multiband_compression` to the final master mix.

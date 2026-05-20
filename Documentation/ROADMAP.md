@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v5.6.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v5.7.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -10,8 +10,9 @@
 ## 🚀 Version 5.x: The Global Console (CURRENT)
 - [x] **Real-time Command Console**: WebSocket-powered visual dashboard.
 - [x] **Modular DSP**: High-order filters and transition archetypes.
-- [ ] **Parallel Warp Engine**: Distributing Phase Vocoder tasks across cores.
-- [ ] **Interactive Transition Override**: Manual selection of archetypes via GUI.
+- [x] **Parallel Warp Engine**: Distributing Phase Vocoder tasks across cores.
+- [x] **Interactive Transition Override**: Manual selection of archetypes via GUI.
+- [x] **Interactive Tempo Ramping**: Set-wide BPM evolution via GUI.
 - [x] **Dynamic Mastering Chain**: Multi-band compression and true-peak limiting.
 
 ## 🌠 Version 6.x: The Cloud Era (FUTURE)

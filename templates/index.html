@@ -46,9 +46,17 @@
             </div>
             <div class="controls-card">
                 <form id="launch-form">
-                    <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Set BPM Profile</label>
-                    <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
-                    <br><br>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                        <div>
+                            <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Start BPM</label>
+                            <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
+                        </div>
+                        <div>
+                            <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">End BPM</label>
+                            <input type="number" name="end_bpm" placeholder="Optional" step="0.1">
+                        </div>
+                    </div>
+                    <br>
                     <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
                     <select name="archetype">
                         <option value="auto">Auto (Genre-Aware)</option>

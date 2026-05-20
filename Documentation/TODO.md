@@ -1,9 +1,8 @@
-# 📝 Immediate Tasks (v5.5.0)
+# 📝 Immediate Tasks (v5.7.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Parallelize the Warp Engine**: Integrate \`ProcessPoolExecutor\` into the \`Mixer.render\` loop to speed up the time-stretching of tracks.
-- [x] **GUI Visual Polish**: Ensure WaveSurfer.js is correctly hooked into the WebSocket stream for live waveform updates.
-- [x] **Manual Archetype Override**: Add UI buttons for "Bass-Swap", "Echo-Out", and "HPF-Sweep" to the web dashboard.
+- [x] **Interactive Tempo Ramping**: Wire "End BPM" to the GUI.
+- [x] **Bug Fix: BPM Signature**: Resolve the `get_native_bpm` argument mismatch.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).
