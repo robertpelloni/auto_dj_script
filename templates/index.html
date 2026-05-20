@@ -26,90 +26,136 @@
     </style>
 </head>
 <body>
-    <div class="console">
-        <div style="display: flex; justify-content: space-between; align-items: flex-start;">
-            <div>
-                <h1>AUTO DJ <span class="accent">COMMAND</span></h1>
-                <div class="status-pill">SYSTEM STATE: <strong id="state-text">{{ status.status }}</strong></div>
-            </div>
-            <div style="text-align: right; color: #444; font-size: 0.8em;">CORE VERSION<br><strong style="color:#888;">{{ version }}</strong></div>
+<div class="console">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start;">
+        <div>
+            <h1>AUTO DJ <span class="accent">COMMAND</span></h1>
+            <div class="status-pill">SYSTEM STATE: <strong id="state-text">{{ status.status }}</strong></div>
         </div>
-
-        <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
-
-        <div class="grid">
-            <div class="log-area" id="terminal">
-                [SYSTEM] Kernel v{{ version }} active...<br>
-                [SYSTEM] Parallel Warp Engine standing by...<br>
-                [MIR] CQT Key Detection loaded.<br>
-                [DSP] True-Peak Look-ahead Limiter online.
-            </div>
-            <div class="controls-card">
-                <form id="launch-form">
-                    <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Set BPM Profile</label>
-                    <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
-                    <br><br>
-                    <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
-                    <select name="archetype">
-                        <option value="auto">Auto (Genre-Aware)</option>
-                        <option value="bass_swap">Bass-Swap (Psytrance/Techno)</option>
-                        <option value="hpf_sweep">HPF-Sweep (Build-up)</option>
-                        <option value="echo_out">Echo-Out (Wash)</option>
-                        <option value="classic">Classic Fade (Smooth)</option>
-                    </select>
-                    <br><br>
-                    <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
-                        <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
-                        Simulated Annealing Optimization
-                    </label>
-                    <br><br>
-                    <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
-                </form>
-                <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
-                    <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                        <span>⬇</span> DOWNLOAD MASTER EXPORT
-                    </a>
-                </div>
-            </div>
-        </div>
-
-        <div class="tracklist">
-            <h3 style="margin-top: 0; color: #a020f0;">LIVE TRACKLIST</h3>
-            <div class="track-item track-header">
-                <div>Time</div>
-                <div>Track Title</div>
-                <div>Key</div>
-                <div>Genre</div>
-            </div>
-            <div id="tracklist-container">
-                <!-- Tracks will be injected here -->
-            </div>
-        </div>
-
-        <div id="waveform"></div>
+        <div style="text-align: right; color: #444; font-size: 0.8em;">CORE VERSION<br><strong style="color:#888;">{{ version }}</strong></div>
     </div>
 
-    <script>
-        const ws = new WebSocket(`ws://${window.location.host}/ws`);
-        const term = document.getElementById('terminal');
-        const fill = document.getElementById('fill');
-        const state = document.getElementById('state-text');
-        const trackContainer = document.getElementById('tracklist-container');
+    <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
-        ws.onmessage = (event) => {
-            const line = document.createElement('div');
-            line.innerHTML = `> ${event.data}`;
-            term.appendChild(line);
-            term.scrollTop = term.scrollHeight;
+    <div class="grid">
+        <div class="log-area" id="terminal">
+            [SYSTEM] Kernel v{{ version }} active...<br>
+            [SYSTEM] Parallel Warp Engine standing by...<br>
+            [MIR] CQT Key Detection loaded.<br>
+            [DSP] True-Peak Look-ahead Limiter online.<br>
+            [SYSTEM] WebSocket connecting...
+        </div>
+        <div class="controls-card">
+            <form id="launch-form">
+                <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Set BPM Profile</label>
+                <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
+                <br><br>
+                <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
+                <select name="archetype">
+                    <option value="auto">Auto (Genre-Aware)</option>
+                    <option value="bass_swap">Bass-Swap (Psytrance/Techno)</option>
+                    <option value="hpf_sweep">HPF-Sweep (Build-up)</option>
+                    <option value="echo_out">Echo-Out (Wash)</option>
+                    <option value="classic">Classic Fade (Smooth)</option>
+                </select>
+                <br><br>
+                <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
+                    <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
+                    Simulated Annealing Optimization
+                </label>
+                <br><br>
+                <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
+            </form>
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
+                <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                    <span>⬇</span> DOWNLOAD MASTER EXPORT
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <div class="tracklist">
+        <h3 style="margin-top: 0; color: #a020f0;">LIVE TRACKLIST</h3>
+        <div class="track-item track-header">
+            <div>Time</div>
+            <div>Track Title</div>
+            <div>Key</div>
+            <div>Genre</div>
+        </div>
+        <div id="tracklist-container">
+            <!-- Tracks will be injected here -->
+        </div>
+    </div>
+
+    <div id="waveform"></div>
+</div>
+
+<script>
+    const term = document.getElementById('terminal');
+    const fill = document.getElementById('fill');
+    const state = document.getElementById('state-text');
+    const trackContainer = document.getElementById('tracklist-container');
+
+    function logTerminal(msg, color = '#55ff55') {
+        const line = document.createElement('div');
+        line.innerHTML = `<span style="color:${color}">> ${msg}</span>`;
+        term.appendChild(line);
+        term.scrollTop = term.scrollHeight;
+    }
+
+    // WebSocket with auto-reconnect
+    let ws;
+    let wsRetryCount = 0;
+    const wsMaxRetries = 30;
+
+    function connectWS() {
+        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
+        const url = `${protocol}//${window.location.host}/ws`;
+        try {
+            ws = new WebSocket(url);
+        } catch (e) {
+            logTerminal('[SYSTEM] WebSocket creation failed. Using polling only.', '#ff5555');
+            return;
+        }
+
+        ws.onopen = () => {
+            wsRetryCount = 0;
+            logTerminal('[SYSTEM] WebSocket connected.', '#00ffcc');
         };
 
-        async function pollStatus() {
-            try {
-                const r = await fetch('/status');
-                const d = await r.json();
-                state.innerText = d.status.toUpperCase();
-                fill.style.width = d.progress + '%';
+        ws.onmessage = (event) => {
+            logTerminal(event.data);
+        };
 
+        ws.onclose = (event) => {
+            if (wsRetryCount < wsMaxRetries) {
+                wsRetryCount++;
+                const delay = Math.min(500 * wsRetryCount, 5000);
+                logTerminal(`[SYSTEM] WebSocket closed. Reconnecting in ${delay}ms (attempt ${wsRetryCount})...`, '#ffcc00');
+                setTimeout(connectWS, delay);
+            } else {
+                logTerminal('[SYSTEM] WebSocket retries exhausted. Status polling active.', '#ff5555');
+            }
+        };
+
+        ws.onerror = (err) => {
+            console.error('WebSocket error:', err);
+            // onclose will fire after onerror, so reconnect logic is there
+        };
+    }
+
+    connectWS();
+
+    // Status polling — always active for reliable updates
+    let pollInterval = null;
+
+    async function pollStatus() {
+        try {
+            const r = await fetch('/status');
+            const d = await r.json();
+            state.innerText = d.status.toUpperCase();
+            fill.style.width = d.progress + '%';
+            if (d.tracklist && d.tracklist.length > 0) {
                 trackContainer.innerHTML = d.tracklist.map(t => `
                     <div class="track-item">
                         <div style="color: #00ffcc; font-weight: 700;">${t.timestamp}</div>
@@ -118,36 +164,43 @@
                         <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
                     </div>
                 `).join('');
-
-                if (d.status === "Complete") {
-                    document.getElementById('launch-btn').disabled = false;
-                    wavesurfer.load('/download');
-                } else if (d.status !== "Idle") {
-                    setTimeout(pollStatus, 1000);
-                }
-            } catch (err) {
-                console.error("Polling error:", err);
-                setTimeout(pollStatus, 2000);
             }
+            if (d.status === 'Complete') {
+                document.getElementById('launch-btn').disabled = false;
+                if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+                try { wavesurfer.load('/download'); } catch(e) {}
+            }
+        } catch (err) {
+            console.error('Polling error:', err);
         }
+    }
 
-        document.getElementById('launch-form').onsubmit = async (e) => {
-            e.preventDefault();
-            document.getElementById('launch-btn').disabled = true;
-            const fd = new FormData(e.target);
-            term.innerHTML += `<br><span style="color: #a020f0;">[SYSTEM] Mission initialized. Analyzing library...</span>`;
-            await fetch('/start', { method: 'POST', body: fd });
+    function startPolling() {
+        if (!pollInterval) {
             pollStatus();
-        };
+            pollInterval = setInterval(pollStatus, 1500);
+        }
+    }
 
-        const wavesurfer = WaveSurfer.create({
-            container: '#waveform',
-            waveColor: '#1a1a24',
-            progressColor: '#a020f0',
-            height: 120,
-            normalize: true,
-            cursorColor: '#00ffcc'
-        });
-    </script>
+    // Form submission
+    document.getElementById('launch-form').onsubmit = async (e) => {
+        e.preventDefault();
+        document.getElementById('launch-btn').disabled = true;
+        const fd = new FormData(e.target);
+        logTerminal('[SYSTEM] Mission initialized. Analyzing library...', '#a020f0');
+        await fetch('/start', { method: 'POST', body: fd });
+        startPolling();
+    };
+
+    // Waveform viewer
+    const wavesurfer = WaveSurfer.create({
+        container: '#waveform',
+        waveColor: '#1a1a24',
+        progressColor: '#a020f0',
+        height: 120,
+        normalize: true,
+        cursorColor: '#00ffcc'
+    });
+</script>
 </body>
 </html>
