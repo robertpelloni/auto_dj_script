@@ -79,18 +79,37 @@ def get_native_bpm(y, sr):
     if not bpms:
         return 140.0, y, sr
 
+    # 3. Detect global beats for linear refinement
+    y_mono_full = librosa.to_mono(y) if y.ndim == 2 else y
+    onset_full = librosa.onset.onset_strength(y=y_mono_full, sr=sr)
+    _, beat_frames = librosa.beat.beat_track(onset_envelope=onset_full, sr=sr, start_bpm=np.median(bpms))
+    beat_times_ms = (librosa.frames_to_time(beat_frames, sr=sr) * 1000).astype(int)
+
     # Enhanced Correction Logic
     corrected_bpms = []
     for b in bpms:
-        # Fix 1/2 or 2x errors
         while b < 110: b *= 2
         while b > 175: b /= 2
         corrected_bpms.append(b)
         
     final_bpm = float(np.median(corrected_bpms))
+
+    # 4. Linear-Fit BPM Refinement (v7.0.0)
+    # Fits a linear model to beat timestamps to find the 'True Constant BPM'
+    if len(beat_times_ms) > 15:
+        # We use a large window for regression to avoid local variations
+        x = np.arange(len(beat_times_ms))
+        # Use polyfit to find the best constant interval (slope)
+        slope, intercept = np.polyfit(x, beat_times_ms, 1)
+        fitted_bpm = 60000.0 / slope
+        
+        # If fit is stable, use it. fitted_bpm is far more accurate for warping.
+        if abs(fitted_bpm - final_bpm) < 1.5:
+            final_bpm = fitted_bpm
+            print(f"  [ANALYSIS] Refined BPM via Linear Fit: {final_bpm:.4f}")
+
     print(f"  [ANALYSIS] Detected BPMs: {bpms} -> Final: {final_bpm:.2f}")
     return final_bpm, y, sr
-
 
 def get_energy_profile(y, sr):
     """Calculates RMS energy."""
