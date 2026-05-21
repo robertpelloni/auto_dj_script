@@ -172,6 +172,37 @@ def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
         return last_30_s[:, -samples_per_bar:]
     return last_30_s[-samples_per_bar:]
 
+def find_sync_offset(outro_y, intro_y, sr, bpm):
+    """
+    Finds the sample-accurate offset between two tracks using cross-correlation 
+    of their onset envelopes. This is the 'secret sauce' for perfect sync.
+    """
+    # Ensure both are mono for envelope calculation
+    o_m = librosa.to_mono(outro_y) if outro_y.ndim == 2 else outro_y
+    i_m = librosa.to_mono(intro_y) if intro_y.ndim == 2 else intro_y
+    
+    # Calculate onset envelopes
+    o_env = librosa.onset.onset_strength(y=o_m, sr=sr)
+    i_env = librosa.onset.onset_strength(y=i_m, sr=sr)
+    
+    # Cross-correlate the envelopes to find the best rhythmic overlap
+    # We only search within a small window (+/- 1 beat) to avoid false positives
+    ms_per_beat = 60000.0 / bpm
+    hop_length = 512
+    search_frames = int((ms_per_beat / 1000.0) * sr / hop_length)
+    
+    correlation = np.correlate(o_env, i_env, mode='full')
+    center = len(i_env) - 1
+    
+    # Restrict search to nearby peaks
+    window = correlation[center - search_frames : center + search_frames]
+    if len(window) == 0: return 0
+    
+    best_lag_frames = np.argmax(window) - (len(window) // 2)
+    nudge_ms = (best_lag_frames * hop_length / sr) * 1000
+    
+    return int(nudge_ms)
+
 def get_genre_archetype(y, sr, bpm=None):
     """
     Identifies the genre archetype using a multi-feature heuristic (v3 - Enhanced).
