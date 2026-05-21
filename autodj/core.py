@@ -317,14 +317,21 @@ def compile_master_set(args, status_obj=None):
              f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, 'lowpass', args.lowpass), sr)
              f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, 'highpass', args.highpass), sr)
 
-        # Master Mixing with Logarithmic (Equal Power) Fades
+        # 3. Master Overlay (Mix-Bus Logic)
+        # Pydub's .overlay() returns the length of the caller.
+        # We must ensure we use the full ms_trans duration.
         f_m_log = apply_log_fade(pydub_to_ndarray(f_m), fade_type='out')
         f_n_log = apply_log_fade(pydub_to_ndarray(f_n), fade_type='in')
         
         f_m_final = ndarray_to_pydub(f_m_log, sr)
         f_n_final = ndarray_to_pydub(f_n_log, sr)
+
+        # Create a 'Mix Bus' segment of the exact transition length
+        # This prevents Pydub from truncating the mix if f_m is short
+        mix_bus = AudioSegment.silent(duration=ms_trans, frame_rate=sr)
+        mix_bus = mix_bus.overlay(f_m_final).overlay(f_n_final)
         
-        master = m_body + f_m_final.overlay(f_n_final) + n_body
+        master = m_body + mix_bus + n_body
         current_time_ms = len(master)
 
     if master:
