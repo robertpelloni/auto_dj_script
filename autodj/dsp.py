@@ -326,25 +326,30 @@ class SpectralBalancedMix(TransitionArchetype):
 
         return f_m, f_n
 
-def apply_log_fade(audio_array, fade_type='in'):
+def apply_log_fade(audio_array, fade_type='in', dip_db=-2.5):
     """
-    Applies a Logarithmic (Equal Power) fade to the audio array.
-    This maintains constant energy during crossfading, preventing volume dips.
+    Applies a Logarithmic (Equal Power) fade with a Volume Dip.
+    The 'dip' prevents the 'too mixed' feeling by lowering the gain 
+    at the midpoint of the crossfade.
     """
     if audio_array.ndim == 2:
         num_samples = audio_array.shape[1]
     else:
         num_samples = len(audio_array)
         
-    # Generate Equal Power curve: sqrt(x) for in, sqrt(1-x) for out
     x = np.linspace(0, 1, num_samples)
     
+    # Base Equal Power Curve
     if fade_type == 'in':
         curve = np.sqrt(x)
     else:
         curve = np.sqrt(1.0 - x)
         
-    return audio_array * curve
+    # Apply VCA-style dip (Bell curve)
+    # 10^(db/20) to convert dB to linear gain
+    dip_factor = 1.0 - (1.0 - 10**(dip_db/20.0)) * np.sin(np.pi * x)
+    
+    return audio_array * curve * dip_factor
 
 @ArchetypeRegistry.register
 class DualFilterSweep(TransitionArchetype):

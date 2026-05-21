@@ -175,7 +175,7 @@ def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
 def find_sync_offset(outro_y, intro_y, sr, bpm):
     """
     Finds the sample-accurate offset between two tracks using cross-correlation 
-    of their onset envelopes. This is the 'secret sauce' for perfect sync.
+    of their onset envelopes.
     """
     # Ensure both are mono for envelope calculation
     o_m = librosa.to_mono(outro_y) if outro_y.ndim == 2 else outro_y
@@ -185,21 +185,24 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     o_env = librosa.onset.onset_strength(y=o_m, sr=sr)
     i_env = librosa.onset.onset_strength(y=i_m, sr=sr)
     
-    # Cross-correlate the envelopes to find the best rhythmic overlap
-    # We only search within a small window (+/- 1 beat) to avoid false positives
+    # Increase search window to +/- 2 beats (captures larger drift)
     ms_per_beat = 60000.0 / bpm
     hop_length = 512
-    search_frames = int((ms_per_beat / 1000.0) * sr / hop_length)
+    search_frames = int((ms_per_beat * 2 / 1000.0) * sr / hop_length)
     
     correlation = np.correlate(o_env, i_env, mode='full')
     center = len(i_env) - 1
     
-    # Restrict search to nearby peaks
-    window = correlation[center - search_frames : center + search_frames]
+    # Find local maximum within the search window
+    start_idx = max(0, center - search_frames)
+    end_idx = min(len(correlation), center + search_frames)
+    window = correlation[start_idx : end_idx]
+    
     if len(window) == 0: return 0
     
-    best_lag_frames = np.argmax(window) - (len(window) // 2)
-    nudge_ms = (best_lag_frames * hop_length / sr) * 1000
+    best_lag_rel = np.argmax(window)
+    actual_lag_frames = (start_idx + best_lag_rel) - center
+    nudge_ms = (actual_lag_frames * hop_length / sr) * 1000
     
     return int(nudge_ms)
 
