@@ -1,5 +1,10 @@
 # Changelog
 
+## [6.3.0] - 2024-05-26
+### Added
+- **Live Broadcast Client**: Integrated FFmpeg-based RTMP/Icecast streaming capability.
+- **Broadcast UI**: Added "Live Broadcast Mode" and Stream URL input to the Command Console.
+
 ## [6.2.0] - 2024-05-26
 ### Added
 - **AI-Enhanced Genre Classification (v3)**: Integrated MFCC and Spectral Contrast for superior stylistic detection.

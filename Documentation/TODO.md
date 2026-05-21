@@ -1,8 +1,7 @@
-# 📝 Immediate Tasks (v6.2.0)
+# 📝 Immediate Tasks (v6.3.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **AI-Enhanced Genre Classification (v3)**: Timbre-aware detection.
-- [x] **Genre-Aware Mastering Profiles**: Automated dynamics tailoring.
+- [x] **Live Broadcast Client**: Integrated RTMP/Icecast streaming.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).

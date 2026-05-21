@@ -1,4 +1,4 @@
-# 📦 Library & Dependency Inventory (v6.2.0)
+# 📦 Library & Dependency Inventory (v6.3.0)
 
 This document tracks all external libraries used in the Auto DJ Script, their versions, and their specific roles in the ecosystem.
 

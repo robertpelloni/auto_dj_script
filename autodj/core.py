@@ -8,7 +8,7 @@ parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 Version 5.8.x features: 3-band mastering and enhanced genre detection.
 """
 
-import os, glob, re, librosa, random, json
+import os, glob, re, librosa, random, json, subprocess
 import soundfile as sf
 import numpy as np
 from pydub import AudioSegment
@@ -185,10 +185,11 @@ def compile_master_set(args, status_obj=None):
 
         # Dynamic Transition Logic
         t_bars = args.transition_bars
-        if getattr(args, 'dynamic_transitions', False):
+        if getattr(args, 'dynamic_transitions', False) and i > 0:
             # Load previous track for analysis if available
             prev_y_w, _ = warped_results[i-1]
-            t_bars = calculate_dynamic_transition(prev_y_w, y_w, sr, t_s_bpm, args.beats_per_bar)
+            if prev_y_w is not None:
+                t_bars = calculate_dynamic_transition(prev_y_w, y_w, sr, t_s_bpm, args.beats_per_bar)
 
         beats, ms_trans = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, t_bars)
 
@@ -280,6 +281,27 @@ def compile_master_set(args, status_obj=None):
         master = ndarray_to_pydub(master_compressed, master.frame_rate)
 
         master.export(args.output, format="flac")
+
+        # Live Broadcast Integration (v6.3.0)
+        if getattr(args, 'broadcast_mode', False) and getattr(args, 'stream_url', None):
+            if status_obj:
+                status_obj["status"] = "Broadcasting to Live Node"
+
+            # Use FFmpeg to stream the exported file to the target URL (Icecast/RTMP)
+            # This is a fire-and-forget background stream for the rendered set
+            cmd = [
+                'ffmpeg', '-re', '-i', args.output,
+                '-c:a', 'libmp3lame', '-b:a', '320k',
+                '-f', 'mp3', args.stream_url
+            ]
+            try:
+                subprocess.Popen(cmd, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+                if status_obj:
+                    status_obj["status"] = f"Broadcasting: {args.stream_url}"
+            except Exception as e:
+                if status_obj:
+                    status_obj["status"] = f"Broadcast Failed: {str(e)}"
+
         if status_obj:
             status_obj["status"] = "Complete"
             status_obj["progress"] = 100

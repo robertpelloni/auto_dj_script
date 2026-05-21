@@ -83,7 +83,15 @@
                         <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
                         Simulated Annealing Optimization
                     </label>
-                    <br><br>
+                    <br>
+                    <div style="background: #000; padding: 15px; border-radius: 8px; border: 1px solid #252535; margin-top: 10px;">
+                        <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc; margin-bottom: 10px;">
+                            <input type="checkbox" name="broadcast_mode" style="width: 20px; height: 20px; accent-color: #ff5555;">
+                            Live Broadcast Mode
+                        </label>
+                        <input type="text" name="stream_url" placeholder="RTMP/Icecast URL (e.g. rtmp://...)" style="background: #111; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; width: 100%; box-sizing: border-box; font-size: 0.8em;">
+                    </div>
+                    <br>
                     <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
                 </form>
                 <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
