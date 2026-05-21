@@ -258,38 +258,43 @@ def compile_master_set(args, status_obj=None):
         beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
         ph = detect_phrases(y_w, sr)
 
-        # 1. Precise Phase Alignment (v6.8.2)
+        # 1. Precise Phase Alignment (v6.9.0)
         ms_per_beat = 60000.0 / t_s_bpm
         ms_per_bar = ms_per_beat * args.beats_per_bar
+        grid_size = ms_per_bar * 4 # Align to 4-bar phrases
         
         fixed_p = beats[min(args.transition_bars * args.beats_per_bar, len(beats)-1)] if len(beats) > 0 else theoretical_ms_trans
         
-        # Snapping: Find the nearest phrase anchor to the theoretical transition point
+        # Snapping
         ideal_p = fixed_p
         if ph.any():
             cl = ph[np.argmin(np.abs(ph - fixed_p))]
             if abs(cl - fixed_p) < config.PHRASE_ANCHOR_TOLERANCE_MS:
                 ideal_p = cl
 
-        # Transition duration must cover the snapped phrase AND the ambient intro
-        ms_trans = max(ideal_p, first_beat_ms + (ms_per_bar * 4)) # Ensure at least 4 bars of kick-mix
+        # Initial overlap calculation
+        ms_trans = max(ideal_p, first_beat_ms + int(ms_per_bar * 4))
         
-        # Phase Correction: Align first_beat_ms to the Master's 4-bar grid
-        grid_size = ms_per_bar * 4
-        current_kick_time = (current_time_ms - ms_trans + first_beat_ms)
-        phase_error = current_kick_time % grid_size
+        # Absolute Grid Sync: (StartTime + FirstBeat) % Grid == 0
+        # StartTime = current_time_ms - ms_trans
+        current_kick_pos = (current_time_ms - ms_trans + first_beat_ms)
+        phase_error = current_kick_pos % grid_size
         
-        # To align, we increase ms_trans by phase_error. 
-        # This moves the entry point EARLIER in time, keeping it solid.
-        ms_trans += int(phase_error)
+        # Adjust ms_trans to push the kick forward to the next grid point
+        correction = (grid_size - phase_error) % grid_size
+        # But we prefer to pull it back if it's closer
+        if phase_error < (grid_size / 2):
+            ms_trans += int(phase_error) # Push start back (delay kick)
+        else:
+            ms_trans -= int(grid_size - phase_error) # Pull start forward (advance kick)
 
-        # 2. Sample-Accurate Nudging (v6.8.5)
-        # Final fine-tuning using spectral cross-correlation
+        # 2. Sample-Accurate Nudging (v6.9.1)
+        # Using the improved +/- 2 beat search range
         m_slice = pydub_to_ndarray(master[-ms_trans:])
         n_slice = pydub_to_ndarray(nxt[:ms_trans])
         sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
         ms_trans += sync_nudge
-        
+
         # Intelligent Tail Extension
         if ms_trans > (len(master) - tracklist[-1]['start_ms']):
             loop_bar = identify_loopable_phrase(prev_y_w, sr, t_s_bpm, args.beats_per_bar)
@@ -298,7 +303,7 @@ def compile_master_set(args, status_obj=None):
             ext_segment = np.tile(loop_bar, num_loops)
             master += ndarray_to_pydub(ext_segment, sr)
 
-        print(f"  [SYNC] Phase-locked: {phase_error:.1f}ms (grid) + {sync_nudge}ms (nudge). Overlap: {ms_trans/1000:.1f}s")
+        print(f"  [SYNC] Global Grid: {phase_error:.1f}ms err. Nudge: {sync_nudge}ms. Overlap: {ms_trans/1000:.1f}s")
 
         ms_trans = min(ms_trans, len(master))
         track_start_ms = len(master) - ms_trans
