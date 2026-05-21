@@ -258,10 +258,10 @@ def compile_master_set(args, status_obj=None):
         beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
         ph = detect_phrases(y_w, sr)
 
-        # 1. Precise Phase Alignment (v6.9.0)
+        # 1. Precise Phase Alignment (v7.0.0)
         ms_per_beat = 60000.0 / t_s_bpm
         ms_per_bar = ms_per_beat * args.beats_per_bar
-        grid_size = ms_per_bar * 4 # Align to 4-bar phrases
+        grid_size = ms_per_bar * 4 
         
         fixed_p = beats[min(args.transition_bars * args.beats_per_bar, len(beats)-1)] if len(beats) > 0 else theoretical_ms_trans
         
@@ -275,24 +275,21 @@ def compile_master_set(args, status_obj=None):
         # Initial overlap calculation
         ms_trans = max(ideal_p, first_beat_ms + int(ms_per_bar * 4))
         
-        # Absolute Grid Sync: (StartTime + FirstBeat) % Grid == 0
-        # StartTime = current_time_ms - ms_trans
+        # Absolute Grid Sync
         current_kick_pos = (current_time_ms - ms_trans + first_beat_ms)
         phase_error = current_kick_pos % grid_size
         
-        # Adjust ms_trans to push the kick forward to the next grid point
-        correction = (grid_size - phase_error) % grid_size
-        # But we prefer to pull it back if it's closer
-        if phase_error < (grid_size / 2):
-            ms_trans += int(phase_error) # Push start back (delay kick)
-        else:
-            ms_trans -= int(grid_size - phase_error) # Pull start forward (advance kick)
+        # Always increase overlap to align with the PREVIOUS grid point
+        # This keeps the mix solid and avoids gaps
+        if phase_error != 0:
+             ms_trans += int(phase_error)
 
-        # 2. Sample-Accurate Nudging (v6.9.1)
-        # Using the improved +/- 2 beat search range
+        # 2. Sample-Accurate Nudging (v7.0.1)
         m_slice = pydub_to_ndarray(master[-ms_trans:])
         n_slice = pydub_to_ndarray(nxt[:ms_trans])
         sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
+        
+        # If nudge is positive, it means intro is delayed, so we start it EARLIER (+ ms_trans)
         ms_trans += sync_nudge
 
         # Intelligent Tail Extension
