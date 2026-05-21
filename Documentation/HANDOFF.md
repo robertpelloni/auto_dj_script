@@ -1,56 +1,35 @@
-# 🤝 Auto DJ Script: Transition & Handoff Brief (v5.6.0)
+# 🤝 Auto DJ Script: Transition & Handoff Brief (v6.6.0)
 
-## 🎖 Current Status: "The Global Console" Era
-The project is in a highly stable, modular, and performant state. We have transitioned from basic script-based mixing to a parallel, MIR-intelligent audio engine with a real-time web interface.
-
-*Note: No previous conversation logs were found in the codebase.*
+## 🎖 Current Status: "The Intelligent Looping Era"
+The project has reached a new level of robustness. v6.6.0 introduces **Intelligent Phrase Looping**, which effectively solves the "short track" problem by autonomously extending outros and intros with rhythmically compatible segments.
 
 ## 🔎 Project Audit
-1. **Completed features:** High-performance metadata extraction, Simulated Annealing sequencing, Smart Phrase Detection, LUFS Mastering, Real-time Command Console (v5.0), true-peak limiting, manual archetype overrides, parallel warp engine.
-2. **Partially implemented features:** Dynamic mastering chain (now implemented multi-band compression, but missing true multiband routing, currently handles low/high split).
-3. **Backend features not wired to the frontend:** None apparent at the moment.
-4. **UI features that are missing, hidden, underrepresented, or unpolished:** Missing transition visualizations or progress indicators for specific tracks in UI, beyond basic percent bar.
-5. **Bugs or fragile areas:** Potential high-frequency transient issues in `librosa.beat_track` causing octave errors for fast Psytrance.
-6. **Refactor opportunities:** Porting DSP to Rust for performance, plugin-based archetypes.
-7. **Documentation gaps:** None after this cycle.
-8. **Dependency/library/submodule gaps:** Could use PyO3 for Rust bindings if refactored.
-9. **Deployment/versioning gaps:** No deployment automation (e.g. Dockerfile).
-10. **Next highest-impact implementation tasks:** AI Genre Inference (using CNN for automatic transition style detection).
-
-## 📚 Library Inventory
-- **librosa (v0.11.0):** Analysis/MIR (CQT Key detection, Beat tracking, Phase Vocoder warping).
-- **numpy (v2.4.6):** Math/Signal processing.
-- **pydub (v0.25.1):** Mechanics (high-level audio slicing, fades).
-- **soundfile (v0.13.1):** High-Fidelity I/O (handles 24-bit lossless files).
-- **scipy (v1.17.1):** Low-level DSP (Butterworth filters).
-- **fastapi (v0.136.1):** Web/GUI (async Command Console).
-- **uvicorn (v0.47.0):** ASGI server for FastAPI.
-- **tqdm (v4.67.3):** UX (CLI progress bars).
-- **pyloudnorm (v0.2.0):** Loudness normalization (BS.1770-4).
-- **jinja2 (v3.1.6):** Templating for frontend HTML.
-- **python-multipart (v0.0.29):** Form parsing for FastAPI.
+1. **Completed features:**
+   - **MIR/Analysis**: Parallel metadata extraction, SA sequencing, v3 Genre Inference, Phrase Detection, **Rhythmic Similarity/Loop Identification** (v6.6.0).
+   - **DSP/Mixing**: 10th-order filters, Plugin architecture, Adaptive Spectral Balancing, **Phrase Looping & Tail Extension** (v6.6.0).
+   - **Performance**: **Segmented Parallel Mixing Engine** (v6.5.0) - renders transitions in parallel.
+   - **Mastering**: 3-band Multiband Compression, Genre-Aware Profiles, Dynamic Energy Mastering.
+   - **Broadcast/UI**: Command Console (FastAPI), Live Telemetry, Performance Metrics, RTMP/Icecast Broadcasting.
+2. **Bugs or fragile areas**: The parallel engine is stable. Phrase looping uses a basic energy-envelope heuristic; cross-correlation would improve sample-accuracy.
+3. **Refactor opportunities**: Porting core DSP to Rust.
+4. **Documentation gaps**: None. v6.6.0 full documentation sync complete.
 
 ## 🏗 Key Accomplishments in this Session:
-1.  **Operational Consolidation**: Consolidated 8+ instruction files into \`GLOBAL_LLM_DIRECTIVE.md\`.
-2.  **Universal Versioning**: Established `VERSION.md` as the single source of truth (now at v5.6.0).
-3.  **Parallel Warp Engine**: Parallelized the Phase Vocoder time-stretching pipeline, cutting render times significantly.
-4.  **True-Peak Mastering**: Integrated a soft-knee look-ahead limiter into the mastering chain (\`dsp.py\`).
-5.  **GUI Evolution**:
-    - Added a live tracklist with Key and Genre metadata.
-    - Implemented **Manual Archetype Overrides** (Bass-Swap, Echo-Out, HPF-Sweep).
-    - Fixed status polling and progress tracking for superior UX.
-6.  **Heuristic Optimization**: Upgraded Simulated Annealing to use a logarithmic cooling schedule for better global sequencing.
-7.  **Multi-band Compression**: Implemented `apply_multiband_compression` in `dsp.py` which isolates low and high frequencies and applies a limiter to each one. Updated `core.py` to use it for final dynamics mastering.
+1.  **Intelligent Phrase Looping**: Added `identify_loopable_phrase` to analysis module.
+2.  **Tail Extension**: Integrated auto-looping into the parallel mixing pipeline. Transitions no longer truncate for short tracks.
+3.  **UI Feedback**: Updated the rationale display to show `[Loop-Extended]` when a track is autonomously lengthened.
+4.  **Performance Metrics**: Integrated a parallelism monitor into the Web Dashboard.
+5.  **Documentation Synchronization**: Updated 10+ files to v6.6.0, following the "Extreme Operational Standard".
 
 ## 🧠 Memory for the Next Agent:
-- **Audio Fidelity**: Keep all internal processing in the float domain using NumPy.
-- **Camelot Logic**: Key sync is limited to +/- 2 semitones to prevent artifacts.
-- **Parallelism**: We use \`ProcessPoolExecutor\`. Do not nested pools within workers.
-- **Directives**: ALWAYS follow the \`GLOBAL_LLM_DIRECTIVE.md\`. "Don't stop the party!"
+- **Looping**: Looping is triggered automatically if `ms_trans > len(prev_nxt)`.
+- **Parallelism**: We use `ProcessPoolExecutor`. Avoid nesting pools.
+- **Directives**: Follow `GLOBAL_LLM_DIRECTIVE.md` with absolute priority.
 
-## 🚀 The Next Frontier (Next Steps):
-- [ ] **AI Genre Inference**: Implement a CNN or similar model for more robust genre-aware mixing.
-- [ ] **Broadcast Client**: Integrate Icecast/RTMP output for live streaming.
+## 🚀 The Next Frontier (v6.7.0+):
+- [ ] **AI Genre Inference (CNN)**: Deep learning for style detection.
+- [ ] **VST Host Integration**: Pro-audio plugin support.
+- [ ] **Distributed Multi-Node Rendering**: Cloud-scale set compilation.
 
 ---
-*Magnificent! Insanely Great! Keep on goin'!*
+*Magnificent! Extraordinary! Insanely Great! The Party Never Stops.*

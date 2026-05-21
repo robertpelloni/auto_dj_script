@@ -1,7 +1,8 @@
-# 🤖 General Agent Instructions
-Reference: [GLOBAL_LLM_DIRECTIVE.md](../Documentation/GLOBAL_LLM_DIRECTIVE.md)
+# 🤖 Universal AI Agent Instructions (v6.2.0)
 
-## Agent Directives
-- Adhere to the Universal Directive with absolute precision.
-- Maintain and update VISION.md, MEMORY.md, and ROADMAP.md in extreme detail.
-- Ensure all version numbers are synchronized across the project.
+Please refer to the [GLOBAL_LLM_DIRECTIVE.md](../Documentation/GLOBAL_LLM_DIRECTIVE.md) for all project-wide operational standards, design patterns, and Behavioral Directives.
+
+## Key Points
+- Version 6.2.0 is current.
+- AI Genre-Aware Mastering is now available.
+- Always use float-domain processing.

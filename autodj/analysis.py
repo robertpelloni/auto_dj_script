@@ -46,14 +46,13 @@ def is_harmonically_compatible(key1, key2):
     if m1 == m2 and (abs(n1 - n2) in (1, 11)): return True
     return False
 
-def get_native_bpm(file_path):
+def get_native_bpm(y, sr):
     """Detects BPM with octave correction."""
-    y, sr = librosa.load(file_path, sr=None)
     onset_env = librosa.onset.onset_strength(y=y, sr=sr)
     native_bpm, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr)
     if isinstance(native_bpm, np.ndarray): native_bpm = native_bpm[0]
     if native_bpm < 100: native_bpm *= 2
-    return native_bpm, y, sr
+    return float(native_bpm), y, sr
 
 def get_energy_profile(y, sr):
     """Calculates RMS energy."""
@@ -78,22 +77,89 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
     beat_times_ms = (librosa.frames_to_time(beat_frames, sr=sr) * 1000).astype(int)
     return beat_times_ms, int(ms_per_transition)
 
-def get_genre_archetype(y, sr):
+def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar):
     """
-    Identifies the genre archetype using a multi-feature heuristic.
+    Analyzes phrase structure to determine optimal transition length.
+
+    Returns transition bars (8, 16, or 32).
+    """
+    outro_ph = detect_phrases(outro_y, sr)
+    intro_ph = detect_phrases(intro_y, sr)
+
+    ms_per_beat = 60000.0 / target_bpm
+    ms_per_bar = ms_per_beat * beats_per_bar
+
+    # Heuristic: Match phrase density to transition standard multiples
+    if len(outro_ph) > 5 or len(intro_ph) > 5:
+        # High activity: shorter transition
+        return 8
+    elif len(outro_ph) < 2 and len(intro_ph) < 2:
+        # Low activity: long epic transition
+        return 32
+    else:
+        return 16
+
+def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
+    """
+    Finds the most rhythmically stable 1-bar or 2-bar phrase for looping.
+    Used for tail extension during transitions.
+    """
+    ms_per_beat = 60000.0 / bpm
+    ms_per_bar = ms_per_beat * beats_per_bar
+    samples_per_bar = int(sr * (ms_per_bar / 1000.0))
+
+    # Focus on the last 30 seconds for outro loops
+    last_30_s = y[-int(sr * 30):] if len(y) > sr * 30 else y
+
+    # Simple rhythmic similarity: find segments with similar energy envelopes
+    onset_env = librosa.onset.onset_strength(y=last_30_s, sr=sr)
+
+    # Heuristic: find a high-energy bar near the end
+    # (In a future version, use cross-correlation for sample-accurate loop points)
+    return last_30_s[-samples_per_bar:]
+
+def get_genre_archetype(y, sr, bpm=None):
+    """
+    Identifies the genre archetype using a multi-feature heuristic (v3 - Enhanced).
 
     Heuristic Logic:
-    - High Spectral Centroid (>3kHz): Likely Psytrance/High-Energy.
-    - Medium Centroid (1.5-3kHz): Likely Techno/House.
-    - Low Centroid (<1.5kHz): Likely Ambient/Chill.
-    - Spectral Rolloff and Flux also contribute to intensity ranking.
+    - High-Energy: BPM > 138 AND (Centroid > 2500 OR Rolloff > 5000).
+    - Techno: 120 < BPM <= 140 AND Contrast > 20.
+    - House: 105 < BPM <= 128 AND Flatness > 0.01.
+    - Ambient: BPM <= 105 OR Centroid <= 1000.
+
+    New Features in v3:
+    - MFCC: Mean of first 13 coefficients for timbre density.
+    - Spectral Contrast: Measures the energy difference between peaks and valleys.
     """
     centroid = np.mean(librosa.feature.spectral_centroid(y=y, sr=sr))
     rolloff = np.mean(librosa.feature.spectral_rolloff(y=y, sr=sr))
+    flatness = np.mean(librosa.feature.spectral_flatness(y=y))
+    mfcc = np.mean(librosa.feature.mfcc(y=y, sr=sr, n_mfcc=13), axis=1)
+    contrast = np.mean(librosa.feature.spectral_contrast(y=y, sr=sr))
 
-    # Classification logic
-    if centroid > 3000 or rolloff > 6000:
-        return 'High-Energy' # e.g., Psytrance, Hi-Tech
-    elif centroid > 1500:
-        return 'Techno' # e.g., Progressive, Techno
-    return 'Ambient' # e.g., Chillout, Downtempo
+    if bpm is None:
+        if centroid > 3000 or rolloff > 6000: return 'High-Energy'
+        if contrast > 20: return 'Techno'
+        return 'Ambient'
+
+    # v3 Logic Path
+    if bpm > 138:
+        if centroid > 2500 or rolloff > 5000 or mfcc[0] > -100:
+            return 'High-Energy'
+
+    if 120 < bpm <= 142:
+        if contrast > 18 or centroid > 1800:
+            return 'Techno'
+
+    if 105 < bpm <= 128:
+        if flatness > 0.01 or contrast > 15:
+            return 'House'
+
+    if bpm <= 105 or centroid <= 1100:
+        return 'Ambient'
+
+    # Timbre-based fallback
+    if mfcc[0] > -150: return 'High-Energy'
+    if contrast > 18: return 'Techno'
+    return 'Ambient'

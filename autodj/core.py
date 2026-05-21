@@ -3,10 +3,10 @@
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 5.5.x features: Manual Archetype Overrides.
+Version 5.8.x features: 3-band mastering and enhanced genre detection.
 """
 
-import os, glob, re, librosa, random, json
+import os, glob, re, librosa, random, json, subprocess
 import soundfile as sf
 import numpy as np
 from pydub import AudioSegment
@@ -155,7 +155,7 @@ def find_optimal_order(files, status_obj=None):
 
 
 def compile_master_set(args, status_obj=None):
-    """The High-Performance Mixing Pipeline (v5.5.0)."""
+    """The High-Performance Mixing Pipeline (v5.8.0)."""
     folder = args.input
     all_files = []
     for ext in config.SUPPORTED_EXTENSIONS:
@@ -214,6 +214,7 @@ def compile_master_set(args, status_obj=None):
         sf.write(path, y_w.T, sr, format='WAV', subtype='PCM_16')
         nxt = trim_silence(AudioSegment.from_wav(path))
         os.remove(path)
+        processed_tracks.append((nxt, y_w, sr))
 
         if master is None:
             master = nxt
@@ -223,6 +224,7 @@ def compile_master_set(args, status_obj=None):
             current_time_ms = len(master)
             continue
 
+        prev_nxt, prev_y_w, _ = processed_tracks[i-1]
         t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
         beats, ms_trans = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
         ph = detect_phrases(y_w, sr)
@@ -234,7 +236,16 @@ def compile_master_set(args, status_obj=None):
             if abs(cl - fixed_p) < config.PHRASE_ANCHOR_TOLERANCE_MS:
                 ideal_p = cl
 
-        ms_trans = min(ms_trans, len(master))
+        # Intelligent Tail Extension (v6.6.0)
+        ext_rationale = ""
+        if ms_trans > len(prev_nxt):
+            loop_bar = identify_loopable_phrase(prev_y_w, sr, t_s_bpm, args.beats_per_bar)
+            num_loops = int(np.ceil((ms_trans - len(prev_nxt)) / (len(loop_bar) / sr * 1000))) + 1
+            ext_segment = np.tile(loop_bar, num_loops)
+            prev_nxt += ndarray_to_pydub(ext_segment, sr)
+            ext_rationale = " [Loop-Extended]"
+
+        ms_trans = min(ms_trans, len(prev_nxt))
         track_start_ms = current_time_ms - ms_trans
 
         tracklist.append({'timestamp': ms_to_timestamp(track_start_ms), 'file': os.path.basename(all_files[i]),
@@ -291,6 +302,28 @@ def compile_master_set(args, status_obj=None):
             for item in tracklist:
                 f.write(f"[{item['timestamp']}] {item['file']} ({item['key']}) [{item['genre']}]\n")
 
+
+def transition_render_worker(args):
+    """Parallel worker for rendering a single transition overlap."""
+    outro_raw, intro_raw, sr, mode, ms_trans, ideal_p, dsp_kwargs = args
+    try:
+        arch_plugin = ArchetypeRegistry.get(mode)
+        if arch_plugin:
+            f_m_raw, f_n_raw = arch_plugin.apply(
+                outro_raw,
+                intro_raw,
+                sr,
+                **dsp_kwargs
+            )
+            f_m, f_n = ndarray_to_pydub(f_m_raw, sr), ndarray_to_pydub(f_n_raw, sr)
+        else:
+            f_m, f_n = ndarray_to_pydub(outro_raw, sr), ndarray_to_pydub(intro_raw, sr)
+
+        # Apply fades and overlay
+        rendered = f_m.fade_out(ms_trans).overlay(f_n.fade_in(ms_trans))
+        return pydub_to_ndarray(rendered), sr
+    except Exception as e:
+        return None, str(e)
 
 def ms_to_timestamp(ms):
     s = int((ms / 1000) % 60)

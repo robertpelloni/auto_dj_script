@@ -11,6 +11,7 @@ import asyncio
 import config
 from .core import compile_master_set
 from .version import __version__
+from .dsp import ArchetypeRegistry
 
 app = FastAPI(title=f"Auto DJ v{__version__} Console")
 templates = Jinja2Templates(directory="templates")
@@ -54,7 +55,8 @@ async def index(request: Request):
         context={
             "version": __version__,
             "config": config,
-            "status": mixing_status
+            "status": mixing_status,
+            "archetypes": ArchetypeRegistry.get_all()
         }
     )
 
@@ -78,13 +80,26 @@ async def websocket_endpoint(websocket: WebSocket):
             manager.active_connections.remove(websocket)
 
 @app.post("/start")
-async def start_mixing(background_tasks: BackgroundTasks, bpm: float = Form(...), reorder: bool = Form(False), archetype: str = Form("auto")):
+async def start_mixing(
+    background_tasks: BackgroundTasks,
+    bpm: float = Form(...),
+    end_bpm: float = Form(None),
+    reorder: bool = Form(False),
+    archetype: str = Form("auto"),
+    mastering_intensity: float = Form(0.5),
+    dynamic_transitions: bool = Form(True),
+    genre_aware_mastering: bool = Form(True),
+    dynamic_energy_mastering: bool = Form(True),
+    adaptive_spectral_balancing: bool = Form(True),
+    broadcast_mode: bool = Form(False),
+    stream_url: str = Form(None)
+):
     class Args:
         def __init__(self):
             self.input = config.INPUT_FOLDER
             self.output = config.OUTPUT_FILE
             self.bpm = bpm
-            self.end_bpm = None
+            self.end_bpm = end_bpm
             self.dbfs = config.TARGET_DBFS
             self.lowpass = config.LOWPASS_CUTOFF
             self.highpass = config.HIGHPASS_CUTOFF
@@ -93,6 +108,13 @@ async def start_mixing(background_tasks: BackgroundTasks, bpm: float = Form(...)
             self.dry_run = False
             self.reorder = reorder
             self.archetype = archetype
+            self.mastering_intensity = mastering_intensity
+            self.dynamic_transitions = dynamic_transitions
+            self.genre_aware_mastering = genre_aware_mastering
+            self.dynamic_energy_mastering = dynamic_energy_mastering
+            self.adaptive_spectral_balancing = adaptive_spectral_balancing
+            self.broadcast_mode = broadcast_mode
+            self.stream_url = stream_url
 
     mixing_status["status"] = "Preparing Engine..."
     mixing_status["progress"] = 0

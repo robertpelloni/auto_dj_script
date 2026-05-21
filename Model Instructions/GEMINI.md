@@ -1,6 +1,6 @@
-# ♊ Gemini Instructions
+# ♊ Gemini Instructions (v6.2.0)
 Reference: [GLOBAL_LLM_DIRECTIVE.md](../Documentation/GLOBAL_LLM_DIRECTIVE.md)
 
 ## Gemini-Specific Directives
-- Utilize your massive context window to analyze the entire historical log and codebase.
-- Focus on robust error handling and defensive programming in the analysis layer.
+- Prioritize high-level architectural summaries.
+- Maintain a focus on the creative vision of the "Ultimate autonomous party engine".

@@ -22,3 +22,30 @@ def test_harmonic_compatibility():
 def test_wrap_around():
     # 12A (C# Minor) to 1A (G# Minor)
     assert is_harmonically_compatible('C# Minor', 'G# Minor') is True
+
+def test_dynamic_transition_logic():
+    from autodj.analysis import calculate_dynamic_transition
+    sr = 44100
+    bpm = 120
+    # Mock some audio arrays
+    y = np.zeros(sr * 5)
+
+    # Low activity (all zeros) -> 32 bars
+    res = calculate_dynamic_transition(y, y, sr, bpm, 4)
+    assert res == 32
+
+def test_genre_archetype_v3():
+    from autodj.analysis import get_genre_archetype
+    sr = 22050
+    # Generate some white noise
+    y = np.random.uniform(-1, 1, sr * 5)
+
+    # High energy profile (high centroid from white noise)
+    # White noise has high centroid/rolloff
+    genre = get_genre_archetype(y, sr, bpm=145)
+    assert genre == 'High-Energy'
+
+    # Low BPM / low energy
+    y_low = np.sin(2 * np.pi * 440 * np.linspace(0, 5, sr * 5))
+    genre_low = get_genre_archetype(y_low, sr, bpm=90)
+    assert genre_low == 'Ambient'

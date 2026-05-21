@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v5.6.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v6.2.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -10,15 +10,25 @@
 ## 🚀 Version 5.x: The Global Console (CURRENT)
 - [x] **Real-time Command Console**: WebSocket-powered visual dashboard.
 - [x] **Modular DSP**: High-order filters and transition archetypes.
-- [ ] **Parallel Warp Engine**: Distributing Phase Vocoder tasks across cores.
-- [ ] **Interactive Transition Override**: Manual selection of archetypes via GUI.
+- [x] **Parallel Warp Engine**: Distributing Phase Vocoder tasks across cores.
+- [x] **Interactive Transition Override**: Manual selection of archetypes via GUI.
+- [x] **Interactive Tempo Ramping**: Set-wide BPM evolution via GUI.
 - [x] **Dynamic Mastering Chain**: Multi-band compression and true-peak limiting.
+- [x] **Phrase-Aware Dynamic Transitions**: Automated transition length calculation.
 
-## 🌠 Version 6.x: The Cloud Era (FUTURE)
+## 🚀 Version 6.x: The Plugin & Cloud Era (CURRENT)
+- [x] **Plugin-based Archetypes**: Modular transition architecture.
+- [x] **Intelligent Transition Selector**: Energy-aware style detection.
+- [x] **AI-Enhanced Genre Classification (v3)**: Timbre and contrast awareness.
+- [x] **Genre-Aware Mastering Profiles**: Automatic dynamics tailoring.
+- [x] **Adaptive Spectral Balancing**: Real-time clash detection (v6.4.0).
+- [x] **Dynamic Energy Mastering**: Profile-based intensity scaling (v6.4.0).
+- [x] **Segmented Parallel Mixing**: Multi-core transition rendering (v6.5.0).
+- [x] **Intelligent Phrase Looping**: Automatic tail extension (v6.6.0).
 - [ ] **Distributed Rendering**: Multi-node set compilation.
-- [ ] **AI Genre Evolution**: Deep Learning for style inference.
+- [ ] **AI Genre Evolution**: Deep Learning (CNN) for style inference.
 - [ ] **VST Host Integration**: Support for pro-audio plugins.
-- [ ] **Live Broadcast Client**: Integrated Icecast/RTMP streaming.
+- [x] **Live Broadcast Client**: Integrated Icecast/RTMP streaming.
 
 ---
 *Outstanding! Magnificent!*

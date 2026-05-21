@@ -15,6 +15,32 @@ Key Innovations:
 import numpy as np
 from scipy.signal import butter, sosfilt
 import pyloudnorm as pyln
+from .utils import ndarray_to_pydub, pydub_to_ndarray
+
+class TransitionArchetype:
+    """Base class for all transition plugins."""
+    name = "Base"
+    display_name = "Base Archetype"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        raise NotImplementedError
+
+class ArchetypeRegistry:
+    _registry = {}
+
+    @classmethod
+    def register(cls, archetype_cls):
+        cls._registry[archetype_cls.name] = archetype_cls
+        return archetype_cls
+
+    @classmethod
+    def get_all(cls):
+        return cls._registry
+
+    @classmethod
+    def get(cls, name):
+        return cls._registry.get(name)
 
 def apply_dsp_filter(audio_array, sr, filter_type='highpass', cutoff=150.0):
     """
@@ -112,92 +138,182 @@ def apply_limiter(audio_array, threshold=0.99):
         return out
     return audio_array
 
-def apply_multiband_compression(audio_array, sr, crossover=200.0, low_threshold=0.8, high_threshold=0.9):
+def calculate_spectral_clash(outro_array, intro_array, sr):
     """
-    Multi-band Compression for dynamic mastering.
-
-    Why:
-    Compressing the entire frequency spectrum at once often causes 'pumping'
-    where a loud bass hit ducks the volume of the high hats. By splitting the
-    signal into frequency bands and compressing them independently, we can maximize
-    loudness and punch without destructive ducking artifacts.
+    Analyzes frequency band overlap between two audio segments.
+    Returns a dictionary of energy ratios for Low, Mid, and High bands.
     """
-    # 1. Split the signal
-    low_band = apply_dsp_filter(audio_array, sr, 'lowpass', crossover)
-    high_band = apply_dsp_filter(audio_array, sr, 'highpass', crossover)
+    # 1. Frequency Splitting
+    def get_bands(arr):
+        l = apply_dsp_filter(arr, sr, 'lowpass', 200.0)
+        m_h = apply_dsp_filter(arr, sr, 'highpass', 200.0)
+        m = apply_dsp_filter(m_h, sr, 'lowpass', 3000.0)
+        h = apply_dsp_filter(arr, sr, 'highpass', 3000.0)
+        return np.mean(np.abs(l)), np.mean(np.abs(m)), np.mean(np.abs(h))
 
-    # 2. Compress each band independently
-    low_compressed = apply_limiter(low_band, low_threshold)
-    high_compressed = apply_limiter(high_band, high_threshold)
+    o_l, o_m, o_h = get_bands(outro_array)
+    i_l, i_m, i_h = get_bands(intro_array)
 
-    # 3. Sum the bands
-    return low_compressed + high_compressed
+    return {
+        'low': (o_l + i_l) / (max(o_l, i_l, 1e-6)),
+        'mid': (o_m + i_m) / (max(o_m, i_m, 1e-6)),
+        'high': (o_h + i_h) / (max(o_h, i_h, 1e-6))
+    }
 
-def apply_bass_swap(outro_array, intro_array, sr, crossover=150.0):
+def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None):
     """
-    The 'Bass Swap' Archetype.
+    3-Band Multi-band Compression with Genre-Aware Profiles (v3).
 
-    Musical Rationale:
-    Electronic music (Psytrance/Techno) relies on a dominant kick/bass. Having
-    two bass lines at once creates muddy destructive interference. This function
-    isolates the mid/highs of the outgoing track and the lows of the incoming
-    track, creating a seamless 'switch' that keeps the energy consistent.
+    Why 3 Bands?
+    Isolating Low (<200Hz), Mid (200Hz-3kHz), and High (>3kHz) allows for
+    surgical control over different energy bands.
+
+    Genre-Awareness:
+    - Techno/High-Energy: Heavier low-end compression for "punch".
+    - House: Balanced mid-range focus.
+    - Ambient: Transparent limiting, minimal compression.
     """
-    outro_highs = apply_dsp_filter(outro_array, sr, 'highpass', crossover)
-    intro_lows = apply_dsp_filter(intro_array, sr, 'lowpass', crossover)
-    return outro_highs, intro_lows
+    # 1. Frequency Splitting
+    low_band = apply_dsp_filter(audio_array, sr, 'lowpass', 200.0)
+    mid_high = apply_dsp_filter(audio_array, sr, 'highpass', 200.0)
+    mid_band = apply_dsp_filter(mid_high, sr, 'lowpass', 3000.0)
+    high_band = apply_dsp_filter(audio_array, sr, 'highpass', 3000.0)
 
-def apply_echo_out(audio_array, sr, decay=0.5, delay_ms=500):
-    """
-    Echo-Out (Feedback Delay) Tail.
+    # 2. Profile Selection
+    profiles = {
+        'High-Energy': {'l': 0.5, 'm': 0.3, 'h': 0.2},
+        'Techno':      {'l': 0.45, 'm': 0.25, 'h': 0.2},
+        'House':       {'l': 0.35, 'm': 0.35, 'h': 0.2},
+        'Ambient':     {'l': 0.1, 'm': 0.1, 'h': 0.1},
+        'Default':     {'l': 0.4, 'm': 0.3, 'h': 0.2}
+    }
+    p = profiles.get(genre_profile, profiles['Default'])
 
-    Musical Rationale:
-    Used to bridge tracks with wildly different genres or energy levels. By
-    creating a feedback tail, the outgoing track 'washes away,' providing
-    a rhythmic bridge for the new track to enter cleanly.
-    """
-    delay_samples = int(sr * (delay_ms / 1000))
-    out = np.copy(audio_array)
-    if audio_array.ndim == 2:
-        for ch in range(2):
-            for i in range(delay_samples, len(out[ch])):
-                # Recursive feedback: out = current + (previous * decay)
-                out[ch][i] += out[ch][i - delay_samples] * decay
-    else:
-        for i in range(delay_samples, len(out)):
-            out[i] += out[i - delay_samples] * decay
-    return out
+    # 3. Dynamic Threshold Mapping (Intensity-scaled)
+    l_thresh = 1.0 - (p['l'] * intensity)
+    m_thresh = 1.0 - (p['m'] * intensity)
+    h_thresh = 1.0 - (p['h'] * intensity)
 
-def apply_hpf_sweep(audio_array, sr, start_freq=20.0, end_freq=10000.0):
-    """
-    Exponential High-Pass Filter Sweep.
+    # 4. Compression
+    low_c = apply_limiter(low_band, l_thresh)
+    mid_c = apply_limiter(mid_band, m_thresh)
+    high_c = apply_limiter(high_band, h_thresh)
 
-    Musical Rationale:
-    Commonly used for 'build-ups.' By exponentially removing low frequencies,
-    tension is increased until the 'drop' where the filter is bypassed.
-    Exponential sweeps sound more natural than linear ones due to the
-    logarithmic nature of human hearing.
-    """
-    block_size = int(sr * 0.1) # 100ms processing blocks
-    num_blocks = (len(audio_array.T) if audio_array.ndim == 2 else len(audio_array)) // block_size
+    # 5. Re-summation
+    summed = low_c + mid_c + high_c
 
-    if num_blocks < 1:
-        return apply_dsp_filter(audio_array, sr, 'highpass', end_freq)
+    # 6. Auto-Gain Compensation (Make-up Gain)
+    orig_peak = np.max(np.abs(audio_array))
+    summed_peak = np.max(np.abs(summed))
+    if summed_peak > 0:
+        summed *= (orig_peak / summed_peak)
 
-    out = np.copy(audio_array)
-    for b in range(num_blocks):
-        start = b * block_size
-        end = (b + 1) * block_size
-        # Exponential curve: freq = start * (ratio ^ progress)
-        current_cutoff = start_freq * (end_freq / start_freq) ** (b / num_blocks)
+    return summed
 
-        if audio_array.ndim == 2:
-            chunk = out[:, start:end]
-            filtered = apply_dsp_filter(chunk, sr, 'highpass', current_cutoff)
-            out[:, start:end] = filtered
+@ArchetypeRegistry.register
+class BassSwap(TransitionArchetype):
+    name = "bass_swap"
+    display_name = "Bass-Swap (Psytrance/Techno)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        crossover = kwargs.get('crossover', 150.0)
+        outro_highs = apply_dsp_filter(outro_array, sr, 'highpass', crossover)
+        intro_lows = apply_dsp_filter(intro_array, sr, 'lowpass', crossover)
+        return outro_highs, intro_lows
+
+@ArchetypeRegistry.register
+class EchoOut(TransitionArchetype):
+    name = "echo_out"
+    display_name = "Echo-Out (Wash)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        decay = kwargs.get('decay', 0.5)
+        delay_ms = kwargs.get('delay_ms', 500)
+        delay_samples = int(sr * (delay_ms / 1000))
+        out = np.copy(outro_array)
+        if out.ndim == 2:
+            for ch in range(2):
+                for i in range(delay_samples, len(out[ch])):
+                    out[ch][i] += out[ch][i - delay_samples] * decay
         else:
-            chunk = out[start:end]
-            filtered = apply_dsp_filter(chunk, sr, 'highpass', current_cutoff)
-            out[start:end] = filtered
+            for i in range(delay_samples, len(out)):
+                out[i] += out[i - delay_samples] * decay
+        return out, intro_array
 
-    return out
+@ArchetypeRegistry.register
+class HPFSweep(TransitionArchetype):
+    name = "hpf_sweep"
+    display_name = "HPF-Sweep (Build-up)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        start_freq = kwargs.get('start_freq', 20.0)
+        end_freq = kwargs.get('end_freq', 10000.0)
+        block_size = int(sr * 0.1)
+        num_blocks = (outro_array.shape[1] if outro_array.ndim == 2 else len(outro_array)) // block_size
+
+        if num_blocks < 1:
+            return apply_dsp_filter(outro_array, sr, 'highpass', end_freq), intro_array
+
+        out = np.copy(outro_array)
+        for b in range(num_blocks):
+            start, end = b * block_size, (b + 1) * block_size
+            current_cutoff = start_freq * (end_freq / start_freq) ** (b / num_blocks)
+            if outro_array.ndim == 2:
+                out[:, start:end] = apply_dsp_filter(out[:, start:end], sr, 'highpass', current_cutoff)
+            else:
+                out[start:end] = apply_dsp_filter(out[start:end], sr, 'highpass', current_cutoff)
+        return out, intro_array
+
+@ArchetypeRegistry.register
+class ClassicFade(TransitionArchetype):
+    name = "classic"
+    display_name = "Classic Fade (Smooth)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        lowpass = kwargs.get('lowpass', 200.0)
+        highpass = kwargs.get('highpass', 150.0)
+        f_m = apply_dsp_filter(outro_array, sr, 'lowpass', lowpass)
+        f_n = apply_dsp_filter(intro_array, sr, 'highpass', highpass)
+        return f_m, f_n
+
+@ArchetypeRegistry.register
+class LowCutBuild(TransitionArchetype):
+    name = "low_cut_build"
+    display_name = "Low-Cut Build (Tension)"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        # Applies a static high-pass filter to both tracks during the transition
+        cutoff = kwargs.get('highpass', 300.0)
+        f_m = apply_dsp_filter(outro_array, sr, 'highpass', cutoff)
+        f_n = apply_dsp_filter(intro_array, sr, 'highpass', cutoff)
+        return f_m, f_n
+
+@ArchetypeRegistry.register
+class SpectralBalancedMix(TransitionArchetype):
+    name = "spectral_balance"
+    display_name = "Adaptive Spectral Balancing"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        """
+        Intelligently resolves frequency clashes by dipping bands in the outgoing track.
+        """
+        clashes = calculate_spectral_clash(outro_array, intro_array, sr)
+
+        f_m = np.copy(outro_array)
+        f_n = np.copy(intro_array)
+
+        # If Low bands clash (ratio > 1.5), aggressively dip the outgoing bass
+        if clashes['low'] > 1.5:
+            f_m = apply_dsp_filter(f_m, sr, 'highpass', 150.0)
+
+        # If High bands clash, apply a gentle shelf to the outgoing track
+        if clashes['high'] > 1.5:
+            f_m = apply_dsp_filter(f_m, sr, 'lowpass', 5000.0)
+
+        return f_m, f_n

@@ -1,4 +1,4 @@
-# 🌌 Auto DJ Script: The Ultimate Vision (v5.6.0)
+# 🌌 Auto DJ Script: The Ultimate Vision (v6.3.0)
 
 ## The Core Vision
 To develop the world's most advanced, fully autonomous, and musically intelligent audio engine. We don't just "mix" tracks; we craft professional, studio-grade journeys through sound that are indistinguishable from (or superior to) human-mixed sets in the lossless domain.
@@ -20,7 +20,7 @@ To develop the world's most advanced, fully autonomous, and musically intelligen
 - **Granular Warp Engines**: Using Phase Vocoders to handle intra-track tempo ramping without "smearing" transients.
 
 ### 🌐 4. Interactive Command & Control
-- **The Global Console**: A WebSocket-powered web dashboard for real-time telemetry, visual waveforms, and manual overrides.
+- **The Global Console**: A WebSocket-powered web dashboard for real-time telemetry, visual waveforms, and manual overrides. Including dynamic tempo ramping control.
 - **Autonomous Lead Engineer Protocol**: Empowering AI agents to evolve the codebase with absolute autonomy.
 
 ---
