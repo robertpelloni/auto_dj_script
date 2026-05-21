@@ -2,3 +2,9 @@ __pycache__/
 *.wav
 *.flac
 psyset_source/
+# AI tool artifacts
+.borg_startup_marker
+.pi/
+.jules/
+metamcp.db
+*.db
