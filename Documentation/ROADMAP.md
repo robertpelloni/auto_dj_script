@@ -22,6 +22,7 @@
 - [x] **In-Memory Buffer Audio I/O**: Accelerated transition pipeline (7.0.0).
 - [x] **Fault-Tolerant Mixing Engine**: Retry-with-Fallback logic (7.4.0).
 - [x] **Incident Recovery Console**: Real-time robustness monitoring (7.4.0).
+- [x] **Live Deck Playlist Manager**: Real-time track selection and injection (7.5.0).
 - [ ] **Real-time 3D Terrain UI**: WebGL visualization of set energy.
 - [ ] **Quantum Sequence Optimizer**: Next-gen SA with parallel branch exploration.
 

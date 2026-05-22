@@ -63,6 +63,27 @@
         </div>
     </div>
 
+    <div id="live-deck" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-bottom: 25px;">
+        <h3 style="margin-top: 0; color: #00ffcc; display: flex; align-items: center; gap: 10px;">
+            <span>🎚</span> LIVE DECK PLAYLIST
+            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Build your set in real-time</span>
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Available Tracks</div>
+                <div id="available-tracks-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;">
+                    <!-- Tracks go here -->
+                </div>
+            </div>
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Current Queue</div>
+                <div id="queue-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;">
+                    <!-- Queue goes here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="grid">
         <div style="display: flex; flex-direction: column; gap: 20px;">
             <div class="log-area" id="terminal" style="height: 250px;">
@@ -219,6 +240,26 @@
             state.innerText = d.status.toUpperCase();
             fill.style.width = d.progress + '%';
 
+            // Update Available Tracks (only when idle)
+            if (d.status === 'IDLE' || d.status === 'Idle' && d.available_tracks) {
+                document.getElementById('available-tracks-list').innerHTML = d.available_tracks.map(t => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #111118; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #222;">
+                        <span style="color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${t}</span>
+                        <button onclick="addToPlaylist('${t}')" style="background: #a020f0; border: none; color: white; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">+</button>
+                    </div>
+                `).join('');
+            }
+
+            // Update Queue
+            if (d.playlist) {
+                document.getElementById('queue-list').innerHTML = d.playlist.map((t, i) => `
+                    <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a24; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #333;">
+                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${i+1}. ${t}</span>
+                        <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
+                    </div>
+                `).join('');
+            }
+
             // Update Telemetry
             if (d.telemetry) {
                 document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
@@ -299,6 +340,20 @@
         const fd = new FormData();
         fd.append('paused', isPaused ? 'true' : 'false');
         await fetch('/update_params', { method: 'POST', body: fd });
+    }
+
+    async function addToPlaylist(filename) {
+        const fd = new FormData();
+        fd.append('filename', filename);
+        await fetch('/playlist/add', { method: 'POST', body: fd });
+        pollStatus();
+    }
+
+    async function removeFromPlaylist(index) {
+        const fd = new FormData();
+        fd.append('index', index);
+        await fetch('/playlist/remove', { method: 'POST', body: fd });
+        pollStatus();
     }
 
     async function resetNode(nodeId) {

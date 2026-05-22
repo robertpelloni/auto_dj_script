@@ -1,12 +1,60 @@
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [101132]
 /home/jules/.pyenv/versions/3.12.13/lib/python3.12/site-packages/pydub/utils.py:170: RuntimeWarning: Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work
   warn("Couldn't find ffmpeg or avconv - defaulting to ffmpeg, but may not work", RuntimeWarning)
-INFO:     Started server process [101132]
+INFO:     Started server process [314095]
 INFO:     Waiting for application startup.
 INFO:     Application startup complete.
 INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
-[*] Auto DJ v7.4.0 Console launching...
-INFO:     127.0.0.1:36506 - "GET / HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36506 - "GET /status HTTP/1.1" 200 OK
-INFO:     127.0.0.1:36516 - "WebSocket /ws" [accepted]
+[*] Auto DJ v7.5.0 Console launching...
+INFO:     127.0.0.1:47816 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47816 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47822 - "WebSocket /ws" [accepted]
 INFO:     connection open
+INFO:     127.0.0.1:47816 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47816 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47816 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47816 - "GET /status HTTP/1.1" 200 OK
+INFO:     connection closed
+INFO:     127.0.0.1:45530 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45530 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45542 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:45530 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45530 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45530 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:45530 - "GET /status HTTP/1.1" 200 OK
+INFO:     connection closed
+INFO:     127.0.0.1:35302 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42520 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:42504 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:42504 - "GET /status HTTP/1.1" 200 OK
+INFO:     connection closed
+INFO:     127.0.0.1:37966 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41724 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:37966 - "GET /status HTTP/1.1" 200 OK
+INFO:     connection closed
+INFO:     127.0.0.1:47550 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47550 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47564 - "WebSocket /ws" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:47550 - "POST /playlist/add HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47550 - "GET /status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:47550 - "GET /status HTTP/1.1" 200 OK
 INFO:     connection closed

@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (7.4.0)
+""" Core Orchestration Engine | Auto DJ Script (7.5.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 7.4.0 features: The Resilient Era (Incident Recovery).
+Version 7.5.0 features: The Dynamic Era (Live Playlist Management).
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -220,12 +220,18 @@ def find_optimal_order(files, status_obj=None):
 
 
 def compile_master_set(args, status_obj=None):
-    """The High-Performance Mixing Pipeline (7.0.0)."""
+    """The High-Performance Mixing Pipeline (7.5.0)."""
     folder = args.input
-    all_files = []
-    for ext in config.SUPPORTED_EXTENSIONS:
-        all_files.extend(glob.glob(os.path.join(folder, f"*{ext}")))
-        all_files.extend(glob.glob(os.path.join(folder, f"*{ext.upper()}")))
+
+    # Live Deck Initialization (v7.5.0)
+    # If a playlist is provided in status_obj, use it; otherwise fallback to folder scan.
+    if status_obj and status_obj.get("playlist"):
+        all_files = [os.path.join(folder, f) for f in status_obj["playlist"]]
+    else:
+        all_files = []
+        for ext in config.SUPPORTED_EXTENSIONS:
+            all_files.extend(glob.glob(os.path.join(folder, f"*{ext}")))
+            all_files.extend(glob.glob(os.path.join(folder, f"*{ext.upper()}")))
 
     if not all_files:
         if status_obj:
@@ -296,8 +302,32 @@ def compile_master_set(args, status_obj=None):
     # Using Cluster-Aware persistent executor (7.0.0 Optimized)
     import io
     mix_executor = cluster.get_executor()
-    for i in range(num_tracks):
+    i = 0
+    while i < num_tracks:
         wait_for_health(status_obj)
+
+        # Live Deck Dynamic Injection (v7.5.0)
+        # Check if the user has inserted tracks into the playlist during the session.
+        # This allows adding tracks while the mix is being rendered.
+        if status_obj and status_obj.get("playlist"):
+            # If current i is beyond the pre-analyzed track count, we need to analyze new tracks
+            if i >= len(all_files) and i < len(status_obj["playlist"]):
+                new_track_name = status_obj["playlist"][i]
+                new_track_path = os.path.join(folder, new_track_name)
+                print(f"[*] Live Injection detected: {new_track_name}")
+                # Analyze and warp on-the-fly
+                new_meta = analyze_track_worker(new_track_path)
+                meta_list.append(new_meta)
+                all_files.append(new_track_path)
+
+                # Dynamic Warping for injected track
+                t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / (i+1)) # Simple ramp adjustment
+                t_e_bpm = t_s_bpm
+                warp_task = (new_track_path, new_meta['bpm'], t_s_bpm, t_e_bpm, new_meta['key'], meta_list[i-1]['key'], True)
+                y_w, sr = warp_worker(warp_task)
+                warped_results.append((y_w, sr))
+                num_tracks = len(status_obj["playlist"]) # Update dynamic limit
+
         y_w, sr = warped_results[i]
         if y_w is None:
             print(f"[WARN] Skipping track {i}: warp failed")
@@ -421,6 +451,7 @@ def compile_master_set(args, status_obj=None):
 
         master = m_body + mix_bus + n_body
         current_time_ms = len(master)
+        i += 1
 
     if master:
         try:

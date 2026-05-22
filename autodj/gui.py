@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.4.0).
-7.4.0: The Resilient Era (Incident Recovery).
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.5.0).
+7.5.0: The Dynamic Era (Live Playlist Management).
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
@@ -22,6 +22,7 @@ templates = Jinja2Templates(directory="templates")
 mixing_status = {
     "status": "Idle",
     "tracklist": [],
+    "playlist": [],
     "progress": 0,
     "version": __version__,
     "parallel_cores": os.cpu_count() or 1,
@@ -106,7 +107,24 @@ async def get_status():
     status_data = dict(mixing_status)
     status_data["cluster"] = cluster.get_status()
     status_data["monitoring"] = monitor.get_status()
+    # Populate available tracks if idle
+    if mixing_status["status"] == "Idle":
+        import glob
+        status_data["available_tracks"] = [os.path.basename(f) for f in glob.glob(os.path.join(config.INPUT_FOLDER, "*")) if any(f.endswith(ext) for ext in config.SUPPORTED_EXTENSIONS)]
     return JSONResponse(status_data)
+
+@app.post("/playlist/add")
+async def playlist_add(filename: str = Form(...)):
+    """Adds a track to the dynamic playlist."""
+    mixing_status["playlist"].append(filename)
+    return {"status": "Added", "playlist": mixing_status["playlist"]}
+
+@app.post("/playlist/remove")
+async def playlist_remove(index: int = Form(...)):
+    """Removes a track from the dynamic playlist."""
+    if 0 <= index < len(mixing_status["playlist"]):
+        mixing_status["playlist"].pop(index)
+    return {"status": "Removed", "playlist": mixing_status["playlist"]}
 
 @app.post("/cluster/reset")
 async def cluster_reset(node_id: str = Form(...)):

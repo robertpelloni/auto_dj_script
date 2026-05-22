@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.5.0] - 2024-05-30
+### Added
+- **Live Deck Playlist Manager**: Real-time track selection and session building.
+- **Dynamic Track Injection**: Support for adding tracks to the queue while a mix is rendering.
+- **Just-in-Time Warping**: On-the-fly analysis and time-stretching for late-injected tracks.
+- **Live Deck UI**: Two-pane track manager for folder browsing and queue manipulation.
+
 ## [7.4.0] - 2024-05-29
 ### Added
 - **Fault-Tolerant Mixing Engine**: Implemented "Retry-with-Fallback" strategy for cluster tasks.
