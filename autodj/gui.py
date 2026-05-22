@@ -8,6 +8,7 @@ from fastapi.responses import FileResponse, JSONResponse, Response
 import uvicorn
 import os
 import asyncio
+import psutil
 import config
 from .core import compile_master_set
 from .version import __version__
@@ -22,7 +23,16 @@ mixing_status = {
     "tracklist": [],
     "progress": 0,
     "version": __version__,
-    "parallel_cores": os.cpu_count() or 1
+    "parallel_cores": os.cpu_count() or 1,
+    "telemetry": {
+        "cpu_usage": 0,
+        "memory_usage": 0,
+        "active_threads": 0
+    },
+    "live_params": {
+        "mastering_intensity": 0.5,
+        "target_bpm": config.TARGET_BPM
+    }
 }
 
 class ConnectionManager:
@@ -63,11 +73,39 @@ async def index(request: Request):
         }
     )
 
+@app.on_event("startup")
+async def startup_event():
+    asyncio.create_task(update_telemetry())
+
+async def update_telemetry():
+    """Background task to poll system performance metrics."""
+    psutil.cpu_percent()  # Initialize first call
+    while True:
+        try:
+            mixing_status["telemetry"]["cpu_usage"] = psutil.cpu_percent()
+            mixing_status["telemetry"]["memory_usage"] = psutil.virtual_memory().percent
+            mixing_status["telemetry"]["active_threads"] = len(psutil.Process().threads())
+        except Exception:
+            pass
+        await asyncio.sleep(1)
+
 @app.get("/status")
 async def get_status():
     status_data = dict(mixing_status)
     status_data["cluster"] = cluster.get_status()
     return JSONResponse(status_data)
+
+@app.post("/update_params")
+async def update_params(
+    mastering_intensity: float = Form(None),
+    target_bpm: float = Form(None)
+):
+    """Real-time parameter adjustment endpoint."""
+    if mastering_intensity is not None:
+        mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
+    if target_bpm is not None:
+        mixing_status["live_params"]["target_bpm"] = target_bpm
+    return {"status": "Updated", "params": mixing_status["live_params"]}
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -124,6 +162,8 @@ async def start_mixing(
     mixing_status["status"] = "Preparing Engine..."
     mixing_status["progress"] = 0
     mixing_status["tracklist"] = []
+    mixing_status["live_params"]["target_bpm"] = bpm
+    mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
 
     background_tasks.add_task(compile_master_set, Args(), status_obj=mixing_status)
     return {"message": "Engine ignited."}

@@ -220,7 +220,9 @@ def compile_master_set(args, status_obj=None):
     if status_obj:
         status_obj["status"] = f"Warping {num_tracks} tracks (Cluster: {cluster.nodes[0].id})"
 
-    start_bpm, end_bpm = args.bpm, (args.end_bpm or args.bpm)
+    # Check for live parameter overrides (v7.1.0)
+    start_bpm = status_obj.get("live_params", {}).get("target_bpm", args.bpm) if status_obj else args.bpm
+    end_bpm = (args.end_bpm or start_bpm)
 
     warp_tasks = []
     for i in range(num_tracks):
@@ -274,7 +276,11 @@ def compile_master_set(args, status_obj=None):
             continue
 
         prev_nxt, prev_y_w, _ = processed_tracks[i-1]
-        t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
+
+        # Poll live BPM for dynamic ramp adjustments (v7.1.0)
+        current_target_bpm = status_obj.get("live_params", {}).get("target_bpm", start_bpm) if status_obj else start_bpm
+        t_s_bpm = current_target_bpm + (end_bpm - current_target_bpm) * (i / num_tracks)
+
         beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
         ph = detect_phrases(y_w, sr)
 

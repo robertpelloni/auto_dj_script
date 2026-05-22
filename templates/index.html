@@ -37,6 +37,21 @@
 
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
+    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
+        <div class="controls-card" style="padding: 15px; text-align: center;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
+            <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
+        </div>
+        <div class="controls-card" style="padding: 15px; text-align: center;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">MEMORY LOAD</div>
+            <div id="mem-stat" style="font-size: 2em; font-weight: 800; color: #a020f0;">0%</div>
+        </div>
+        <div class="controls-card" style="padding: 15px; text-align: center;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">ACTIVE THREADS</div>
+            <div id="thread-stat" style="font-size: 2em; font-weight: 800; color: #ffffff;">0</div>
+        </div>
+    </div>
+
     <div id="cluster-monitor" style="background: #111118; padding: 15px; border-radius: 10px; border: 1px solid #1f1f2a; margin-bottom: 20px; font-size: 0.8em; display: flex; gap: 20px;">
         <div style="color: #888; font-weight: 800;">CLUSTER NODES:</div>
         <div id="nodes-container" style="display: flex; gap: 15px;">
@@ -73,6 +88,29 @@
                 <br><br>
                 <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
             </form>
+
+            <div id="live-adjustments" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
+                <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter Overrides</label>
+
+                <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
+                            <span>TARGET BPM</span>
+                            <span id="live-bpm-val">145</span>
+                        </div>
+                        <input type="range" id="live-bpm" min="80" max="200" value="145" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
+                    </div>
+
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
+                            <span>MASTERING INTENSITY</span>
+                            <span id="live-intensity-val">0.5</span>
+                        </div>
+                        <input type="range" id="live-intensity" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #a020f0;" oninput="updateLiveParams()">
+                    </div>
+                </div>
+            </div>
+
             <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
                 <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                     <span>⬇</span> DOWNLOAD MASTER EXPORT
@@ -165,6 +203,13 @@
             state.innerText = d.status.toUpperCase();
             fill.style.width = d.progress + '%';
 
+            // Update Telemetry
+            if (d.telemetry) {
+                document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
+                document.getElementById('mem-stat').innerText = d.telemetry.memory_usage.toFixed(1) + '%';
+                document.getElementById('thread-stat').innerText = d.telemetry.active_threads;
+            }
+
             if (d.cluster && d.cluster.length > 0) {
                 document.getElementById('nodes-container').innerHTML = d.cluster.map(n => `
                     <div class="cluster-node" style="display: flex; align-items: center; gap: 5px;">
@@ -196,6 +241,20 @@
         } catch (err) {
             console.error('Polling error:', err);
         }
+    }
+
+    async function updateLiveParams() {
+        const bpm = document.getElementById('live-bpm').value;
+        const intensity = document.getElementById('live-intensity').value;
+
+        document.getElementById('live-bpm-val').innerText = bpm;
+        document.getElementById('live-intensity-val').innerText = intensity;
+
+        const fd = new FormData();
+        fd.append('target_bpm', bpm);
+        fd.append('mastering_intensity', intensity);
+
+        await fetch('/update_params', { method: 'POST', body: fd });
     }
 
     function startPolling() {

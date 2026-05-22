@@ -3,7 +3,6 @@ AI Classification Models for the Auto DJ system (7.0.0).
 Provides neural-network based genre inference using spectral feature vectors.
 """
 import numpy as np
-from sklearn.neural_network import MLPClassifier
 
 class GenreClassifier:
     """
