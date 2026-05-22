@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (v6.7.0).
-v6.7.0: High-Performance Parallel Telemetry.
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (v6.8.0).
+v6.8.0: AI Rationale and Spectral Telemetry.
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates

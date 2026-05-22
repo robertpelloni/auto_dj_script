@@ -42,10 +42,11 @@ def test_genre_archetype_v3():
 
     # High energy profile (high centroid from white noise)
     # White noise has high centroid/rolloff
-    genre = get_genre_archetype(y, sr, bpm=145)
+    genre, rationale = get_genre_archetype(y, sr, bpm=145)
     assert genre == 'High-Energy'
+    assert "High spectral centroid" in rationale
 
     # Low BPM / low energy
     y_low = np.sin(2 * np.pi * 440 * np.linspace(0, 5, sr * 5))
-    genre_low = get_genre_archetype(y_low, sr, bpm=90)
+    genre_low, rationale_low = get_genre_archetype(y_low, sr, bpm=90)
     assert genre_low == 'Ambient'

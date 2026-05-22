@@ -1,4 +1,4 @@
-# 🧠 Project Memory & Technical Observations (v6.7.0)
+# 🧠 Project Memory & Technical Observations (v6.8.0)
 
 ## Design Preferences
 - **Functional DSP**: Prefer pure functions for DSP operations in \`dsp.py\` to simplify parallel execution.

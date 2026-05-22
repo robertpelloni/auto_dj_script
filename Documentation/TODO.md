@@ -1,9 +1,9 @@
-# 📝 Immediate Tasks (v6.7.0)
+# 📝 Immediate Tasks (v6.8.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **High-Performance Parallel Engine**: Multi-core Analysis/Warping.
-- [x] **Sample-Accurate Cross-Correlation Looping**: Enhanced phrase matching.
-- [ ] **AI Genre Inference Pipeline**: Spectral feature extraction for CNN.
+- [x] **AI Genre Inference Engine**: Neural classification with probabilistic activation.
+- [x] **Mathematical Rationale Display**: Real-time MIR explanation in UI.
+- [ ] **CNN Model Training**: Collect datasets for deep-learning style inference.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).

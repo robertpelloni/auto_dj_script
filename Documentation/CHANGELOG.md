@@ -1,5 +1,12 @@
 # Changelog
 
+## [6.8.0] - 2024-05-27
+### Added
+- **AI Genre Inference Engine**: Implemented an MLP-based classification model in `autodj/models.py`.
+- **Probabilistic Stylistic Activation**: Transitions are now guided by probabilistic genre maps (Ambient, Techno, House, High-Energy).
+- **MIR Rationale Logic**: The engine now provides mathematical explanations for its genre choices in the Web Dashboard.
+- **UI Enhancements**: Added an "AI Rationale" column to the live tracklist.
+
 ## [6.7.0] - 2024-05-27
 ### Added
 - **High-Performance Parallel Engine**: Transitioned metadata analysis and audio warping to a multi-core `ProcessPoolExecutor` architecture.

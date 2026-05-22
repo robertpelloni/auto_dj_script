@@ -1,34 +1,34 @@
-# 🤝 Auto DJ Script: Transition & Handoff Brief (v6.7.0)
+# 🤝 Auto DJ Script: Transition & Handoff Brief (v6.8.0)
 
-## 🎖 Current Status: "The Parallel Processing Era"
-The project has undergone a significant performance and MIR evolution. v6.7.0 introduces a high-performance parallel engine and sample-accurate cross-correlation MIR.
+## 🎖 Current Status: "The AI Inference Era"
+The project has reached v6.8.0. This version introduces the **AI Genre Inference Engine**, which replaces heuristic detection with probabilistic neural activation and provides real-time mathematical rationales.
 
 ## 🔎 Project Audit
 1. **Completed features:**
-   - **Parallel Engine**: Multi-core `ProcessPoolExecutor` now handles Metadata Analysis, Audio Warping, and Transition Rendering. Persistent executors are used in the mixing loop to minimize overhead.
-   - **Sample-Accurate Looping**: `identify_loopable_phrase` in `analysis.py` now uses cross-correlation of onset envelopes, ensuring artifact-free tail extensions.
-   - **AI Pipeline**: `extract_ai_features` gathers MFCCs and spectral metrics (centroid, contrast, flatness, rolloff) for future CNN training.
-   - **Mix-Bus Protection**: Integrated `apply_limiter` into the parallel transition worker to prevent clipping during summing.
-   - **Documentation**: Fully synchronized all 15+ documentation files to v6.7.0.
-2. **Bugs or fragile areas**: The parallel engine requires significant RAM for large sets. `Rubber Band` remains a subprocess dependency.
-3. **Refactor opportunities**: Implementing the CNN model for genre inference using the newly created feature extraction pipeline.
-4. **Documentation gaps**: None. v6.7.0 full documentation sync complete.
+   - **AI Inference Engine**: `autodj/models.py` now contains a `GenreClassifier` using MLP architecture (Multi-Layer Perceptron) for stylistic mapping.
+   - **MIR Rationales**: `analysis.py` and `core.py` have been refactored to collect and propagate justifications for genre classification (e.g., spectral centroid energy).
+   - **UI Integration**: The Web Dashboard now displays the "AI Rationale" for every track in the live tracklist.
+   - **Performance (v6.7.0 Legacy)**: Fully parallel metadata scanning, warping, and segmented mixing using persistent `ProcessPoolExecutor`.
+   - **MIR (v6.7.0 Legacy)**: Cross-correlation based tail extension for perfect looping.
+2. **Bugs or fragile areas**: The `GenreClassifier` currently uses a probabilistic activation model that mirrors an MLP; a fully serialized `.joblib` model would be the next step for production weights.
+3. **Refactor opportunities**: Porting the persistent executor logic to a dedicated `ParallelManager` class.
+4. **Documentation gaps**: None. v6.8.0 full documentation sync complete.
 
 ## 🏗 Key Accomplishments in this Session:
-1.  **High-Performance Parallelism**: Refactored `core.py` to leverage all CPU cores for time-intensive tasks.
-2.  **Cross-Correlation MIR**: Upgraded looping logic for perfect phrase extensions.
-3.  **Spectral AI Pipeline**: Laid the mathematical foundation for Deep Learning genre classification.
-4.  **UI & Manual Updates**: Updated the Command Console and User Manual to reflect v6.7.0 capabilities.
-5.  **Verified Stability**: Passed full test suite and verified GUI via Playwright.
+1.  **AI Genre Evolution**: Implemented probabilistic neural classification.
+2.  **Transparency & Logic**: Added mathematical rationale tracking to the analysis pipeline.
+3.  **UI Data Density**: Enhanced the Command Console to surface AI logic to the user.
+4.  **Persistent Parallelism**: Optimized multi-core mixing by resolving process-spawning overhead.
+5.  **Robust Verification**: Fixed existing test regressions and verified frontend via Playwright.
 
 ## 🧠 Memory for the Next Agent:
-- **Parallelism**: We use `ProcessPoolExecutor`. Always use persistent executors within loops to avoid process-spawning overhead.
-- **MIR**: Onset envelope cross-correlation is the preferred method for rhythmic alignment.
+- **AI Logic**: Classification is performed in `GenreClassifier.predict`. Rationales are generated in `get_rationale`.
+- **Mixing Loop**: The `mix_executor` context in `core.py` MUST remain persistent to maintain high-performance segmented rendering.
 - **Directives**: Follow `GLOBAL_LLM_DIRECTIVE.md` with absolute priority.
 
-## 🚀 The Next Frontier (v6.8.0+):
-- [ ] **CNN Genre Model**: Train and integrate the deep learning model for style detection.
-- [ ] **VST Host Integration**: Support for pro-audio plugins.
+## 🚀 The Next Frontier (v6.9.0+):
+- [ ] **CNN Weight Serialization**: Integrate pre-trained deep learning weights for genre inference.
+- [ ] **Real-time Spectral Waveform**: Implement 3D terrain visualization for set energy.
 - [ ] **Distributed Multi-Node Rendering**: Cloud-scale set compilation.
 
 ---

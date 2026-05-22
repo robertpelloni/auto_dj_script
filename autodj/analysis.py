@@ -1,5 +1,5 @@
 """
-Audio analysis module for the Auto DJ system (v6.7.0).
+Audio analysis module for the Auto DJ system (v6.8.0).
 This module is the "brain" of the engine, responsible for Music Information Retrieval (MIR).
 
 Theoretical Foundations:
@@ -285,35 +285,20 @@ def extract_ai_features(y, sr):
 
 def get_genre_archetype(y, sr, bpm=None):
     """
-    Identifies the genre archetype using a multi-feature heuristic (v3 - Enhanced).
+    Identifies the genre archetype using the AI Inference Engine (v6.8.0).
+    Returns (genre, rationale).
     """
+    from .models import GenreClassifier
+
     features = extract_ai_features(y, sr)
-    centroid = features['centroid']
-    rolloff = features['rolloff']
-    flatness = features['flatness']
-    mfcc = features['mfccs']
-    contrast = features['contrast']
+    classifier = GenreClassifier()
 
-    if bpm is None:
-        if centroid > 3000 or rolloff > 6000: return 'High-Energy'
-        if contrast > 20: return 'Techno'
-        return 'Ambient'
+    genre = classifier.predict(features)
+    rationale = classifier.get_rationale(features)
 
-    if bpm > 138:
-        if centroid > 2500 or rolloff > 5000 or mfcc[0] > -100:
-            return 'High-Energy'
+    # BPM-based sanity check
+    if bpm and bpm > 150 and genre == 'Ambient':
+        genre = 'High-Energy'
+        rationale = f"BPM override ({bpm:.0f} > 150): Ambient classification rejected."
 
-    if 120 < bpm <= 142:
-        if contrast > 18 or centroid > 1800:
-            return 'Techno'
-
-    if 105 < bpm <= 128:
-        if flatness > 0.01 or contrast > 15:
-            return 'House'
-
-    if bpm <= 105 or centroid <= 1100:
-        return 'Ambient'
-
-    if mfcc[0] > -150: return 'High-Energy'
-    if contrast > 18: return 'Techno'
-    return 'Ambient'
+    return genre, rationale

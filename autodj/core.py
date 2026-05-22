@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (v6.7.0)
+""" Core Orchestration Engine | Auto DJ Script (v6.8.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 6.7.0 features: Parallel Warp Engine and Segmented Mixing.
+Version 6.8.0 features: AI Genre Inference and Transition Rationales.
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -107,12 +107,15 @@ def analyze_track_worker(f):
         y, sr = librosa.load(f, sr=None, mono=False)
         native_bpm, _, _ = get_native_bpm(y, sr)
         
+        genre, rationale = get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr, bpm=native_bpm)
+
         return {
             'path': f,
             'bpm': native_bpm,
             'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), sr),
             'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), sr),
-            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr)
+            'genre': genre,
+            'rationale': rationale
         }
     except Exception as e:
         print(f"[ERROR] analyze_track_worker failed for {f}: {e}")
@@ -259,7 +262,9 @@ def compile_master_set(args, status_obj=None):
                 master = nxt
                 tracklist.append({'timestamp': "00:00:00", 'file': os.path.basename(all_files[i]),
                                    'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
-                                   'genre': meta_list[i]['genre'], 'start_ms': 0})
+                               'genre': meta_list[i]['genre'],
+                               'rationale': meta_list[i].get('rationale', ''),
+                               'start_ms': 0})
                 current_time_ms = len(master)
                 continue
 
@@ -317,7 +322,9 @@ def compile_master_set(args, status_obj=None):
 
             tracklist.append({'timestamp': ms_to_timestamp(track_start_ms), 'file': os.path.basename(all_files[i]),
                                'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
-                               'genre': meta_list[i]['genre'], 'start_ms': track_start_ms})
+                           'genre': meta_list[i]['genre'],
+                           'rationale': meta_list[i].get('rationale', ''),
+                           'start_ms': track_start_ms})
 
             if status_obj:
                 status_obj["tracklist"] = tracklist
