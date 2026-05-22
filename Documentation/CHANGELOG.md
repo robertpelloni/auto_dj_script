@@ -1,5 +1,18 @@
 # Changelog
 
+## [7.2.0] - 2024-05-29
+### Added
+- **Automated Health Guardrails**: The engine now automatically throttles or pauses processing if CPU or RAM exceeds safety thresholds (85% and 90% respectively).
+- **Manual Pause/Resume**: Added full execution control to the Web Dashboard.
+- **Dynamic BPM Overrides**: Real-time adjustment of target BPM during the active mixing cycle.
+- **Enhanced Telemetry UI**: Color-coded system load alerts and color-shifting telemetry cards.
+
+## [7.1.0] - 2024-05-28
+### Added
+- **System Telemetry Module**: Integrated `psutil` for real-time tracking of CPU, RAM, and active threads.
+- **Live Parameter Controls**: Added sliders to the Command Console for real-time Mastering Intensity and BPM adjustments.
+- **Engine Hot-Reload**: Refactored the core loop to poll live parameters during each track rendering phase.
+
 ## [7.0.0] - 2024-05-28
 ### Added
 - **Quantum Network Cluster**: Implemented remote node registration and orchestration via `/cluster/join`.

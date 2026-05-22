@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.0.0).
-7.0.0: AI Rationale and Spectral Telemetry.
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.2.0).
+7.2.0: Health Guardrails & Execution Control.
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
@@ -27,11 +27,14 @@ mixing_status = {
     "telemetry": {
         "cpu_usage": 0,
         "memory_usage": 0,
-        "active_threads": 0
+        "active_threads": 0,
+        "is_healthy": True,
+        "is_throttled": False
     },
     "live_params": {
         "mastering_intensity": 0.5,
-        "target_bpm": config.TARGET_BPM
+        "target_bpm": config.TARGET_BPM,
+        "paused": False
     }
 }
 
@@ -82,12 +85,20 @@ async def update_telemetry():
     psutil.cpu_percent()  # Initialize first call
     while True:
         try:
-            mixing_status["telemetry"]["cpu_usage"] = psutil.cpu_percent()
-            mixing_status["telemetry"]["memory_usage"] = psutil.virtual_memory().percent
+            cpu = psutil.cpu_percent()
+            mem = psutil.virtual_memory().percent
+            mixing_status["telemetry"]["cpu_usage"] = cpu
+            mixing_status["telemetry"]["memory_usage"] = mem
             mixing_status["telemetry"]["active_threads"] = len(psutil.Process().threads())
+
+            # Health Logic (v7.2.0)
+            is_healthy = (cpu < config.MAX_CPU_LOAD and mem < config.MAX_RAM_LOAD)
+            mixing_status["telemetry"]["is_healthy"] = is_healthy
+            mixing_status["telemetry"]["is_throttled"] = not is_healthy
+
         except Exception:
             pass
-        await asyncio.sleep(1)
+        await asyncio.sleep(config.HEALTH_CHECK_INTERVAL)
 
 @app.get("/status")
 async def get_status():
@@ -98,13 +109,16 @@ async def get_status():
 @app.post("/update_params")
 async def update_params(
     mastering_intensity: float = Form(None),
-    target_bpm: float = Form(None)
+    target_bpm: float = Form(None),
+    paused: bool = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
         mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
     if target_bpm is not None:
         mixing_status["live_params"]["target_bpm"] = target_bpm
+    if paused is not None:
+        mixing_status["live_params"]["paused"] = paused
     return {"status": "Updated", "params": mixing_status["live_params"]}
 
 @app.websocket("/ws")
