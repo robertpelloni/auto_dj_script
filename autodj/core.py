@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (7.0.0)
+""" Core Orchestration Engine | Auto DJ Script (7.2.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 7.0.0 features: Quantum Network Cluster & Spectral Terrain.
+Version 7.2.0 features: Health Guardrails & Execution Control.
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -29,6 +29,34 @@ from .dsp import (
 from .utils import pydub_to_ndarray, ndarray_to_pydub
 from .version import __version__
 from .cluster import cluster
+import time
+
+
+def wait_for_health(status_obj):
+    """Execution Health Guardrail (v7.2.0)."""
+    if status_obj is None:
+        return
+
+    while True:
+        live = status_obj.get("live_params", {})
+        telemetry = status_obj.get("telemetry", {})
+
+        paused = live.get("paused", False)
+        is_healthy = telemetry.get("is_healthy", True)
+
+        if not paused and is_healthy:
+            break
+
+        # Update status message to reflect guardrail state
+        orig_status = status_obj.get("status", "Processing")
+        if paused:
+            status_obj["status"] = "Session Paused (Manual)"
+        elif not is_healthy:
+            status_obj["status"] = "Auto-Throttled (High System Load)"
+
+        time.sleep(1)
+        # Restore status after waiting
+        status_obj["status"] = orig_status
 
 
 def get_semitone_diff(key1, key2):
@@ -220,6 +248,8 @@ def compile_master_set(args, status_obj=None):
     if status_obj:
         status_obj["status"] = f"Warping {num_tracks} tracks (Cluster: {cluster.nodes[0].id})"
 
+    wait_for_health(status_obj)
+
     # Check for live parameter overrides (v7.1.0)
     start_bpm = status_obj.get("live_params", {}).get("target_bpm", args.bpm) if status_obj else args.bpm
     end_bpm = (args.end_bpm or start_bpm)
@@ -252,6 +282,7 @@ def compile_master_set(args, status_obj=None):
     import io
     mix_executor = cluster.get_executor()
     for i in range(num_tracks):
+        wait_for_health(status_obj)
         y_w, sr = warped_results[i]
         if y_w is None:
             print(f"[WARN] Skipping track {i}: warp failed")

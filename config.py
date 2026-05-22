@@ -27,3 +27,8 @@ PHRASE_ANCHOR_TOLERANCE_MS = 2000 # 2 seconds tolerance for smart phrase detecti
 SA_ITERATIONS = 500
 SA_COOLING_RATE = 0.99
 SA_INITIAL_TEMP = 100.0
+
+# Execution Health Guardrails (v7.2.0)
+MAX_CPU_LOAD = 85.0    # Percentage threshold to trigger auto-throttling
+MAX_RAM_LOAD = 90.0    # Percentage threshold to trigger auto-throttling
+HEALTH_CHECK_INTERVAL = 1.0 # Seconds

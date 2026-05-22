@@ -38,11 +38,11 @@
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
     <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
-        <div class="controls-card" style="padding: 15px; text-align: center;">
+        <div class="controls-card" id="cpu-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
             <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
         </div>
-        <div class="controls-card" style="padding: 15px; text-align: center;">
+        <div class="controls-card" id="mem-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">MEMORY LOAD</div>
             <div id="mem-stat" style="font-size: 2em; font-weight: 800; color: #a020f0;">0%</div>
         </div>
@@ -93,6 +93,10 @@
                 <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter Overrides</label>
 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
+                    <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">
+                        ⏸ PAUSE EXECUTION
+                    </button>
+
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
                             <span>TARGET BPM</span>
@@ -137,6 +141,8 @@
 </div>
 
 <script>
+    let pollInterval = null;
+    let isPaused = false;
     const term = document.getElementById('terminal');
     const fill = document.getElementById('fill');
     const state = document.getElementById('state-text');
@@ -194,8 +200,6 @@
     startPolling();
 
     // Status polling — always active for reliable updates
-    let pollInterval = null;
-
     async function pollStatus() {
         try {
             const r = await fetch('/status');
@@ -208,6 +212,25 @@
                 document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
                 document.getElementById('mem-stat').innerText = d.telemetry.memory_usage.toFixed(1) + '%';
                 document.getElementById('thread-stat').innerText = d.telemetry.active_threads;
+
+                // Health Alert Styling
+                const cpuCard = document.getElementById('cpu-card');
+                const memCard = document.getElementById('mem-card');
+
+                if (d.telemetry.cpu_usage > 85) cpuCard.style.borderColor = '#ff5555';
+                else cpuCard.style.borderColor = '#252535';
+
+                if (d.telemetry.memory_usage > 90) memCard.style.borderColor = '#ff5555';
+                else memCard.style.borderColor = '#252535';
+            }
+
+            if (d.live_params) {
+                isPaused = d.live_params.paused;
+                const btn = document.getElementById('pause-btn');
+                if (btn) {
+                    btn.innerText = isPaused ? '▶ RESUME EXECUTION' : '⏸ PAUSE EXECUTION';
+                    btn.style.background = isPaused ? '#a020f0' : '#333';
+                }
             }
 
             if (d.cluster && d.cluster.length > 0) {
@@ -241,6 +264,19 @@
         } catch (err) {
             console.error('Polling error:', err);
         }
+    }
+
+    async function togglePause() {
+        isPaused = !isPaused;
+        const btn = document.getElementById('pause-btn');
+        if (btn) {
+            btn.innerText = isPaused ? '▶ RESUME EXECUTION' : '⏸ PAUSE EXECUTION';
+            btn.style.background = isPaused ? '#a020f0' : '#333';
+        }
+
+        const fd = new FormData();
+        fd.append('paused', isPaused ? 'true' : 'false');
+        await fetch('/update_params', { method: 'POST', body: fd });
     }
 
     async function updateLiveParams() {
