@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.3.0).
-7.3.0: Integration Bridge & Staging Era.
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.4.0).
+7.4.0: The Resilient Era (Incident Recovery).
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
@@ -14,6 +14,7 @@ from .core import compile_master_set
 from .version import __version__
 from .dsp import ArchetypeRegistry
 from .cluster import cluster
+from .monitoring import monitor
 
 app = FastAPI(title=f"Auto DJ v{__version__} Console")
 templates = Jinja2Templates(directory="templates")
@@ -104,7 +105,14 @@ async def update_telemetry():
 async def get_status():
     status_data = dict(mixing_status)
     status_data["cluster"] = cluster.get_status()
+    status_data["monitoring"] = monitor.get_status()
     return JSONResponse(status_data)
+
+@app.post("/cluster/reset")
+async def cluster_reset(node_id: str = Form(...)):
+    """Resets failed states for a node."""
+    cluster.reset_node(node_id)
+    return {"status": "Reset", "node": node_id}
 
 @app.post("/update_params")
 async def update_params(

@@ -37,7 +37,7 @@
 
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
-    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px;">
+    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px;">
         <div class="controls-card" id="cpu-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
             <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
@@ -50,6 +50,10 @@
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">ACTIVE THREADS</div>
             <div id="thread-stat" style="font-size: 2em; font-weight: 800; color: #ffffff;">0</div>
         </div>
+        <div class="controls-card" style="padding: 15px; text-align: center;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">SYSTEM ERROR RATE</div>
+            <div id="error-rate" style="font-size: 2em; font-weight: 800; color: #ff5555;">0.0%</div>
+        </div>
     </div>
 
     <div id="cluster-monitor" style="background: #111118; padding: 15px; border-radius: 10px; border: 1px solid #1f1f2a; margin-bottom: 20px; font-size: 0.8em; display: flex; gap: 20px;">
@@ -60,12 +64,20 @@
     </div>
 
     <div class="grid">
-        <div class="log-area" id="terminal">
-            [SYSTEM] Kernel v{{ version }} active...<br>
-            [SYSTEM] Parallel Warp Engine standing by...<br>
-            [MIR] CQT Key Detection loaded.<br>
-            [DSP] True-Peak Look-ahead Limiter online.<br>
-            [SYSTEM] WebSocket connecting...
+        <div style="display: flex; flex-direction: column; gap: 20px;">
+            <div class="log-area" id="terminal" style="height: 250px;">
+                [SYSTEM] Kernel v{{ version }} active...<br>
+                [SYSTEM] Parallel Warp Engine standing by...<br>
+                [MIR] CQT Key Detection loaded.<br>
+                [DSP] True-Peak Look-ahead Limiter online.<br>
+                [SYSTEM] WebSocket connecting...
+            </div>
+            <div id="incident-log" style="background: #0a0a10; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 130px; overflow-y: auto;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; text-transform: uppercase; margin-bottom: 10px;">Incident Recovery Log</div>
+                <div id="incident-container" style="font-family: 'Fira Code', monospace; font-size: 0.75em; line-height: 1.4;">
+                    <!-- Incidents go here -->
+                </div>
+            </div>
         </div>
         <div class="controls-card">
             <form id="launch-form">
@@ -224,6 +236,15 @@
                 else memCard.style.borderColor = '#252535';
             }
 
+            if (d.monitoring) {
+                document.getElementById('error-rate').innerText = d.monitoring.error_rate;
+                document.getElementById('incident-container').innerHTML = d.monitoring.incidents.map(i => `
+                    <div style="margin-bottom: 5px; color: ${i.severity === 'ERROR' ? '#ff5555' : '#ffcc00'}">
+                        [${i.timestamp}] ${i.module}: ${i.message}
+                    </div>
+                `).reverse().join('');
+            }
+
             if (d.live_params) {
                 isPaused = d.live_params.paused;
                 const btn = document.getElementById('pause-btn');
@@ -235,10 +256,11 @@
 
             if (d.cluster && d.cluster.length > 0) {
                 document.getElementById('nodes-container').innerHTML = d.cluster.map(n => `
-                    <div class="cluster-node" style="display: flex; align-items: center; gap: 5px;">
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${n.status === 'Idle' ? '#00ffcc' : '#a020f0'};"></span>
-                        <span style="color: #eee;">${n.id}</span>
-                        <span style="color: #666;">(${n.cores} Cores)</span>
+                    <div class="cluster-node" style="display: flex; align-items: center; gap: 8px; background: #1a1a24; padding: 5px 10px; border-radius: 5px;">
+                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${n.failed_tasks > 3 ? '#ff5555' : (n.status === 'Idle' ? '#00ffcc' : '#a020f0')};"></span>
+                        <span style="color: #eee; font-weight: 600;">${n.id}</span>
+                        <span style="color: #666;">[${n.total_tasks - n.failed_tasks}/${n.total_tasks}]</span>
+                        <button onclick="resetNode('${n.id}')" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.8em; padding: 0;">↺</button>
                     </div>
                 `).join('');
             } else {
@@ -277,6 +299,13 @@
         const fd = new FormData();
         fd.append('paused', isPaused ? 'true' : 'false');
         await fetch('/update_params', { method: 'POST', body: fd });
+    }
+
+    async function resetNode(nodeId) {
+        const fd = new FormData();
+        fd.append('node_id', nodeId);
+        await fetch('/cluster/reset', { method: 'POST', body: fd });
+        logTerminal(`[CLUSTER] Manual reset initiated for ${nodeId}`, '#ffcc00');
     }
 
     async function updateLiveParams() {

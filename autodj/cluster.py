@@ -15,6 +15,8 @@ class ClusterNode:
         self.id = node_id
         self.cores = cores
         self.status = "Idle"
+        self.failed_tasks = 0
+        self.total_tasks = 0
 
 class RenderCluster:
     """
@@ -50,10 +52,23 @@ class RenderCluster:
             self._executor.shutdown()
             self._executor = None
 
+    def reset_node(self, node_id):
+        """Resets the failure counter for a node."""
+        for n in self.nodes:
+            if n.id == node_id:
+                n.failed_tasks = 0
+                n.status = "Idle"
+
     def get_status(self):
         """Returns the status of the cluster nodes."""
         return [
-            {"id": n.id, "cores": n.cores, "status": n.status}
+            {
+                "id": n.id,
+                "cores": n.cores,
+                "status": n.status,
+                "failed_tasks": n.failed_tasks,
+                "total_tasks": n.total_tasks
+            }
             for n in self.nodes
         ]
 
