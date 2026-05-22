@@ -82,38 +82,33 @@ def warp_worker(args):
     """Thread worker for track preparation (time-stretch, pitch-shift, normalize)."""
     path, native_bpm, s_bpm, e_bpm, cur_key, tar_key, sync = args
     try:
-        # Force stereo loading from the start
-        y, sr = librosa.load(path, sr=None, mono=False)
-        print(f"  [LOAD] {os.path.basename(path)} - Channels: {1 if y.ndim==1 else y.shape[0]}")
+        # Force strict 44100Hz to eliminate resampling drift
+        target_sr = 44100
+        y, sr = librosa.load(path, sr=target_sr, mono=False)
+        print(f"  [LOAD] {os.path.basename(path)} - Forced 44.1kHz Standard")
         
-        y_w = dynamic_warp(y, sr, native_bpm, s_bpm, e_bpm)
+        y_w = dynamic_warp(y, target_sr, native_bpm, s_bpm, e_bpm)
         
-        # Disable pitch shifting for now to ensure maximum fidelity and isolate the muddiness
-        # if sync and cur_key and tar_key:
-        #    diff = get_semitone_diff(cur_key, tar_key)
-        #    if 0 < abs(diff) <= 2:
-        #        y_w = librosa.effects.pitch_shift(y_w, sr=sr, n_steps=diff)
-        
-        y_w = apply_limiter(normalize_lufs(y_w, sr, config.TARGET_LUFS))
-        return y_w, sr
+        y_w = apply_limiter(normalize_lufs(y_w, target_sr, config.TARGET_LUFS))
+        return y_w, target_sr
     except Exception as e:
         print(f"[ERROR] warp_worker failed for {path}: {e}")
         return None, str(e)
 
 
 def analyze_track_worker(f):
-    """Metadata extraction worker with multi-window analysis."""
+    """Metadata extraction worker with forced 44.1kHz analysis."""
     try:
-        # Load stereo for initial load, but get_native_bpm will handle mono conversion for analysis
-        y, sr = librosa.load(f, sr=None, mono=False)
-        native_bpm, _, _ = get_native_bpm(y, sr)
+        target_sr = 44100
+        y, sr = librosa.load(f, sr=target_sr, mono=False)
+        native_bpm, _, _ = get_native_bpm(y, target_sr)
         
         return {
             'path': f,
             'bpm': native_bpm,
-            'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), sr),
-            'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), sr),
-            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr)
+            'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), target_sr),
+            'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), target_sr),
+            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), target_sr)
         }
     except Exception as e:
         print(f"[ERROR] analyze_track_worker failed for {f}: {e}")
