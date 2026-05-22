@@ -124,24 +124,41 @@ def detect_phrases(y, sr):
     return (librosa.frames_to_time(boundaries, sr=sr) * 1000).astype(int)
 
 def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
-    """Calculates millisecond offsets for track segmentation and phase alignment."""
+    """Calculates millisecond offsets for track segmentation and downbeat anchoring."""
     samples = pydub_to_ndarray(segment)
     samples_mono = librosa.to_mono(samples)
+    
+    # Force Kick-only analysis for anchoring
+    nyquist = 0.5 * sr
+    sos_kick = butter(4, 150.0 / nyquist, btype='lowpass', output='sos')
+    samples_kick = sosfiltfilt(sos_kick, samples_mono)
     
     ms_per_beat = 60000.0 / target_bpm
     ms_per_bar = ms_per_beat * beats_per_bar
     ms_per_transition = ms_per_bar * transition_bars
     
-    # Track-wide beat detection to find the "groove"
-    onset_env = librosa.onset.onset_strength(y=samples_mono, sr=sr)
-    tempo, beat_frames = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, start_bpm=target_bpm)
+    # 1. High-Res Onset Detection on filtered kick signal
+    onset_env = librosa.onset.onset_strength(y=samples_kick, sr=sr)
+    _, beat_frames = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, start_bpm=target_bpm)
     beat_times_ms = (librosa.frames_to_time(beat_frames, sr=sr) * 1000).astype(int)
     
-    # Find the first real beat (first strong transient)
-    # This is critical for tracks with long ambient intros
-    first_beat_ms = 0
-    if len(beat_times_ms) > 0:
-        first_beat_ms = beat_times_ms[0]
+    if len(beat_times_ms) == 0:
+        return [], int(ms_per_transition), 0
+
+    # 2. Kick-Locked Downbeat Finder
+    # We look for the most consistent rhythmic start point in the bass frequencies
+    search_limit = min(len(beat_times_ms), 16)
+    energies = []
+    for i in range(search_limit):
+        b_ms = beat_times_ms[i]
+        start_s = int(max(0, (b_ms - 20) * sr / 1000))
+        end_s = int(min(len(samples_kick), (b_ms + 20) * sr / 1000))
+        if start_s >= end_s: energies.append(0)
+        else: energies.append(np.max(np.abs(samples_kick[start_s:end_s])))
+    
+    # Anchor to the strongest transient in the first measure
+    downbeat_idx = np.argmax(energies[:4]) if len(energies) >= 4 else 0
+    first_beat_ms = beat_times_ms[downbeat_idx]
         
     return beat_times_ms, int(ms_per_transition), first_beat_ms
 
@@ -196,46 +213,38 @@ from scipy.signal import butter, sosfilt, sosfiltfilt
 def find_sync_offset(outro_y, intro_y, sr, bpm):
     """
     Finds the sample-accurate offset by correlating the isolated kick-drum
-    waveforms (20-150Hz). This is the 'Mastering' approach to sync.
+    waveforms (20-150Hz) with a measure-wide search window.
     """
-    # 1. Isolate the Kick Band (20Hz - 150Hz)
     nyquist = 0.5 * sr
     sos = butter(4, [20.0 / nyquist, 150.0 / nyquist], btype='bandpass', output='sos')
     
-    # Ensure mono
     o_m = librosa.to_mono(outro_y) if outro_y.ndim == 2 else outro_y
     i_m = librosa.to_mono(intro_y) if intro_y.ndim == 2 else intro_y
     
-    # Use zero-phase filtering (forward-backward) so the filter doesn't shift the beats
+    # Zero-phase kick isolation
     o_kick = sosfiltfilt(sos, o_m)
     i_kick = sosfiltfilt(sos, i_m)
     
-    # 2. High-Res Cross-Correlation
-    # Only correlate the first 4 bars of the transition to save CPU
     ms_per_beat = 60000.0 / bpm
     samples_per_beat = int((ms_per_beat / 1000.0) * sr)
     limit = min(len(o_kick), len(i_kick), samples_per_beat * 16)
     
-    # Perform correlation on the raw waveforms
     correlation = np.correlate(o_kick[:limit], i_kick[:limit], mode='full')
     center = limit - 1
     
-    # Search window: +/- 1.5 beats (plenty for fine-tuning)
-    search_samples = int(samples_per_beat * 1.5)
+    # Increase search window to +/- 4 beats (1 full measure)
+    # This catches the 'half-measure' and 'echo' errors simultaneously
+    search_samples = int(samples_per_beat * 4.0)
     start_idx = max(0, center - search_samples)
     end_idx = min(len(correlation), center + search_samples)
     window = correlation[start_idx : end_idx]
     
     if len(window) == 0: return 0
     
-    # Find the sample-accurate peak
     best_lag_rel = np.argmax(window)
     actual_lag_samples = (start_idx + best_lag_rel) - center
     
-    # Convert samples to ms
-    nudge_ms = (actual_lag_samples / sr) * 1000
-    
-    return int(nudge_ms)
+    return int((actual_lag_samples / sr) * 1000)
 
 def get_genre_archetype(y, sr, bpm=None):
     """

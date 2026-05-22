@@ -62,7 +62,8 @@ def dynamic_warp(y, sr, native_bpm, start_target_bpm, end_target_bpm):
             # Correct Ratio: rate is target/native. 
             # If target > native, rate > 1.0 (speed up).
             # Rubber Band --tempo X: X > 1.0 is faster.
-            subprocess.run(["rubberband", "--quiet", "--tempo", str(rate), fin.name, fout.name], check=True)
+            print(f"    [RB] rate={rate:.4f} in={fin.name}")
+            subprocess.run(["rubberband", "--tempo", str(rate), fin.name, fout.name], check=True)
             out_y, _ = librosa.load(fout.name, sr=sr, mono=False)
             os.remove(fin.name); os.remove(fout.name)
             
@@ -296,14 +297,15 @@ def compile_master_set(args, status_obj=None):
         n_slice = pydub_to_ndarray(nxt[:ms_trans])
         sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
         
-        # Cap nudge at +/- 0.5 beats to maintain phrase integrity
-        max_nudge = int(ms_per_beat / 2)
+        # Increase nudge limit to +/- 2 beats (approx 826ms @ 145BPM)
+        # This allows the engine to jump over a kick if the initial phrasing was off.
+        max_nudge = int(ms_per_beat * 2.0)
         sync_nudge = max(-max_nudge, min(max_nudge, sync_nudge))
         
         # CORRECT DIRECTION: Subtract nudge to align transients
         ms_trans -= sync_nudge
 
-        print(f"  [SYNC] 8-Bar Phrase Locked. Offset: {master_grid_offset}ms. Nudge: {sync_nudge}ms.")
+        print(f"  [SYNC] 8-Bar Phrase Locked. Offset: {master_grid_offset}ms. Nudge: {sync_nudge}ms. Final Overlap: {ms_trans/1000:.1f}s")
 
         ms_trans = min(ms_trans, len(master))
         track_start_ms = len(master) - ms_trans
