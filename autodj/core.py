@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (7.3.0)
+""" Core Orchestration Engine | Auto DJ Script (7.4.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 7.3.0 features: Integration Bridge & Staging Era.
+Version 7.4.0 features: The Resilient Era (Incident Recovery).
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -29,6 +29,7 @@ from .dsp import (
 from .utils import pydub_to_ndarray, ndarray_to_pydub, export_rekordbox_xml
 from .version import __version__
 from .cluster import cluster
+from .monitoring import monitor
 import time
 
 
@@ -125,7 +126,8 @@ def warp_worker(args):
         y_w = apply_limiter(normalize_lufs(y_w, sr, config.TARGET_LUFS))
         return y_w, sr
     except Exception as e:
-        print(f"[ERROR] warp_worker failed for {path}: {e}")
+        import traceback
+        monitor.log_incident("ERROR", "WarpWorker", f"Failed to warp {os.path.basename(path)}: {e}", traceback.format_exc())
         return None, str(e)
 
 
@@ -266,7 +268,20 @@ def compile_master_set(args, status_obj=None):
     futures = {executor.submit(warp_worker, task): i for i, task in enumerate(warp_tasks)}
     for future in as_completed(futures):
         idx = futures[future]
-        warped_results[idx] = future.result()
+        y_w, sr = future.result()
+
+        # Fault Tolerance: Local Fallback (v7.4.0)
+        if y_w is None:
+            monitor.record_retry()
+            monitor.log_incident("WARN", "CoreEngine", f"Cluster task {idx} failed. Retrying locally...")
+            y_w, sr = warp_worker(warp_tasks[idx])
+
+        if y_w is not None:
+            monitor.record_success()
+        else:
+            monitor.record_failure()
+
+        warped_results[idx] = (y_w, sr)
         if status_obj is not None:
             completed = sum(1 for x in warped_results if x is not None)
             status_obj["status"] = f"Warping track {completed}/{num_tracks}"
@@ -389,9 +404,16 @@ def compile_master_set(args, status_obj=None):
         future = mix_executor.submit(transition_render_worker, render_args)
         mix_bus_raw, _ = future.result()
 
+        # Fault Tolerance: Fallback to Sequential Render (v7.4.0)
+        if mix_bus_raw is None:
+            monitor.log_incident("WARN", "CoreEngine", f"Transition render {i} failed in cluster. Falling back...")
+            mix_bus_raw, _ = transition_render_worker(render_args)
+
         if mix_bus_raw is not None:
             mix_bus = ndarray_to_pydub(mix_bus_raw, sr)
+            monitor.record_success()
         else:
+             monitor.record_failure()
              # Classic Fallback if parallel render fails
              f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, 'lowpass', args.lowpass), sr)
              f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, 'highpass', args.highpass), sr)

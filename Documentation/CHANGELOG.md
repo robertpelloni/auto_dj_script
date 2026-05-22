@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.4.0] - 2024-05-29
+### Added
+- **Fault-Tolerant Mixing Engine**: Implemented "Retry-with-Fallback" strategy for cluster tasks.
+- **Incident Recovery Console**: Real-time robustness telemetry and structured incident logging.
+- **Node-Specific Metrics**: Tracking success/failure rates per cluster node.
+- **Auto-Recovery UI**: Added manual node reset and error rate visualization.
+
 ## [7.3.0] - 2024-05-29
 ### Added
 - **Integration Bridge (Rekordbox)**: Automated generation of Pioneer DJ compatible XML files with metadata and transition cue points.
