@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.0.0] - 2024-05-28
+### Added
+- **Quantum Network Cluster**: Implemented remote node registration and orchestration via `/cluster/join`.
+- **Spectral Terrain Data Pipeline**: High-resolution energy map extraction for 3D visualization.
+- **In-Memory Audio I/O**: Refactored the internal pipeline to use `io.BytesIO`, eliminating temporary file overhead.
+### Performance
+- Reduced track preparation latency by ~15% via memory-buffer optimization.
+
 ## [6.9.0] - 2024-05-27
 ### Added
 - **Distributed Cluster Rendering**: Introduced `autodj/cluster.py` for orchestrating rendering tasks across multiple nodes.

@@ -1,4 +1,4 @@
-# 📐 Technical Design & Mathematical Foundations (v6.7.0)
+# 📐 Technical Design & Mathematical Foundations (7.0.0)
 
 ## 1. Genre-Aware Heuristics
 The classification engine uses a combination of **Spectral Centroid** ($\mu_c$) and **Spectral Rolloff** ($\mu_r$) to determine stylistic archetypes:

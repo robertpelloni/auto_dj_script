@@ -1,5 +1,5 @@
 """
-Distributed Rendering Cluster Manager for the Auto DJ system (v6.9.0).
+Distributed Rendering Cluster Manager for the Auto DJ system (7.0.0).
 Coordinates rendering tasks across multiple local or remote nodes.
 """
 import os
@@ -27,6 +27,16 @@ class RenderCluster:
     def __init__(self):
         self.nodes = [ClusterNode("LocalHost", cores=os.cpu_count() or 1)]
         self._executor = None
+
+    def register_node(self, node_id, cores):
+        """Registers a new remote node in the cluster."""
+        # Check if node already exists
+        for n in self.nodes:
+            if n.id == node_id:
+                n.cores = cores
+                n.status = "Idle"
+                return
+        self.nodes.append(ClusterNode(node_id, cores=cores))
 
     def get_executor(self):
         """Returns the persistent ProcessPoolExecutor instance."""

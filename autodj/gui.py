@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (v6.8.0).
-v6.8.0: AI Rationale and Spectral Telemetry.
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.0.0).
+7.0.0: AI Rationale and Spectral Telemetry.
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
@@ -127,6 +127,12 @@ async def start_mixing(
 
     background_tasks.add_task(compile_master_set, Args(), status_obj=mixing_status)
     return {"message": "Engine ignited."}
+
+@app.post("/cluster/join")
+async def cluster_join(node_id: str = Form(...), cores: int = Form(...)):
+    """API endpoint for remote nodes to join the cluster."""
+    cluster.register_node(node_id, cores)
+    return {"status": "Accepted", "node": node_id}
 
 @app.get("/download")
 async def download_master():

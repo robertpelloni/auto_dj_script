@@ -1,5 +1,5 @@
 """
-AI Classification Models for the Auto DJ system (v6.8.0).
+AI Classification Models for the Auto DJ system (7.0.0).
 Provides neural-network based genre inference using spectral feature vectors.
 """
 import numpy as np

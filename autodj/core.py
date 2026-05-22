@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (v6.9.0)
+""" Core Orchestration Engine | Auto DJ Script (7.0.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 6.9.0 features: Distributed Cluster Rendering.
+Version 7.0.0 features: Quantum Network Cluster & Spectral Terrain.
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -18,7 +18,7 @@ from .analysis import (
     get_native_bpm, get_musical_key, analyze_geometry,
     get_camelot_key, is_harmonically_compatible,
     get_energy_profile, detect_phrases, get_genre_archetype,
-    find_sync_offset, identify_loopable_phrase
+    find_sync_offset, identify_loopable_phrase, extract_spectral_terrain
 )
 from .dsp import (
     apply_dsp_filter, trim_silence, normalize_lufs,
@@ -109,6 +109,7 @@ def analyze_track_worker(f):
         native_bpm, _, _ = get_native_bpm(y, sr)
         
         genre, rationale = get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr, bpm=native_bpm)
+        terrain = extract_spectral_terrain(y, sr)
 
         return {
             'path': f,
@@ -116,7 +117,8 @@ def analyze_track_worker(f):
             'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), sr),
             'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), sr),
             'genre': genre,
-            'rationale': rationale
+            'rationale': rationale,
+            'terrain': terrain
         }
     except Exception as e:
         print(f"[ERROR] analyze_track_worker failed for {f}: {e}")
@@ -188,7 +190,7 @@ def find_optimal_order(files, status_obj=None):
 
 
 def compile_master_set(args, status_obj=None):
-    """The High-Performance Mixing Pipeline (v6.9.0)."""
+    """The High-Performance Mixing Pipeline (7.0.0)."""
     folder = args.input
     all_files = []
     for ext in config.SUPPORTED_EXTENSIONS:
@@ -244,7 +246,8 @@ def compile_master_set(args, status_obj=None):
 
     tracklist, master, processed_tracks, current_time_ms = [], None, [], 0
 
-    # Using Cluster-Aware persistent executor (v6.9.0 Optimized)
+    # Using Cluster-Aware persistent executor (7.0.0 Optimized)
+    import io
     mix_executor = cluster.get_executor()
     for i in range(num_tracks):
         y_w, sr = warped_results[i]
@@ -252,10 +255,12 @@ def compile_master_set(args, status_obj=None):
             print(f"[WARN] Skipping track {i}: warp failed")
             continue
 
-        path = f"scratch_{i}_{os.getpid()}.wav"
-        sf.write(path, y_w.T, sr, format='WAV', subtype='PCM_16')
-        nxt = trim_silence(AudioSegment.from_wav(path))
-        os.remove(path)
+        # In-Memory Buffer Conversion (v7.0.0 Optimized)
+        # Avoids disk I/O for temporary track preparation
+        buf = io.BytesIO()
+        sf.write(buf, y_w.T, sr, format='WAV', subtype='PCM_16')
+        buf.seek(0)
+        nxt = trim_silence(AudioSegment.from_file(buf, format="wav"))
         processed_tracks.append((nxt, y_w, sr))
 
         if master is None:
@@ -339,7 +344,7 @@ def compile_master_set(args, status_obj=None):
         if mode == 'auto' and meta_list[i]['genre'] == 'High-Energy':
             mode = 'progressive' # Professional default for Psytrance
 
-        # Parallel Transition Rendering (v6.7.0)
+        # Parallel Transition Rendering (7.0.0)
         dsp_kwargs = {'lowpass': args.lowpass, 'highpass': args.highpass}
         render_args = (pydub_to_ndarray(m_outro), pydub_to_ndarray(n_intro), sr, mode, ms_trans, ideal_p, dsp_kwargs)
 
@@ -385,7 +390,7 @@ def compile_master_set(args, status_obj=None):
 
 
 def transition_render_worker(args):
-    """Parallel worker for rendering a single transition overlap (v6.7.0)."""
+    """Parallel worker for rendering a single transition overlap (7.0.0)."""
     outro_raw, intro_raw, sr, mode, ms_trans, ideal_p, dsp_kwargs = args
     try:
         arch_plugin = ArchetypeRegistry.get(mode)
@@ -401,7 +406,7 @@ def transition_render_worker(args):
             f_m_raw = apply_dsp_filter(outro_raw, sr, 'lowpass', dsp_kwargs.get('lowpass', 200.0))
             f_n_raw = apply_dsp_filter(intro_raw, sr, 'highpass', dsp_kwargs.get('highpass', 150.0))
 
-        # Apply Professional Logarithmic Fades with Dip (v6.7.0)
+        # Apply Professional Logarithmic Fades with Dip (7.0.0)
         f_m_faded = apply_log_fade(f_m_raw, fade_type='out')
         f_n_faded = apply_log_fade(f_n_raw, fade_type='in')
 

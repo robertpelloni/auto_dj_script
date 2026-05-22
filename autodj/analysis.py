@@ -1,5 +1,5 @@
 """
-Audio analysis module for the Auto DJ system (v6.8.0).
+Audio analysis module for the Auto DJ system (v7.0.0).
 This module is the "brain" of the engine, responsible for Music Information Retrieval (MIR).
 
 Theoretical Foundations:
@@ -168,7 +168,7 @@ def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar
 
 def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
     """
-    Finds the most rhythmically stable 1-bar or 2-bar phrase for looping (v6.7.0).
+    Finds the most rhythmically stable 1-bar or 2-bar phrase for looping (7.0.0).
     Uses Cross-Correlation for sample-accurate loop point detection.
     """
     ms_per_beat = 60000.0 / bpm
@@ -250,7 +250,7 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
 
 def extract_ai_features(y, sr):
     """
-    Extracts high-dimensional spectral features for CNN-based genre inference (v6.7.0).
+    Extracts high-dimensional spectral features for CNN-based genre inference (7.0.0).
     Returns a feature vector containing MFCCs, Spectral Centroid, Contrast, Flatness, and Rolloff.
     """
     y_mono = librosa.to_mono(y) if y.ndim == 2 else y
@@ -285,7 +285,7 @@ def extract_ai_features(y, sr):
 
 def get_genre_archetype(y, sr, bpm=None):
     """
-    Identifies the genre archetype using the AI Inference Engine (v6.8.0).
+    Identifies the genre archetype using the AI Inference Engine (7.0.0).
     Returns (genre, rationale).
     """
     from .models import GenreClassifier
@@ -302,3 +302,22 @@ def get_genre_archetype(y, sr, bpm=None):
         rationale = f"BPM override ({bpm:.0f} > 150): Ambient classification rejected."
 
     return genre, rationale
+
+def extract_spectral_terrain(y, sr, bins=64):
+    """
+    Generates a high-resolution energy map of the track for 3D visualization (v7.0.0).
+    Returns a downsampled mel-spectrogram matrix.
+    """
+    y_mono = librosa.to_mono(y) if y.ndim == 2 else y
+
+    # Generate Mel-Spectrogram
+    S = librosa.feature.melspectrogram(y=y_mono, sr=sr, n_mels=bins)
+
+    # Convert to log-scale (dB)
+    S_db = librosa.power_to_db(S, ref=np.max)
+
+    # Downsample time-axis for lightweight transmission (aim for ~100 points)
+    hop = max(1, S_db.shape[1] // 100)
+    terrain = S_db[:, ::hop]
+
+    return terrain.tolist()

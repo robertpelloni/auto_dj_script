@@ -1,9 +1,10 @@
-# 📝 Immediate Tasks (v6.9.0)
+# 📝 Immediate Tasks (7.0.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Distributed Cluster Dispatcher**: Rendering task orchestration.
-- [x] **Cluster Monitor UI**: Real-time node status in dashboard.
-- [ ] **Remote Node Support**: Secure WebSocket-based remote rendering nodes.
+- [x] **Remote Node Registration**: `/cluster/join` API for external nodes.
+- [x] **Spectral Terrain Generation**: Mel-Spectrogram mapping for 3D UI.
+- [x] **In-Memory Audio Pipeline**: Zero-disk I/O for track preparation.
+- [ ] **WebGL Terrain Viewer**: Implement 3D visualizer in dashboard.
 
 ## 🛠 Improvements & Refactoring
 - [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).
