@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (7.2.0)
+""" Core Orchestration Engine | Auto DJ Script (7.3.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 7.2.0 features: Health Guardrails & Execution Control.
+Version 7.3.0 features: Integration Bridge & Staging Era.
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -26,7 +26,7 @@ from .dsp import (
     apply_limiter, apply_multiband_compression,
     apply_log_fade, ArchetypeRegistry
 )
-from .utils import pydub_to_ndarray, ndarray_to_pydub
+from .utils import pydub_to_ndarray, ndarray_to_pydub, export_rekordbox_xml
 from .version import __version__
 from .cluster import cluster
 import time
@@ -424,6 +424,23 @@ def compile_master_set(args, status_obj=None):
             f.write(f"Auto DJ v{__version__} Master Tracklist\n{'='*40}\n")
             for item in tracklist:
                 f.write(f"[{item['timestamp']}] {item['file']} ({item['key']}) [{item['genre']}]\n")
+
+        # Integration Bridge: Rekordbox XML Export (v7.3.0)
+        xml_path = os.path.splitext(args.output)[0] + "_rekordbox.xml"
+        try:
+            # Enriched tracklist for XML
+            enriched_tl = []
+            for i, item in enumerate(tracklist):
+                entry = dict(item)
+                entry['path'] = all_files[i]
+                entry['bpm'] = str(meta_list[i]['bpm'])
+                entry['duration_ms'] = len(processed_tracks[i][0]) if i < len(processed_tracks) else 0
+                enriched_tl.append(entry)
+
+            export_rekordbox_xml(enriched_tl, xml_path)
+            print(f"[*] Integration: Rekordbox XML exported to {xml_path}")
+        except Exception as e:
+            print(f"[WARN] Rekordbox export failed: {e}")
 
 
 def transition_render_worker(args):

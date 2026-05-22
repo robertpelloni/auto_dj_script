@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  autodj-master:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./psyset_source:/app/psyset_source
+      - .:/app
+    environment:
+      - AUTODJ_LOG_LEVEL=DEBUG
+    restart: unless-stopped
+
+  autodj-node-1:
+    build: .
+    command: ["python", "auto_dj.py", "--cluster-node", "--node-id", "Staging-Node-1"]
+    volumes:
+      - ./psyset_source:/app/psyset_source
+    depends_on:
+      - autodj-master

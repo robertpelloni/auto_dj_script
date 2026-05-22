@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.2.0).
-7.2.0: Health Guardrails & Execution Control.
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.3.0).
+7.3.0: Integration Bridge & Staging Era.
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
