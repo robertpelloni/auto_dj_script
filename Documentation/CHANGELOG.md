@@ -144,6 +144,29 @@
 - **Dynamic Transition UI**: Added a toggle to the Web Dashboard and integrated transition duration metadata into the live tracklist.
 - **Repository Synchronization**: Merged upstream changes and synchronized feature branches for unified development flow.
 
+## [8.0.0] - 2024-05-24
+### Added
+- **Integrated Autonomous Station**: Fully validated end-to-end autonomous mixing workflow.
+- **Pioneer/Rekordbox XML Bridge**: Automated generation of `final_dj_master_rekordbox.xml` containing high-precision transition markers.
+- **Environment Autoconfig**: Added automated detection and resolution for missing system dependencies (`ffmpeg`, `rubberband-cli`).
+- **E2E Integration Tests**: Implemented automated generation of valid test media and Playwright-based GUI verification.
+
+## [7.9.0] - 2024-05-24
+### Added
+- **Real-time FX Engine**: Integrated 3-band EQ gain stages into the mixing loop.
+- **Performance Telemetry**: Added "Speedup Factor" metric to the UI and engine logs.
+- **Interactive UI Overrides**: Added EQ sliders and transition length overrides to the Web Dashboard.
+
+## [7.8.0] - 2024-05-24
+### Added
+- **Advanced Monitoring Dashboard**: Real-time Disk I/O and Network telemetry via `psutil`.
+- **System Health Charts**: Chart.js-powered historical trends for CPU and RAM.
+- **Active Job Tracker**: Granular task visibility for background analysis.
+
+## [7.7.0] - 2024-05-24
+### Added
+- **Modular Plugin Architecture**: Refactored core into `SourcePlugin`, `OutputPlugin`, and `ToolPlugin` base classes.
+
 ## [5.8.0] - 2024-05-23
 ### Added
 - **Enhanced Genre Inference (v2)**: Incorporated BPM and spectral flatness into the classification heuristic for superior stylistic detection.
