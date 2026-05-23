@@ -1,0 +1,6 @@
+2026-05-23 05:14:14,023 - AutoDJ.Monitor - ERROR - [ERROR] WarpWorker: Failed to warp track1.flac: [Errno 2] No such file or directory: 'rubberband'
+2026-05-23 05:14:14,026 - AutoDJ.Monitor - INFO - [WARN] CoreEngine: Cluster task 1 failed. Retrying locally...
+2026-05-23 05:14:14,131 - AutoDJ.Monitor - ERROR - [ERROR] WarpWorker: Failed to warp track2.flac: [Errno 2] No such file or directory: 'rubberband'
+2026-05-23 05:14:15,392 - AutoDJ.Monitor - ERROR - [ERROR] WarpWorker: Failed to warp track1.flac: [Errno 2] No such file or directory: 'rubberband'
+2026-05-23 05:14:15,393 - AutoDJ.Monitor - INFO - [WARN] CoreEngine: Cluster task 0 failed. Retrying locally...
+2026-05-23 05:14:15,417 - AutoDJ.Monitor - ERROR - [ERROR] WarpWorker: Failed to warp track2.flac: [Errno 2] No such file or directory: 'rubberband'
