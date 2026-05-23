@@ -1,0 +1,15 @@
+{
+    "keep": {
+        "days": true,
+        "amount": 14
+    },
+    "auditLog": "C:\\Users\\hyper\\workspace\\auto_dj_script\\logs\\.c849654dea4b478b851841eee45472f436021ea4-audit.json",
+    "files": [
+        {
+            "date": 1779541034348,
+            "name": "C:\\Users\\hyper\\workspace\\auto_dj_script\\logs\\mcp-puppeteer-2026-05-23.log",
+            "hash": "4f7092d2195e87357ea520bc27781c17722f782e28043916c3d9e1d789f5d7f9"
+        }
+    ],
+    "hashType": "sha256"
+}

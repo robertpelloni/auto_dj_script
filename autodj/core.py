@@ -6,7 +6,7 @@ parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 Version 7.6.0 features: The Visual Era (Spectral Terrain 3D).
 """
 
-import os, glob, re, librosa, random, json, subprocess
+import os, glob, re, librosa, random, json, subprocess, io
 import soundfile as sf
 import numpy as np
 from pydub import AudioSegment
@@ -158,7 +158,8 @@ def find_optimal_order(files, status_obj=None):
 
     # Run analysis in parallel to leverage multi-core CPUs
     results = []
-    with ProcessPoolExecutor() as executor:
+    # Limit to 2 workers to prevent memory exhaustion on large tracks
+    with ProcessPoolExecutor(max_workers=2) as executor:
         futures = {executor.submit(analyze_track_worker, f): f for f in files}
         for i, future in enumerate(as_completed(futures)):
             if status_obj:

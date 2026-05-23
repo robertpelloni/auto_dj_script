@@ -43,7 +43,8 @@ class RenderCluster:
     def get_executor(self):
         """Returns the persistent ProcessPoolExecutor instance."""
         if self._executor is None:
-            self._executor = ProcessPoolExecutor()
+            # Throttle to 2 workers to prevent MemoryError on large tracks
+            self._executor = ProcessPoolExecutor(max_workers=2)
         return self._executor
 
     def shutdown(self):
