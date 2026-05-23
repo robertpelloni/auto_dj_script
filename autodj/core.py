@@ -114,15 +114,24 @@ def warp_worker(args):
     """Thread worker for track preparation (time-stretch, pitch-shift, normalize)."""
     path, native_bpm, s_bpm, e_bpm, cur_key, tar_key, sync = args
     try:
-        # Force strict 44100Hz to eliminate resampling drift
+        # Use soundfile.read for much faster loading
         target_sr = 44100
-        y, sr = librosa.load(path, sr=target_sr, mono=False)
-        print(f"  [LOAD] {os.path.basename(path)} - Forced 44.1kHz Standard")
+        y, sr = sf.read(path, dtype='float32')
+        # Soundfile returns (samples, channels). We need (channels, samples)
+        if y.ndim == 2:
+            y = y.T
         
-        y_w = dynamic_warp(y, target_sr, native_bpm, s_bpm, e_bpm)
+        # Ensure sample rate matches or resample if necessary
+        if sr != target_sr:
+            y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
+            sr = target_sr
+            
+        print(f"  [LOAD] {os.path.basename(path)} - Fast-Loaded via SoundFile")
         
-        y_w = apply_limiter(normalize_lufs(y_w, target_sr, config.TARGET_LUFS))
-        return y_w, target_sr
+        y_w = dynamic_warp(y, sr, native_bpm, s_bpm, e_bpm)
+        
+        y_w = apply_limiter(normalize_lufs(y_w, sr, config.TARGET_LUFS))
+        return y_w, sr
     except Exception as e:
         import traceback
         monitor.log_incident("ERROR", "WarpWorker", f"Failed to warp {os.path.basename(path)}: {e}", traceback.format_exc())
@@ -130,11 +139,18 @@ def warp_worker(args):
 
 
 def analyze_track_worker(f):
-    """Metadata extraction worker with forced 44.1kHz analysis."""
+    """Metadata extraction worker with fast-loading."""
     try:
         target_sr = 44100
-        y, sr = librosa.load(f, sr=target_sr, mono=False)
-        native_bpm, _, _ = get_native_bpm(y, target_sr)
+        y, sr = sf.read(f, dtype='float32')
+        if y.ndim == 2:
+            y = y.T
+            
+        if sr != target_sr:
+            y = librosa.resample(y, orig_sr=sr, target_sr=target_sr)
+            sr = target_sr
+            
+        native_bpm, _, _ = get_native_bpm(y, sr)
         
         genre, rationale = get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr, bpm=native_bpm)
         terrain = extract_spectral_terrain(y, sr)
@@ -142,9 +158,9 @@ def analyze_track_worker(f):
         return {
             'path': f,
             'bpm': native_bpm,
-            'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), target_sr),
-            'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), target_sr),
-            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), target_sr)
+            'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), sr),
+            'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), sr),
+            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr)
         }
     except Exception as e:
         print(f"[ERROR] analyze_track_worker failed for {f}: {e}")
@@ -154,30 +170,25 @@ def analyze_track_worker(f):
 def find_optimal_order(files, status_obj=None):
     """Sequencing optimization via Simulated Annealing."""
     total = len(files)
-    print(f"[*] Analyzing {total} tracks (Parallel)...")
+    print(f"[*] Analyzing {total} tracks (Sequential)...")
 
-    # Run analysis in parallel to leverage multi-core CPUs
     results = []
-    # Limit to 2 workers to prevent memory exhaustion on large tracks
-    with ProcessPoolExecutor(max_workers=2) as executor:
-        futures = {executor.submit(analyze_track_worker, f): f for f in files}
-        for i, future in enumerate(as_completed(futures)):
-            if status_obj:
-                # Task Tracker Integration (v7.8.0)
-                status_obj["active_tasks"][futures[future]] = "Analyzing..."
-
-            r = future.result()
-            if status_obj:
-                status_obj["active_tasks"].pop(futures[future], None)
-            results.append(r)
-            if status_obj is not None:
-                status_obj["status"] = f"Analyzing Library ({i+1}/{total})"
-                status_obj["progress"] = int(((i + 1) / total) * 50)  # Analysis = 0-50%
-            path = futures[future]
-            if 'error' not in r:
-                print(f"  [{i+1}/{total}] {os.path.basename(path)}: BPM={r['bpm']:.1f}, Key={r['key']}, Genre={r['genre']}")
-            else:
-                print(f"  [{i+1}/{total}] {os.path.basename(path)}: ERROR - {r['error']}")
+    for i, f in enumerate(files):
+        if status_obj:
+            status_obj["active_tasks"][f] = "Analyzing..."
+        
+        r = analyze_track_worker(f)
+        results.append(r)
+        
+        if status_obj:
+            status_obj["active_tasks"].pop(f, None)
+            status_obj["status"] = f"Analyzing Library ({i+1}/{total})"
+            status_obj["progress"] = int(((i + 1) / total) * 50)
+            
+        if 'error' not in r:
+            print(f"  [{i+1}/{total}] {os.path.basename(f)}: BPM={r['bpm']:.1f}, Key={r['key']}, Genre={r['genre']}")
+        else:
+            print(f"  [{i+1}/{total}] {os.path.basename(f)}: ERROR - {r['error']}")
 
     meta = [r for r in results if 'error' not in r]
     if not meta:
