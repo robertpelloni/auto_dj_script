@@ -285,6 +285,10 @@ def compile_master_set(args, status_obj=None):
 
     warped_results = [None] * num_tracks
     executor = cluster.get_executor()
+
+    # Timing for Performance Metrics (v7.9.0)
+    warp_start_time = time.time()
+
     futures = {executor.submit(warp_worker, task): i for i, task in enumerate(warp_tasks)}
     for future in as_completed(futures):
         idx = futures[future]
@@ -292,6 +296,17 @@ def compile_master_set(args, status_obj=None):
             status_obj["active_tasks"][all_files[idx]] = "Warping..."
 
         y_w, sr = future.result()
+
+        # Calculate Speedup Factor (v7.9.0)
+        if status_obj:
+            completed_warp = sum(1 for x in warped_results if x is not None)
+            elapsed_warp = time.time() - warp_start_time
+            if completed_warp > 0 and elapsed_warp > 0:
+                # Estimate total real-time duration of processed audio
+                # For warping, assume 5 min avg
+                processed_audio_sec = completed_warp * 300
+                speedup = processed_audio_sec / elapsed_warp
+                status_obj["performance_metrics"]["speedup_factor"] = round(speedup, 1)
 
         if status_obj:
             status_obj["active_tasks"].pop(all_files[idx], None)
@@ -379,7 +394,11 @@ def compile_master_set(args, status_obj=None):
         current_target_bpm = status_obj.get("live_params", {}).get("target_bpm", start_bpm) if status_obj else start_bpm
         t_s_bpm = current_target_bpm + (end_bpm - current_target_bpm) * (i / num_tracks)
 
-        beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
+        # Dynamic Transition Length Override (v7.9.0)
+        live = status_obj.get("live_params", {}) if status_obj else {}
+        t_bars = live.get("transition_bars", args.transition_bars)
+
+        beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, t_bars)
         ph = detect_phrases(y_w, sr)
 
         # 1. Precise Phase Alignment (v7.0.0)
@@ -453,8 +472,21 @@ def compile_master_set(args, status_obj=None):
         if mode == 'auto' and meta_list[i]['genre'] == 'High-Energy':
             mode = 'progressive' # Professional default for Psytrance
 
+        # Live EQ & Param Injection (v7.9.0)
+        live = status_obj.get("live_params", {}) if status_obj else {}
+        l_gain = live.get("low_gain", 1.0)
+        m_gain = live.get("mid_gain", 1.0)
+        h_gain = live.get("high_gain", 1.0)
+
         # Parallel Transition Rendering (7.0.0)
-        dsp_kwargs = {'lowpass': args.lowpass, 'highpass': args.highpass, 'ideal_p': ideal_p}
+        dsp_kwargs = {
+            'lowpass': args.lowpass,
+            'highpass': args.highpass,
+            'ideal_p': ideal_p,
+            'low_gain': l_gain,
+            'mid_gain': m_gain,
+            'high_gain': h_gain
+        }
         render_args = (pydub_to_ndarray(m_outro), pydub_to_ndarray(n_intro), sr, mode, ms_trans, ideal_p, dsp_kwargs)
 
         # Using the cluster executor
@@ -528,6 +560,11 @@ def transition_render_worker(args):
     """Parallel worker for rendering a single transition overlap (7.0.0)."""
     outro_raw, intro_raw, sr, mode, ms_trans, ideal_p, dsp_kwargs = args
     try:
+        # Inject Real-time EQ into mastering (v7.9.0)
+        l_gain = dsp_kwargs.get('low_gain', 1.0)
+        m_gain = dsp_kwargs.get('mid_gain', 1.0)
+        h_gain = dsp_kwargs.get('high_gain', 1.0)
+
         arch_plugin = ArchetypeRegistry.get(mode)
         if arch_plugin:
             f_m_raw, f_n_raw = arch_plugin.apply(
@@ -550,6 +587,11 @@ def transition_render_worker(args):
 
         # Safety: Apply Limiter to prevent digital clipping in the mix-bus
         summed = apply_limiter(summed)
+
+        # 1.5 Real-time EQ Gain Stage (v7.9.0)
+        # Apply the live EQ gains to the final transition mix-bus
+        summed = apply_multiband_compression(summed, sr, intensity=0.5,
+                                            low_gain=l_gain, mid_gain=m_gain, high_gain=h_gain)
 
         # Ensure correct shape (stereo) and duration
         return summed, sr

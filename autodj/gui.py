@@ -25,6 +25,11 @@ mixing_status = {
     "tracklist": [],
     "playlist": [],
     "active_tasks": {},
+    "performance_metrics": {
+        "speedup_factor": 0.0,
+        "avg_task_time": 0.0,
+        "estimated_completion": "N/A"
+    },
     "progress": 0,
     "version": __version__,
     "parallel_cores": os.cpu_count() or 1,
@@ -42,6 +47,10 @@ mixing_status = {
     "live_params": {
         "mastering_intensity": 0.5,
         "target_bpm": config.TARGET_BPM,
+        "low_gain": 1.0,
+        "mid_gain": 1.0,
+        "high_gain": 1.0,
+        "transition_bars": config.TRANSITION_BARS,
         "paused": False
     }
 }
@@ -162,6 +171,10 @@ async def cluster_reset(node_id: str = Form(...)):
 async def update_params(
     mastering_intensity: float = Form(None),
     target_bpm: float = Form(None),
+    low_gain: float = Form(None),
+    mid_gain: float = Form(None),
+    high_gain: float = Form(None),
+    transition_bars: int = Form(None),
     paused: bool = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
@@ -169,6 +182,14 @@ async def update_params(
         mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
     if target_bpm is not None:
         mixing_status["live_params"]["target_bpm"] = target_bpm
+    if low_gain is not None:
+        mixing_status["live_params"]["low_gain"] = low_gain
+    if mid_gain is not None:
+        mixing_status["live_params"]["mid_gain"] = mid_gain
+    if high_gain is not None:
+        mixing_status["live_params"]["high_gain"] = high_gain
+    if transition_bars is not None:
+        mixing_status["live_params"]["transition_bars"] = transition_bars
     if paused is not None:
         mixing_status["live_params"]["paused"] = paused
     return {"status": "Updated", "params": mixing_status["live_params"]}

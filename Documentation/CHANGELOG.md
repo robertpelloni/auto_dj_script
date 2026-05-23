@@ -1,5 +1,13 @@
 # Changelog
 
+## [7.9.0] - 2024-06-02
+### Added
+- **Real-time EQ Gain Stage**: Integrated 3-band EQ control into the mastering chain.
+- **Performance Monitoring Engine**: Real-time calculation of "Speedup Factor" (mix time vs. audio duration).
+- **Interactive EQ Console**: Added vertical sliders for Low, Mid, and High band gains to the dashboard.
+- **Dynamic Transition Length Overrides**: Real-time adjustment of transition bars during an active session.
+- **Unified FX Status**: Real-time display of performance metrics and FX overrides in the telemetry dashboard.
+
 ## [7.8.0] - 2024-06-01
 ### Added
 - **Advanced Monitoring Dashboard**: Comprehensive system-wide health telemetry and resource charting.

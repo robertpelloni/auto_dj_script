@@ -39,7 +39,7 @@
 
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
-    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px;">
+    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(5, 1fr); gap: 20px; margin-bottom: 20px;">
         <div class="controls-card" id="cpu-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
             <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
@@ -55,6 +55,10 @@
         <div class="controls-card" id="net-card" style="padding: 15px; text-align: center;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">NET THROUGHPUT</div>
             <div id="net-stat" style="font-size: 1.2em; font-weight: 800; color: #00ffcc;">0 KB/s</div>
+        </div>
+        <div class="controls-card" id="speed-card" style="padding: 15px; text-align: center; border-color: #a020f0;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">SPEEDUP FACTOR</div>
+            <div id="speed-stat" style="font-size: 2em; font-weight: 800; color: #a020f0;">0.0x</div>
         </div>
     </div>
 
@@ -158,12 +162,18 @@
             </form>
 
             <div id="live-adjustments" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
-                <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter Overrides</label>
+                <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter & EQ Overrides</label>
 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">
-                        ⏸ PAUSE EXECUTION
-                    </button>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                        <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">
+                            ⏸ PAUSE
+                        </button>
+                        <div style="display: flex; align-items: center; gap: 10px; background: #000; border-radius: 6px; padding: 0 10px; border: 1px solid #333;">
+                            <span style="font-size: 0.6em; color: #888; font-weight: 800;">BARS</span>
+                            <input type="number" id="live-bars" value="16" min="4" max="64" step="4" style="border:none; padding: 5px; width: 50px;" onchange="updateLiveParams()">
+                        </div>
+                    </div>
 
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
@@ -171,6 +181,24 @@
                             <span id="live-bpm-val">145</span>
                         </div>
                         <input type="range" id="live-bpm" min="80" max="200" value="145" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
+                    </div>
+
+                    <div style="background: #111118; padding: 10px; border-radius: 8px; border: 1px solid #252535;">
+                        <div style="font-size: 0.6em; color: #a020f0; font-weight: 800; margin-bottom: 8px;">REAL-TIME EQ GAINS</div>
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
+                            <div>
+                                <div style="font-size: 0.5em; color: #888; text-align: center;">LOW</div>
+                                <input type="range" id="live-low" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #ff5555;" oninput="updateLiveParams()">
+                            </div>
+                            <div>
+                                <div style="font-size: 0.5em; color: #888; text-align: center;">MID</div>
+                                <input type="range" id="live-mid" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #00ffcc;" oninput="updateLiveParams()">
+                            </div>
+                            <div>
+                                <div style="font-size: 0.5em; color: #888; text-align: center;">HIGH</div>
+                                <input type="range" id="live-high" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #a020f0;" oninput="updateLiveParams()">
+                            </div>
+                        </div>
                     </div>
 
                     <div>
@@ -321,7 +349,18 @@
             if (d.telemetry) {
                 document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
                 document.getElementById('mem-stat').innerText = d.telemetry.memory_usage.toFixed(1) + '%';
-                document.getElementById('thread-stat').innerText = d.telemetry.active_threads;
+
+                const diskKb = (d.telemetry.disk_read + d.telemetry.disk_write) / 1024;
+                document.getElementById('disk-stat').innerText = diskKb.toFixed(1) + ' KB/s';
+
+                const netKb = (d.telemetry.net_sent + d.telemetry.net_recv) / 1024;
+                document.getElementById('net-stat').innerText = netKb.toFixed(1) + ' KB/s';
+
+                if (d.performance_metrics) {
+                    document.getElementById('speed-stat').innerText = d.performance_metrics.speedup_factor.toFixed(1) + 'x';
+                }
+
+                updateCharts(d.telemetry.cpu_usage, d.telemetry.memory_usage);
 
                 // Health Alert Styling
                 const cpuCard = document.getElementById('cpu-card');
@@ -433,6 +472,10 @@
     async function updateLiveParams() {
         const bpm = document.getElementById('live-bpm').value;
         const intensity = document.getElementById('live-intensity').value;
+        const low = document.getElementById('live-low').value;
+        const mid = document.getElementById('live-mid').value;
+        const high = document.getElementById('live-high').value;
+        const bars = document.getElementById('live-bars').value;
 
         document.getElementById('live-bpm-val').innerText = bpm;
         document.getElementById('live-intensity-val').innerText = intensity;
@@ -440,6 +483,10 @@
         const fd = new FormData();
         fd.append('target_bpm', bpm);
         fd.append('mastering_intensity', intensity);
+        fd.append('low_gain', low);
+        fd.append('mid_gain', mid);
+        fd.append('high_gain', high);
+        fd.append('transition_bars', bars);
 
         await fetch('/update_params', { method: 'POST', body: fd });
     }

@@ -153,9 +153,9 @@ def calculate_spectral_clash(outro_array, intro_array, sr):
         'high': (o_h + i_h) / (max(o_h, i_h, 1e-6))
     }
 
-def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None):
+def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None, low_gain=1.0, mid_gain=1.0, high_gain=1.0):
     """
-    3-Band Multi-band Compression with Genre-Aware Profiles (v3).
+    3-Band Multi-band Compression with Genre-Aware Profiles (v3) and Real-time EQ (v7.9.0).
 
     Why 3 Bands?
     Isolating Low (<200Hz), Mid (200Hz-3kHz), and High (>3kHz) allows for
@@ -171,6 +171,11 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=No
     mid_high = apply_dsp_filter(audio_array, sr, 'highpass', 200.0)
     mid_band = apply_dsp_filter(mid_high, sr, 'lowpass', 3000.0)
     high_band = apply_dsp_filter(audio_array, sr, 'highpass', 3000.0)
+
+    # 1.5 Real-time EQ Gain Stage (v7.9.0)
+    low_band *= low_gain
+    mid_band *= mid_gain
+    high_band *= high_gain
 
     # 2. Profile Selection
     profiles = {

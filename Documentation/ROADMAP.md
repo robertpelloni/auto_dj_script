@@ -25,7 +25,8 @@
 - [x] **Live Deck Playlist Manager**: Real-time track selection and injection (7.5.0).
 - [x] **Real-time 3D Terrain UI**: WebGL visualization of set energy (7.6.0).
 - [x] **Modular Plugin Architecture**: Unified framework for Sources, Sinks, and Tools (7.7.0).
-- [ ] **Advanced Monitoring Dashboard**: System-wide health telemetry and resource charting (7.8.0).
+- [x] **Advanced Monitoring Dashboard**: System-wide health telemetry and resource charting (7.8.0).
+- [x] **Real-time FX & Performance Engine**: Interactive EQ and speedup monitoring (7.9.0).
 - [ ] **Quantum Sequence Optimizer**: Next-gen SA with parallel branch exploration.
 
 ## 🚀 Version 6.x: The Plugin & Cloud Era (COMPLETED)
