@@ -1,5 +1,13 @@
 # Changelog
 
+## [8.5.0] - 2024-06-04
+### Added
+- **Job Performance Dashboard**: Integrated historical job duration tracking via Chart.js and a new `/analytics` endpoint.
+- **Auto-Pilot Energy Bias**: Real-time control to influence track selection towards "Chill" or "High Energy".
+- **Dynamic Range Compression (DRC)**: Added a real-time slider for mastering-stage multi-band compression intensity.
+- **Per-Track Job Queue**: Granular progress monitoring for each track in the session (Waiting ↔ Warped ↔ Mixing ↔ Complete).
+- **Enhanced Status UI**: Redesigned the Command Console with a dedicated Job Queue Progress panel and historical analytics.
+
 ## [8.4.0] - 2024-06-03
 ### Added
 - **Session Archive Bundling**: Implemented `create_session_archive` in `utils.py` to zip the final mix, tracklist, and Rekordbox XML into a single distributable bundle.

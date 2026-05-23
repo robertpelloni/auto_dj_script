@@ -1,6 +1,7 @@
-# 📝 Immediate Tasks (8.4.0)
+# 📝 Immediate Tasks (8.5.0)
 
 ## 🚀 Features (Immediate Implementation)
+- [x] **Job Performance & Adjustments (v8.5.0)**: Historical analytics and real-time energy/DRC overrides.
 - [x] **Autonomous Evolution (v8.3.0)**: Infinite Smart Replenishment Auto-Pilot.
 - [x] **Analytics & Archives (v8.4.0)**: Real-time VU Meters and Session Bundling.
 - [x] **Modular Plugin System**: Abstracted Sources, Sinks, and Tools (7.7.0).

@@ -48,9 +48,17 @@ def main():
     parser.add_argument("--gui", action="store_true", help="Launch the web-based dashboard.")
     parser.add_argument("--port", type=int, default=8000, help="Port for the GUI server.")
 
+    # Cluster Node Arguments (v7.0.0)
+    parser.add_argument("--cluster-node", action="store_true", help="Start as a remote rendering node.")
+    parser.add_argument("--node-id", type=str, default="local_node", help="Unique identifier for this node.")
+    parser.add_argument("--master-url", type=str, default="http://localhost:8000", help="URL of the master node.")
+
     args = parser.parse_args()
 
-    if args.gui:
+    if args.cluster_node:
+        from .cluster import cluster
+        cluster.start_node(args.node_id, args.master_url)
+    elif args.gui:
         from .gui import run_gui
         run_gui(port=args.port)
     elif not os.path.exists(args.input):

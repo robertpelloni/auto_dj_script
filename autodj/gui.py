@@ -24,6 +24,7 @@ templates = Jinja2Templates(directory="templates")
 mixing_status = {
     "status": "Idle",
     "tracklist": [],
+    "job_queue": [],  # Detailed progress for current session
     "playlist": [],
     "active_tasks": {},
     "performance_metrics": {
@@ -55,7 +56,9 @@ mixing_status = {
         "high_gain": 1.0,
         "transition_bars": config.TRANSITION_BARS,
         "paused": False,
-        "auto_pilot": False
+        "auto_pilot": False,
+        "auto_pilot_energy_bias": 0.5,  # 0: Chill, 1: High Energy
+        "dynamic_range_compression": 0.5
     }
 }
 
@@ -180,7 +183,9 @@ async def update_params(
     high_gain: float = Form(None),
     transition_bars: int = Form(None),
     paused: bool = Form(None),
-    auto_pilot: bool = Form(None)
+    auto_pilot: bool = Form(None),
+    auto_pilot_energy_bias: float = Form(None),
+    dynamic_range_compression: float = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
@@ -199,6 +204,10 @@ async def update_params(
         mixing_status["live_params"]["paused"] = paused
     if auto_pilot is not None:
         mixing_status["live_params"]["auto_pilot"] = auto_pilot
+    if auto_pilot_energy_bias is not None:
+        mixing_status["live_params"]["auto_pilot_energy_bias"] = auto_pilot_energy_bias
+    if dynamic_range_compression is not None:
+        mixing_status["live_params"]["dynamic_range_compression"] = dynamic_range_compression
     return {"status": "Updated", "params": mixing_status["live_params"]}
 
 @app.websocket("/ws")
@@ -284,6 +293,15 @@ async def download_archive():
     if last_archive and os.path.exists(last_archive):
         return FileResponse(last_archive, filename=os.path.basename(last_archive))
     return JSONResponse({"error": "Archive not found."}, status_code=404)
+
+@app.get("/analytics")
+async def get_analytics():
+    """Returns aggregated performance history for dashboarding."""
+    history_path = "logs/performance_history.json"
+    if os.path.exists(history_path):
+        with open(history_path, "r") as f:
+            return json.load(f)
+    return []
 
 def run_gui(host="0.0.0.0", port=8000):
     print(f"[*] Auto DJ v{__version__} Console launching on {host}:{port}...")

@@ -288,6 +288,10 @@ def compile_master_set(args, status_obj=None):
         tar_key = meta_list[i-1]['key'] if i > 0 else None
         warp_tasks.append((all_files[i], meta_list[i]['bpm'], t_s_bpm, t_e_bpm, meta_list[i]['key'], tar_key, True))
 
+    # Initialize Job Queue for Monitoring (v8.5.0)
+    if status_obj:
+        status_obj["job_queue"] = [{"file": os.path.basename(f), "progress": 0, "state": "Waiting"} for f in all_files]
+
     warped_results = [None] * num_tracks
     max_warp_workers = concurrency.get_optimal_worker_count()
     # Note: cluster.get_executor() uses the default, here we override for local dynamic scaling
@@ -321,6 +325,8 @@ def compile_master_set(args, status_obj=None):
 
         if status_obj:
             status_obj["active_tasks"].pop(all_files[idx], None)
+            status_obj["job_queue"][idx]["progress"] = 100
+            status_obj["job_queue"][idx]["state"] = "Warped"
 
         # Fault Tolerance: Local Fallback (v7.4.0)
         if y_w is None:
@@ -400,8 +406,18 @@ def compile_master_set(args, status_obj=None):
                         def score_transition_local(t1, t2):
                             s = 50 if is_harmonically_compatible(t1['key'], t2['key']) else 0
                             if abs(get_semitone_diff(t1['key'], t2['key'])) <= 2: s += 25
+                            # Incorporate Energy Bias (v8.5.0)
+                            energy_bias = status_obj.get("live_params", {}).get("auto_pilot_energy_bias", 0.5) if status_obj else 0.5
+
                             e_diff = float(t2['energy'] - t1['energy'])
                             s += 20 if e_diff > 0 else 0
+
+                            # Score higher if candidate matches the energy bias direction
+                            # Bias 1.0 (High Energy) -> Prefer positive e_diff
+                            # Bias 0.0 (Chill) -> Prefer negative e_diff
+                            bias_score = (e_diff * (energy_bias - 0.5) * 40.0)
+                            s += bias_score
+
                             s -= abs(e_diff) * 100
                             if t1['genre'] == t2['genre']: s += 30
                             return float(s)
@@ -504,13 +520,19 @@ def compile_master_set(args, status_obj=None):
         # If nudge is positive, it means intro is delayed, so we start it EARLIER (+ ms_trans)
         ms_trans += sync_nudge
 
-        # Intelligent Tail Extension
+        # Intelligent Tail Extension (v7.0.0 Integrated)
         if ms_trans > (len(master) - tracklist[-1]['start_ms']):
+            print(f"  [LOOP] Tail extension required ({ms_trans}ms > remaining).")
             loop_bar = identify_loopable_phrase(prev_y_w, sr, t_s_bpm, args.beats_per_bar)
             needed_ms = ms_trans - (len(master) - tracklist[-1]['start_ms'])
-            num_loops = int(np.ceil(needed_ms / (len(loop_bar) / sr * 1000))) + 1
-            ext_segment = np.tile(loop_bar, num_loops)
-            master += ndarray_to_pydub(ext_segment, sr)
+
+            # Ensure loop_bar is not empty
+            if loop_bar.size > 0:
+                loop_duration_ms = (len(loop_bar) / sr * 1000)
+                num_loops = int(np.ceil(needed_ms / loop_duration_ms)) + 1
+                ext_segment = np.tile(loop_bar, num_loops)
+                master += ndarray_to_pydub(ext_segment, sr)
+                print(f"  [LOOP] Extended tail by {num_loops} loops ({len(ext_segment)/sr:.1f}s).")
 
         print(f"  [SYNC] Global Grid: {phase_error:.1f}ms err. Nudge: {sync_nudge}ms. Overlap: {ms_trans/1000:.1f}s")
 
@@ -554,19 +576,22 @@ def compile_master_set(args, status_obj=None):
             'ideal_p': ideal_p,
             'low_gain': l_gain,
             'mid_gain': m_gain,
-            'high_gain': h_gain
+            'high_gain': h_gain,
+            'drc_intensity': live.get("dynamic_range_compression", 0.5)
         }
         render_args = (pydub_to_ndarray(m_outro), pydub_to_ndarray(n_intro), sr, mode, ms_trans, ideal_p, dsp_kwargs)
 
         # Using the cluster executor
         if status_obj:
             status_obj["active_tasks"][f"Transition {i-1}->{i}"] = "Mixing..."
+            status_obj["job_queue"][i]["state"] = "Mixing"
 
         future = mix_executor.submit(transition_render_worker, render_args)
         mix_bus_raw, _ = future.result()
 
         if status_obj:
              status_obj["active_tasks"].pop(f"Transition {i-1}->{i}", None)
+             status_obj["job_queue"][i]["state"] = "Complete"
              if mix_bus_raw is not None:
                  status_obj["vu"] = calculate_vu(mix_bus_raw)
 
@@ -662,6 +687,12 @@ def transition_render_worker(args):
 
         # Safety: Apply Limiter to prevent digital clipping in the mix-bus
         summed = apply_limiter(summed)
+
+        # Apply Dynamic Range Compression (v8.5.0)
+        drc_intensity = dsp_kwargs.get('drc_intensity', 0.5)
+        if drc_intensity > 0:
+            summed = apply_multiband_compression(summed, sr, intensity=drc_intensity,
+                                                low_gain=l_gain, mid_gain=m_gain, high_gain=h_gain)
 
         # 1.5 Real-time EQ Gain Stage (v7.9.0)
         # Apply the live EQ gains to the final transition mix-bus
