@@ -1,9 +1,9 @@
-""" Core Orchestration Engine | Auto DJ Script (7.5.0)
+""" Core Orchestration Engine | Auto DJ Script (7.6.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
-Version 7.5.0 features: The Dynamic Era (Live Playlist Management).
+Version 7.6.0 features: The Visual Era (Spectral Terrain 3D).
 """
 
 import os, glob, re, librosa, random, json, subprocess
@@ -347,6 +347,7 @@ def compile_master_set(args, status_obj=None):
                                'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
                                'genre': meta_list[i]['genre'],
                                'rationale': meta_list[i].get('rationale', ''),
+                               'terrain': meta_list[i].get('terrain', []),
                                'start_ms': 0})
             current_time_ms = len(master)
             continue
@@ -411,6 +412,7 @@ def compile_master_set(args, status_obj=None):
                            'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
                            'genre': meta_list[i]['genre'],
                            'rationale': meta_list[i].get('rationale', ''),
+                           'terrain': meta_list[i].get('terrain', []),
                            'start_ms': track_start_ms})
 
         if status_obj:

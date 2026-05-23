@@ -3,6 +3,7 @@
 <head>
     <title>Auto DJ v{{ version }} | Ultimate Console</title>
     <script src="https://unpkg.com/wavesurfer.js@7"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <style>
         body { font-family: 'Inter', system-ui, sans-serif; background: #08080a; color: #f0f0f0; margin: 0; padding: 40px; }
         .console { background: #111118; padding: 40px; border-radius: 20px; border: 1px solid #1f1f2a; box-shadow: 0 30px 60px rgba(0,0,0,0.7); max-width: 1200px; margin: auto; }
@@ -170,11 +171,24 @@
         </div>
     </div>
 
-    <div id="waveform"></div>
+    <div id="visualizer-container" style="margin-top: 40px; position: relative; border-radius: 20px; overflow: hidden; height: 500px; background: #000; border: 1px solid #1f1f2a;">
+        <div style="position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; gap: 10px;">
+            <div style="background: rgba(0,0,0,0.8); padding: 10px 15px; border-radius: 8px; border: 1px solid #333; font-size: 0.7em; color: #00ffcc; font-weight: 800;">
+                SPECTRAL TERRAIN v1.0
+            </div>
+            <button onclick="toggleVisualizer()" style="background: rgba(160,32,240,0.4); border: 1px solid #a020f0; color: white; padding: 5px 15px; border-radius: 8px; cursor: pointer; font-size: 0.7em; font-weight: 800;">
+                TOGGLE MODE
+            </button>
+        </div>
+        <div id="webgl-output" style="width: 100%; height: 100%;"></div>
+        <div id="waveform" style="position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10; opacity: 0.5;"></div>
+    </div>
 </div>
 
 <script>
     let pollInterval = null;
+    let scene, camera, renderer, terrainMesh;
+    let is3DActive = true;
     let isPaused = false;
     const term = document.getElementById('terminal');
     const fill = document.getElementById('fill');
@@ -258,6 +272,13 @@
                         <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
                     </div>
                 `).join('');
+            }
+
+            if (d.tracklist && d.tracklist.length > 0) {
+                const latest = d.tracklist[d.tracklist.length - 1];
+                if (latest.terrain && latest.terrain.length > 0) {
+                    updateTerrain(latest.terrain);
+                }
             }
 
             // Update Telemetry
@@ -393,6 +414,89 @@
         await fetch('/start', { method: 'POST', body: fd });
         startPolling();
     };
+
+    function init3D() {
+        console.log("Initializing 3D Engine...");
+        const container = document.getElementById('webgl-output');
+        if (!container) {
+            console.error("Container #webgl-output not found!");
+            return;
+        }
+        scene = new THREE.Scene();
+        camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(container.clientWidth, container.clientHeight);
+        container.appendChild(renderer.domElement);
+
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+        const pointLight = new THREE.PointLight(0xa020f0, 2, 100);
+        pointLight.position.set(0, 20, 10);
+        scene.add(pointLight);
+
+        camera.position.set(0, 15, 30);
+        camera.lookAt(0, 0, 0);
+
+        animate();
+    }
+
+    function animate() {
+        requestAnimationFrame(animate);
+        if (terrainMesh && is3DActive) {
+            // "Fly-over" effect: Slowly advance through the terrain
+            terrainMesh.position.z += 0.05;
+            if (terrainMesh.position.z > 20) terrainMesh.position.z = -20;
+
+            // Subtle energy pulsing
+            const time = Date.now() * 0.001;
+            terrainMesh.material.emissiveIntensity = 0.5 + Math.sin(time * 2) * 0.2;
+        }
+        renderer.render(scene, camera);
+    }
+
+    function updateTerrain(data) {
+        if (!data || data.length === 0) return;
+
+        if (terrainMesh) scene.remove(terrainMesh);
+
+        const width = data[0].length;
+        const height = data.length;
+        const geometry = new THREE.PlaneGeometry(60, 40, width - 1, height - 1);
+
+        const vertices = geometry.attributes.position.array;
+        for (let i = 0; i < height; i++) {
+            for (let j = 0; j < width; j++) {
+                const idx = (i * width + j) * 3;
+                // Use spectral intensity for height
+                const intensity = (data[i][j] + 80) / 80; // Normalize dB range
+                vertices[idx + 2] = intensity * 10;
+            }
+        }
+        geometry.attributes.position.needsUpdate = true;
+        geometry.computeVertexNormals();
+
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x00ffcc,
+            wireframe: true,
+            transparent: true,
+            opacity: 0.6,
+            emissive: 0xa020f0,
+            emissiveIntensity: 0.5
+        });
+
+        terrainMesh = new THREE.Mesh(geometry, material);
+        terrainMesh.rotation.x = -Math.PI / 3;
+        scene.add(terrainMesh);
+    }
+
+    function toggleVisualizer() {
+        is3DActive = !is3DActive;
+        document.getElementById('webgl-output').style.display = is3DActive ? 'block' : 'none';
+        document.getElementById('waveform').style.opacity = is3DActive ? '0.5' : '1.0';
+    }
+
+    // Defer initialization to ensure DOM is ready
+    setTimeout(init3D, 1000);
 
     // Waveform viewer
     const wavesurfer = WaveSurfer.create({

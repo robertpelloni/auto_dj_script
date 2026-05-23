@@ -1,6 +1,6 @@
 """
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.5.0).
-7.5.0: The Dynamic Era (Live Playlist Management).
+Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.6.0).
+7.6.0: The Visual Era (Spectral Terrain 3D).
 """
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates

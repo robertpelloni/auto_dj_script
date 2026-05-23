@@ -1,5 +1,12 @@
 # Changelog
 
+## [7.6.0] - 2024-05-30
+### Added
+- **Spectral Terrain 3D Visualizer**: Integrated Three.js for real-time WebGL rendering of Mel-Spectrogram maps.
+- **Energy-Reactive Heightmaps**: Audio energy is now mapped to 3D topology with fly-over navigation and pulsing emissive shaders.
+- **Visual-to-Audio Sync**: The visualizer state is driven by the internal MIR pipeline's terrain data.
+- **UI Mode Toggle**: Seamlessly switch between the 3D performance view and the standard command console.
+
 ## [7.5.0] - 2024-05-30
 ### Added
 - **Live Deck Playlist Manager**: Real-time track selection and session building.

@@ -1,4 +1,4 @@
-# 🚀 Deployment & Installation Guide (7.3.0)
+# 🚀 Deployment & Installation Guide (7.6.0)
 
 ## Prerequisites
 - **Python 3.12+** (Optimized for Python 3.12 performance).
