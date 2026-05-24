@@ -58,7 +58,9 @@ mixing_status = {
         "paused": False,
         "auto_pilot": False,
         "auto_pilot_energy_bias": 0.5,  # 0: Chill, 1: High Energy
-        "dynamic_range_compression": 0.5
+        "dynamic_range_compression": 0.5,
+        "handoff_mode": False,
+        "handoff_requested": False
     }
 }
 
@@ -168,6 +170,14 @@ async def playlist_remove(index: int = Form(...)):
         mixing_status["playlist"].pop(index)
     return {"status": "Removed", "playlist": mixing_status["playlist"]}
 
+@app.post("/playlist/move")
+async def playlist_move(index: int = Form(...), to_index: int = Form(...)):
+    """Moves a track within the dynamic playlist."""
+    if 0 <= index < len(mixing_status["playlist"]) and 0 <= to_index < len(mixing_status["playlist"]):
+        track = mixing_status["playlist"].pop(index)
+        mixing_status["playlist"].insert(to_index, track)
+    return {"status": "Moved", "playlist": mixing_status["playlist"]}
+
 @app.post("/cluster/reset")
 async def cluster_reset(node_id: str = Form(...)):
     """Resets failed states for a node."""
@@ -185,7 +195,9 @@ async def update_params(
     paused: bool = Form(None),
     auto_pilot: bool = Form(None),
     auto_pilot_energy_bias: float = Form(None),
-    dynamic_range_compression: float = Form(None)
+    dynamic_range_compression: float = Form(None),
+    handoff_mode: bool = Form(None),
+    handoff_requested: bool = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
@@ -208,6 +220,10 @@ async def update_params(
         mixing_status["live_params"]["auto_pilot_energy_bias"] = auto_pilot_energy_bias
     if dynamic_range_compression is not None:
         mixing_status["live_params"]["dynamic_range_compression"] = dynamic_range_compression
+    if handoff_mode is not None:
+        mixing_status["live_params"]["handoff_mode"] = handoff_mode
+    if handoff_requested is not None:
+        mixing_status["live_params"]["handoff_requested"] = handoff_requested
     return {"status": "Updated", "params": mixing_status["live_params"]}
 
 @app.websocket("/ws")

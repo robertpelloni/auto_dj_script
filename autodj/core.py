@@ -361,13 +361,56 @@ def compile_master_set(args, status_obj=None):
     while i < num_tracks:
         wait_for_health(status_obj)
 
-        # Live Deck Dynamic Injection (v7.5.0)
-        # Check if the user has inserted tracks into the playlist during the session.
-        # This allows adding tracks while the mix is being rendered.
+        # Handoff Orchestration Guardrail (v8.6.0)
+        # If handoff mode is active, the engine pauses before starting the next transition
+        # until the user explicitly requests to 'Execute Handoff'.
+        if status_obj and status_obj.get("live_params", {}).get("handoff_mode", False):
+            if i > 0: # Only handoff between tracks
+                print(f"[*] Handoff Mode Active. Holding transition {i-1} -> {i}...")
+                status_obj["status"] = f"Handoff Ready: Waiting for execution ({i-1}->{i})"
+
+                while not status_obj.get("live_params", {}).get("handoff_requested", False):
+                    time.sleep(1)
+                    if not status_obj.get("live_params", {}).get("handoff_mode", False):
+                        break # Mode disabled while waiting
+
+                # Reset request flag
+                status_obj["live_params"]["handoff_requested"] = False
+                status_obj["status"] = "Mixing Master Stream (Cluster)"
+                print(f"[*] Handoff Executed. Proceeding with transition {i-1} -> {i}...")
+
+        # Live Deck Dynamic Injection & Re-ordering (v7.5.0/v8.6.0)
+        # Check if the user has inserted or re-ordered tracks in the playlist during the session.
         if status_obj and status_obj.get("playlist"):
-            # If current i is beyond the pre-analyzed track count, we need to analyze new tracks
-            if i >= len(all_files) and i < len(status_obj["playlist"]):
-                new_track_name = status_obj["playlist"][i]
+            current_playlist = status_obj["playlist"]
+            num_tracks = len(current_playlist)
+
+            # If the track at current index 'i' has changed (due to re-order or force next)
+            if i < len(all_files) and i < num_tracks:
+                expected_file = os.path.basename(all_files[i])
+                actual_file = current_playlist[i]
+
+                if expected_file != actual_file:
+                    print(f"[*] Live Re-order detected at index {i}: {expected_file} -> {actual_file}")
+                    # Re-analyze and re-warp the new track for this slot
+                    new_track_path = os.path.join(folder, actual_file)
+                    new_meta = analyze_track_worker(new_track_path)
+
+                    # Update metadata and files
+                    meta_list[i] = new_meta
+                    all_files[i] = new_track_path
+
+                    # Re-warp for the new track
+                    t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
+                    t_e_bpm = start_bpm + (end_bpm - start_bpm) * ((i + 1) / num_tracks)
+                    tar_key = meta_list[i-1]['key'] if i > 0 else None
+                    warp_task = (new_track_path, new_meta['bpm'], t_s_bpm, t_e_bpm, new_meta['key'], tar_key, True)
+                    y_w, sr = warp_worker(warp_task)
+                    warped_results[i] = (y_w, sr)
+
+            # If new tracks were added to the end
+            if i >= len(all_files) and i < num_tracks:
+                new_track_name = current_playlist[i]
                 new_track_path = os.path.join(folder, new_track_name)
                 print(f"[*] Live Injection detected: {new_track_name}")
                 # Analyze and warp on-the-fly
@@ -376,12 +419,11 @@ def compile_master_set(args, status_obj=None):
                 all_files.append(new_track_path)
 
                 # Dynamic Warping for injected track
-                t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / (i+1)) # Simple ramp adjustment
+                t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
                 t_e_bpm = t_s_bpm
                 warp_task = (new_track_path, new_meta['bpm'], t_s_bpm, t_e_bpm, new_meta['key'], meta_list[i-1]['key'], True)
                 y_w, sr = warp_worker(warp_task)
                 warped_results.append((y_w, sr))
-                num_tracks = len(status_obj["playlist"]) # Update dynamic limit
 
         # Phase 4: Autonomous Auto-Pilot Replenishment (v8.2.0)
         auto_pilot = status_obj.get("live_params", {}).get("auto_pilot", False) if status_obj else False

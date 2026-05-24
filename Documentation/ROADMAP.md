@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v8.5.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v8.6.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -31,6 +31,7 @@
 - [x] **Autonomous Evolution (v8.3)**: "Smart Replenish" Auto-Pilot and performance auditing.
 - [x] **Analytics & Archive Bundling (v8.4)**: Real-time VU metering and session zipping.
 - [x] **Job Performance & Adjustments (v8.5)**: Historical analytics and real-time energy/DRC overrides.
+- [x] **Live Handoff & Deck Control (v8.6)**: Handoff orchestration and real-time queue re-ordering.
 - [ ] **Quantum Sequence Optimizer**: Next-gen SA with parallel branch exploration.
 
 ## 🚀 Version 6.x: The Plugin & Cloud Era (COMPLETED)

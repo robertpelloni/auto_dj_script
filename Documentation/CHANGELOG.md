@@ -1,5 +1,13 @@
 # Changelog
 
+## [8.6.0] - 2024-06-05
+### Added
+- **Live Handoff Orchestration**: New "Handoff Mode" that pauses execution between tracks, allowing for seamless manual handovers to/from the AI.
+- **Enhanced Live Deck Control**: Added "Force Next" functionality to the playlist queue, enabling real-time slot re-ordering.
+- **Dynamic Slot Re-Warping**: The engine now automatically re-analyzes and re-warps tracks if they are moved into the next active slot mid-session.
+- **Handoff Telemetry**: Real-time "Armed" and "Ready" status indicators in the Command Console.
+- **Queue Management UI**: Integrated slot movement and force-next triggers into the Live Deck dashboard.
+
 ## [8.5.0] - 2024-06-04
 ### Added
 - **Job Performance Dashboard**: Integrated historical job duration tracking via Chart.js and a new `/analytics` endpoint.

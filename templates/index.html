@@ -39,7 +39,7 @@
 
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
-    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(6, 1fr); gap: 20px; margin-bottom: 20px;">
+    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 20px; margin-bottom: 20px;">
         <div class="controls-card" id="cpu-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
             <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
@@ -71,6 +71,13 @@
                 </div>
             </div>
             <div id="vu-text" style="font-size: 0.6em; color: #888; margin-top: 5px;">-100.0 dB</div>
+        </div>
+        <div class="controls-card" id="handoff-card" style="padding: 15px; text-align: center; border-color: #333;">
+            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">HANDOFF STATUS</div>
+            <div id="handoff-stat" style="font-size: 1.2em; font-weight: 800; color: #666;">IDLE</div>
+            <div id="handoff-progress" style="width: 100%; height: 4px; background: #000; margin-top: 10px; border-radius: 2px; overflow: hidden;">
+                <div id="handoff-progress-fill" style="width: 0%; height: 100%; background: #a020f0;"></div>
+            </div>
         </div>
     </div>
 
@@ -202,6 +209,21 @@
                             <span id="live-bpm-val">145</span>
                         </div>
                         <input type="range" id="live-bpm" min="80" max="200" value="145" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #000; padding: 10px; border-radius: 8px; border: 1px solid #252535;">
+                        <div>
+                            <label style="font-size: 0.6em; color: #888; font-weight: 800; display: block; margin-bottom: 5px;">HANDOFF MODE</label>
+                            <button type="button" id="handoff-mode-btn" class="btn-prime" style="background: #333; font-size: 0.7em; padding: 8px;" onclick="toggleHandoffMode()">
+                                OFF
+                            </button>
+                        </div>
+                        <div>
+                            <label style="font-size: 0.6em; color: #888; font-weight: 800; display: block; margin-bottom: 5px;">EXECUTION</label>
+                            <button type="button" id="handoff-exec-btn" class="btn-prime" style="background: #333; font-size: 0.7em; padding: 8px; opacity: 0.5;" disabled onclick="executeHandoff()">
+                                WAIT
+                            </button>
+                        </div>
                     </div>
 
                     <div style="background: #111118; padding: 10px; border-radius: 8px; border: 1px solid #252535;">
@@ -368,12 +390,15 @@
                 `).join('');
             }
 
-            // Update Queue
+            // Update Queue (v8.6.0 with Force Next)
             if (d.playlist) {
                 document.getElementById('queue-list').innerHTML = d.playlist.map((t, i) => `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a24; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #333;">
-                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${i+1}. ${t}</span>
-                        <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
+                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${i+1}. ${t}</span>
+                        <div style="display: flex; gap: 5px;">
+                            <button onclick="forceNext(${i})" title="Force Next" style="background: #a020f0; border: none; color: white; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">↑</button>
+                            <button onclick="removeFromPlaylist(${i})" title="Remove" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -417,6 +442,32 @@
                 if (d.last_archive) {
                     archLink.style.opacity = '1.0';
                     archLink.style.pointerEvents = 'auto';
+                }
+
+                // Update Handoff Status
+                const hStat = document.getElementById('handoff-stat');
+                const hFill = document.getElementById('handoff-progress-fill');
+                if (d.status.includes("Handoff Ready")) {
+                    hStat.innerText = "READY";
+                    hStat.style.color = "#00ffcc";
+                    hFill.style.width = "100%";
+                    document.getElementById('handoff-card').style.borderColor = "#00ffcc";
+                } else if (d.live_params && d.live_params.handoff_mode) {
+                    hStat.innerText = "ARMED";
+                    hStat.style.color = "#a020f0";
+                    // Estimate progress to next handoff
+                    const current_i = d.job_queue ? d.job_queue.filter(j => j.state === 'Complete').length : 0;
+                    const next_job = d.job_queue ? d.job_queue[current_i] : null;
+                    if (next_job) {
+                        hStat.innerText = `ARMED (${current_i+1})`;
+                        hFill.style.width = next_job.progress + "%";
+                    }
+                    document.getElementById('handoff-card').style.borderColor = "#a020f0";
+                } else {
+                    hStat.innerText = "IDLE";
+                    hStat.style.color = "#666";
+                    hFill.style.width = "0%";
+                    document.getElementById('handoff-card').style.borderColor = "#333";
                 }
 
                 updateCharts(d.telemetry.cpu_usage, d.telemetry.memory_usage);
@@ -465,10 +516,29 @@
 
             if (d.live_params) {
                 isPaused = d.live_params.paused;
-                const btn = document.getElementById('pause-btn');
-                if (btn) {
-                    btn.innerText = isPaused ? '▶ RESUME EXECUTION' : '⏸ PAUSE EXECUTION';
-                    btn.style.background = isPaused ? '#a020f0' : '#333';
+                const pBtn = document.getElementById('pause-btn');
+                if (pBtn) {
+                    pBtn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
+                    pBtn.style.background = isPaused ? '#a020f0' : '#333';
+                }
+
+                // Handoff UI Sync
+                const hMode = d.live_params.handoff_mode;
+                const hmBtn = document.getElementById('handoff-mode-btn');
+                if (hmBtn) {
+                    hmBtn.innerText = hMode ? 'ON' : 'OFF';
+                    hmBtn.style.background = hMode ? '#a020f0' : '#333';
+                }
+
+                const heBtn = document.getElementById('handoff-exec-btn');
+                if (heBtn) {
+                    const ready = d.status.includes("Handoff Ready");
+                    heBtn.disabled = !ready;
+                    heBtn.style.opacity = ready ? '1.0' : '0.5';
+                    heBtn.style.background = ready ? '#00ffcc' : '#333';
+                    heBtn.innerText = ready ? 'EXECUTE' : 'WAIT';
+                    if (ready) heBtn.style.color = '#000';
+                    else heBtn.style.color = '#fff';
                 }
             }
 
@@ -508,15 +578,39 @@
 
     async function togglePause() {
         isPaused = !isPaused;
-        const btn = document.getElementById('pause-btn');
-        if (btn) {
-            btn.innerText = isPaused ? '▶ RESUME EXECUTION' : '⏸ PAUSE EXECUTION';
-            btn.style.background = isPaused ? '#a020f0' : '#333';
-        }
-
         const fd = new FormData();
         fd.append('paused', isPaused ? 'true' : 'false');
         await fetch('/update_params', { method: 'POST', body: fd });
+    }
+
+    async function toggleHandoffMode() {
+        const current = document.getElementById('handoff-mode-btn').innerText === 'ON';
+        const fd = new FormData();
+        fd.append('handoff_mode', !current ? 'true' : 'false');
+        await fetch('/update_params', { method: 'POST', body: fd });
+    }
+
+    async function executeHandoff() {
+        const fd = new FormData();
+        fd.append('handoff_requested', 'true');
+        await fetch('/update_params', { method: 'POST', body: fd });
+        logTerminal('[SYSTEM] Handoff execution requested...', '#00ffcc');
+    }
+
+    async function forceNext(index) {
+        // Move track to current active index (or next available slot)
+        // In the core, 'i' is the next track to be mixed.
+        // We need to know 'i' from the status to know where to move it.
+        const r = await fetch('/status');
+        const d = await r.json();
+        const current_i = d.job_queue ? d.job_queue.filter(j => j.state === 'Complete').length : 0;
+
+        const fd = new FormData();
+        fd.append('index', index);
+        fd.append('to_index', current_i);
+        await fetch('/playlist/move', { method: 'POST', body: fd });
+        logTerminal(`[LIVE DECK] Forced track ${index+1} to next slot (${current_i})`, '#a020f0');
+        pollStatus();
     }
 
     async function addToPlaylist(filename) {
