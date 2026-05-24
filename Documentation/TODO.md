@@ -1,25 +1,25 @@
-# 📝 Immediate Tasks (8.7.0)
+# 📝 Immediate Tasks (8.8.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [x] **Quantum Sequence Optimizer (v8.7.0)**: Parallel SA and Beat-Grid UI.
-- [x] **Live Handoff & Deck Control (v8.6.0)**: Handoff orchestration and real-time queue re-ordering.
-- [x] **Job Performance & Adjustments (v8.5.0)**: Historical analytics and real-time energy/DRC overrides.
-- [x] **Autonomous Evolution (v8.3.0)**: Infinite Smart Replenishment Auto-Pilot.
-- [x] **Analytics & Archives (v8.4.0)**: Real-time VU Meters and Session Bundling.
-- [x] **Modular Plugin System**: Abstracted Sources, Sinks, and Tools (7.7.0).
-- [x] **Advanced Monitoring Dashboard**: System health and resource telemetry (7.8.0).
-- [x] **Performance & FX Engine**: Real-time EQ and Speedup Factor (7.9.0).
-- [x] **Integrated Autonomous Station**: Full E2E validation and Pioneer/Rekordbox Bridge (8.0.0).
-- [ ] **S3 Source Plugin**: Remote track discovery.
+- [ ] **MIDI Hardware Integration**:
+    - [ ] Install `mido` and `python-rtmidi`.
+    - [ ] Implement `autodj/midi.py` for controller mapping.
+    - [ ] Link MIDI CCs to EQ Gains (Low/Mid/High).
+    - [ ] Link MIDI Notes to "Execute Handoff" and "Force Next".
+- [ ] **Rekordbox Library Plugin**:
+    - [ ] Create `RekordboxSourcePlugin` to parse `pioneer.xml`.
+    - [ ] Extract Hot Cues and Memory Cues for automated alignment.
+- [ ] **Hardware UI Dashboard**:
+    - [ ] Add "Hardware" tab to Web Console.
+    - [ ] MIDI activity indicator and mapping table.
 
 ## 🛠 Improvements & Refactoring
-- [x] **Logarithmic SA Cooling**: Implement a more robust cooling schedule for large sets (>30 tracks).
-- [x] **Mastering True-Peak Limiter**: Upgrade the simple hard limiter to a true-peak look-ahead limiter in `dsp.py`.
+- [ ] **Optimization**: Reduce latency between MIDI input and DSP parameter updates.
+- [ ] **Robustness**: Handle MIDI device disconnects/reconnects gracefully.
 
 ## 📚 Documentation
-- [x] **Operational Directive Consolidation**.
-- [x] **Universal Version Sync**.
-- [x] **Code Commentary Audit**: Ensure every function in `dsp.py` and `core.py` has deep "why/how" comments.
+- [ ] Update `DEPLOY.md` with MIDI library dependencies.
+- [ ] Create `Documentation/MIDI_MAPPING.md` for user configuration.
 
 ---
 *Keep on goin'! Don't stop the party!*

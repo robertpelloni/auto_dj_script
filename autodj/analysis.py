@@ -11,6 +11,7 @@ Theoretical Foundations:
 import librosa
 import numpy as np
 from .utils import pydub_to_ndarray
+from scipy.signal import butter, sosfilt, sosfiltfilt
 
 def get_musical_key(y, sr):
     """Estimates the musical key of a track."""
@@ -69,8 +70,6 @@ def get_native_bpm(y, sr):
         if len(chunk) < sr * 5: continue
             
         onset_env = librosa.onset.onset_strength(y=chunk, sr=sr)
-        # Narrow the search range for Psytrance (typically 130-155)
-        # but allow for faster/slower tracks
         tempo, _ = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, start_bpm=140)
         
         if isinstance(tempo, np.ndarray): tempo = tempo[0]
@@ -124,24 +123,58 @@ def detect_phrases(y, sr):
     return (librosa.frames_to_time(boundaries, sr=sr) * 1000).astype(int)
 
 def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
-    """Calculates millisecond offsets for track segmentation and phase alignment."""
+    """Calculates millisecond offsets for track segmentation and downbeat anchoring."""
     samples = pydub_to_ndarray(segment)
     samples_mono = librosa.to_mono(samples)
     
+    # Force Kick-only analysis for anchoring
+    nyquist = 0.5 * sr
+    sos_kick = butter(4, 150.0 / nyquist, btype='lowpass', output='sos')
+    samples_kick = sosfiltfilt(sos_kick, samples_mono)
+
     ms_per_beat = 60000.0 / target_bpm
     ms_per_bar = ms_per_beat * beats_per_bar
     ms_per_transition = ms_per_bar * transition_bars
     
-    # Track-wide beat detection to find the "groove"
-    onset_env = librosa.onset.onset_strength(y=samples_mono, sr=sr)
-    tempo, beat_frames = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, start_bpm=target_bpm)
+    # 1. High-Res Onset Detection on filtered kick signal
+    onset_env = librosa.onset.onset_strength(y=samples_kick, sr=sr)
+    _, beat_frames = librosa.beat.beat_track(onset_envelope=onset_env, sr=sr, start_bpm=target_bpm)
     beat_times_ms = (librosa.frames_to_time(beat_frames, sr=sr) * 1000).astype(int)
     
-    # Find the first real beat (first strong transient)
-    # This is critical for tracks with long ambient intros
-    first_beat_ms = 0
-    if len(beat_times_ms) > 0:
-        first_beat_ms = beat_times_ms[0]
+    if len(beat_times_ms) == 0:
+        return [], int(ms_per_transition), 0
+
+    # 2. Kick-Locked Downbeat Finder (Version 8.5)
+    # We use a pattern-matching heuristic: Verify the 'One' is part of a 4/4 cycle.
+    search_limit = min(len(beat_times_ms), 32)
+    kick_scores = []
+
+    samples_per_beat = int((ms_per_beat / 1000.0) * sr)
+
+    for i in range(search_limit - 4):
+        # Calculate a 'Pattern Score' for this beat being the 'One'
+        # Check energy at i, i+1, i+2, i+3
+        pattern_energy = 0
+        for offset in range(4):
+            b_ms = beat_times_ms[i + offset]
+            start_s = int(max(0, (b_ms - 15) * sr / 1000))
+            end_s = int(min(len(samples_kick), (b_ms + 15) * sr / 1000))
+            pattern_energy += np.max(np.abs(samples_kick[start_s:end_s]))
+
+        # Check for 'Silence' between beats (confirms it's a transient, not a drone)
+        mid_beat_ms = beat_times_ms[i] + (ms_per_beat / 2.0)
+        m_start = int((mid_beat_ms - 15) * sr / 1000)
+        m_end = int((mid_beat_ms + 15) * sr / 1000)
+        mid_energy = np.max(np.abs(samples_kick[m_start:m_end])) if m_start < len(samples_kick) else 1.0
+
+        # High score = Loud beats + Quiet gaps
+        kick_scores.append(pattern_energy / (mid_energy + 0.01))
+
+    # Anchor to the beat with the most consistent 4/4 'pulse'
+    downbeat_idx = np.argmax(kick_scores) if kick_scores else 0
+    first_beat_ms = beat_times_ms[downbeat_idx]
+
+    print(f"  [ANALYSIS] Kick Pattern Lock: Beat {downbeat_idx} at {first_beat_ms}ms (Score: {max(kick_scores):.2f})")
         
     return beat_times_ms, int(ms_per_transition), first_beat_ms
 
@@ -216,37 +249,52 @@ def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
 
 def find_sync_offset(outro_y, intro_y, sr, bpm):
     """
-    Finds the sample-accurate offset between two tracks using cross-correlation
-    of their onset envelopes.
+    Finds the sample-accurate offset using Peak-Centric Alignment (Version 8.0).
+    Identifies kick transients and locks their peaks.
     """
-    # Ensure both are mono for envelope calculation
+    nyquist = 0.5 * sr
+    sos = butter(4, [20.0 / nyquist, 150.0 / nyquist], btype='bandpass', output='sos')
+
     o_m = librosa.to_mono(outro_y) if outro_y.ndim == 2 else outro_y
     i_m = librosa.to_mono(intro_y) if intro_y.ndim == 2 else intro_y
     
-    # Calculate onset envelopes
-    o_env = librosa.onset.onset_strength(y=o_m, sr=sr)
-    i_env = librosa.onset.onset_strength(y=i_m, sr=sr)
+    # Isolate kicks (Absolute amplitude for peak finding)
+    o_kick = np.abs(sosfiltfilt(sos, o_m))
+    i_kick = np.abs(sosfiltfilt(sos, i_m))
     
-    # Increase search window to +/- 2 beats (captures larger drift)
+    # 1. Energy Gating: Skip search if signal is too quiet (ambient)
+    if np.max(i_kick) < 0.05:
+        return 0
+
     ms_per_beat = 60000.0 / bpm
-    hop_length = 512
-    search_frames = int((ms_per_beat * 2 / 1000.0) * sr / hop_length)
+    samples_per_beat = int((ms_per_beat / 1000.0) * sr)
     
-    correlation = np.correlate(o_env, i_env, mode='full')
-    center = len(i_env) - 1
+    # 2. Cross-Correlation on a measure-wide window
+    limit = samples_per_beat * 16 # Check 4 bars
+    o_slice = o_kick[-limit:] if len(o_kick) > limit else o_kick
+    i_slice = i_kick[:limit] if len(i_kick) > limit else i_kick
     
-    # Find local maximum within the search window
-    start_idx = max(0, center - search_frames)
-    end_idx = min(len(correlation), center + search_frames)
+    correlation = np.correlate(o_slice, i_slice, mode='full')
+    center = len(i_slice) - 1
+
+    # Search window: +/- 1.5 full beats (catches most phasing errors)
+    search_samples = int(samples_per_beat * 1.5)
+    start_idx = max(0, center - search_samples)
+    end_idx = min(len(correlation), center + search_samples)
     window = correlation[start_idx : end_idx]
     
     if len(window) == 0: return 0
     
+    # 3. Confidence Check
     best_lag_rel = np.argmax(window)
-    actual_lag_frames = (start_idx + best_lag_rel) - center
-    nudge_ms = (actual_lag_frames * hop_length / sr) * 1000
+    peak_val = window[best_lag_rel]
+    avg_val = np.mean(window)
     
-    return int(nudge_ms)
+    if peak_val < avg_val * 1.25:
+        return 0 # Low confidence, trust the grid instead
+
+    actual_lag_samples = (start_idx + best_lag_rel) - center
+    return int((actual_lag_samples / sr) * 1000)
 
 def extract_ai_features(y, sr):
     """

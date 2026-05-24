@@ -6,8 +6,6 @@ Theoretical Foundations:
 2. Normalization: We convert to float32 range [-1.0, 1.0] for high-precision DSP.
 """
 import numpy as np
-import json
-import os
 from pydub import AudioSegment
 
 def pydub_to_ndarray(segment):
@@ -95,47 +93,3 @@ def export_rekordbox_xml(tracklist, output_xml_path):
     tree = ET.ElementTree(dj_playlists)
     ET.indent(tree, space="  ", level=0)
     tree.write(output_xml_path, encoding="UTF-8", xml_declaration=True)
-
-def create_session_archive(output_path, tracklist_path, xml_path, session_id=None):
-    """
-    Bundles the final mix and all metadata into a single v8.4.0 compliant session archive.
-    """
-    import zipfile
-    import shutil
-    from datetime import datetime
-
-    if session_id is None:
-        session_id = datetime.now().strftime("%Y%m%d_%H%M%S")
-
-    archive_name = f"session_{session_id}.zip"
-    archive_path = os.path.join("sessions", archive_name)
-
-    os.makedirs("sessions", exist_ok=True)
-
-    with zipfile.ZipFile(archive_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        # Add the mix
-        if os.path.exists(output_path):
-            zipf.write(output_path, os.path.basename(output_path))
-
-        # Add tracklist
-        if os.path.exists(tracklist_path):
-            zipf.write(tracklist_path, os.path.basename(tracklist_path))
-
-        # Add Rekordbox XML
-        if os.path.exists(xml_path):
-            zipf.write(xml_path, os.path.basename(xml_path))
-
-        # Add session metadata
-        meta = {
-            "session_id": session_id,
-            "timestamp": datetime.now().isoformat(),
-            "files_included": [
-                os.path.basename(output_path),
-                os.path.basename(tracklist_path),
-                os.path.basename(xml_path)
-            ]
-        }
-        zipf.writestr("session_info.json", json.dumps(meta, indent=4))
-
-    print(f"[*] Session Archive Bundling: Created {archive_path}")
-    return archive_path

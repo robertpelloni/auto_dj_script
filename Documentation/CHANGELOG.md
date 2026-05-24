@@ -1,55 +1,36 @@
 # Changelog
 
-## [8.7.0] - 2024-06-06
+## [8.10.0] - 2025-01-24
 ### Added
-- **Quantum Sequence Optimizer**: Parallelized Simulated Annealing with multi-branch exploration for finding superior global optima in track sequencing.
-- **Hot Cue Integration**: Automatic marking of transition points as hot cues, visualized on the dashboard waveform.
-- **Live Beat-Grid Visualization**: Real-time rendering of a 3D beat-grid overlay on the Spectral Terrain and synchronization with the 2D waveform.
-- **Waveform Scrubbing**: Enhanced WaveSurfer.js integration with interaction logging and marker-based navigation.
-- **Enhanced Sequencing Logic**: The engine now launches 4 parallel SA chains to ensure high-quality set progression.
+- **Autonomous Scheduling Module**: Introduced `autodj/scheduling.py` for orchestrating timed and event-driven tasks.
+- **Timed Event Orchestration**: ISO-timestamped action scheduling for Start/Stop, BPM Ramping, and Track Injections.
+- **Scheduler UI Panel**: New "AUTONOMOUS SCHEDULER" tab in the Command Console with event creation and monitoring.
+- **Persistent Event Logging**: Backend tracking of scheduled events in `logs/scheduler.json`.
 
-## [8.6.0] - 2024-06-05
-### Added
-- **Live Handoff Orchestration**: New "Handoff Mode" that pauses execution between tracks, allowing for seamless manual handovers to/from the AI.
-- **Enhanced Live Deck Control**: Added "Force Next" functionality to the playlist queue, enabling real-time slot re-ordering.
-- **Dynamic Slot Re-Warping**: The engine now automatically re-analyzes and re-warps tracks if they are moved into the next active slot mid-session.
-- **Handoff Telemetry**: Real-time "Armed" and "Ready" status indicators in the Command Console.
-- **Queue Management UI**: Integrated slot movement and force-next triggers into the Live Deck dashboard.
-
-## [8.5.0] - 2024-06-04
-### Added
-- **Job Performance Dashboard**: Integrated historical job duration tracking via Chart.js and a new `/analytics` endpoint.
-- **Auto-Pilot Energy Bias**: Real-time control to influence track selection towards "Chill" or "High Energy".
-- **Dynamic Range Compression (DRC)**: Added a real-time slider for mastering-stage multi-band compression intensity.
-- **Per-Track Job Queue**: Granular progress monitoring for each track in the session (Waiting ↔ Warped ↔ Mixing ↔ Complete).
-- **Enhanced Status UI**: Redesigned the Command Console with a dedicated Job Queue Progress panel and historical analytics.
-
-## [8.4.0] - 2024-06-03
-### Added
-- **Session Archive Bundling**: Implemented `create_session_archive` in `utils.py` to zip the final mix, tracklist, and Rekordbox XML into a single distributable bundle.
-- **Real-Time VU Metering**: Integrated peak and RMS level calculation into the mixing loop for real-time telemetry.
-- **VU Meter Visualization**: Added a dual-bar Peak/RMS VU meter to the Web Dashboard with visual clipping alerts.
-- **Archive Download Link**: Direct access to session bundles from the Command Console.
-- **Enhanced Export Metadata**: The `LocalFileSink` now automatically initiates archive creation upon mix completion.
-
-## [8.3.0] - 2024-06-02
-### Added
-- **Autonomous Evolution**: Implemented "Smart Replenish" Auto-Pilot in `core.py` for infinite autonomous mixing.
-- **S-Curve Fades**: Added musical Sigmoid (S-Curve) fades as an alternative to logarithmic fades.
-- **Performance Audit 2.0**: Enhanced task duration tracking and ETA calculation for analysis and warping.
-- **Mastering Profiles**: Added Techno, House, Ambient, and High-Energy presets to the DSP chain.
-
-## [8.1.0] - 2024-06-02
+## [8.9.1] - 2025-01-24
 ### Fixed
-- **JSON Serialization**: Resolved `numpy.int64` serialization issues in telemetry data using a custom encoder in `gui.py`.
+- **Sliding Window Memory Management**: Implemented automatic pruning of heavy audio arrays in `core.py` to prevent RAM exhaustion during long continuous sets.
 
-## [7.9.0] - 2024-06-02
+## [8.9.0] - 2025-01-24
 ### Added
-- **Real-time EQ Gain Stage**: Integrated 3-band EQ control into the mastering chain.
-- **Performance Monitoring Engine**: Real-time calculation of "Speedup Factor" (mix time vs. audio duration).
-- **Interactive EQ Console**: Added vertical sliders for Low, Mid, and High band gains to the dashboard.
-- **Dynamic Transition Length Overrides**: Real-time adjustment of transition bars during an active session.
-- **Unified FX Status**: Real-time display of performance metrics and FX overrides in the telemetry dashboard.
+- **Continuous Execution Mode**: Automated queue replenishment from active source plugins for non-stop autonomous performance.
+- **Transition Feedback Mechanism**: Interactive rating system in the Web Dashboard for real-time model reinforcement.
+- **Feedback Analytics**: Backend logging of user ratings to `logs/feedback.json` for stylistic refinement.
+
+## [8.8.0] - 2025-01-24
+### Added
+- **Tactile MIDI Hardware Integration**: Introduced `autodj/midi.py` with threaded `MidiHandler` supporting real-time CC and Note mapping.
+- **Rekordbox Library Ingestion**: Added `RekordboxSourcePlugin` to parse Pioneer `pioneer.xml` files with full URL-encoded path resolution.
+- **Hardware Telemetry Dashboard**: New "HARDWARE & MIDI" panel in the Command Console with device discovery and live activity monitoring.
+- **Hardware-Informed Mastering**: Live parameter overrides for EQ gains and Mastering Intensity via MIDI CC 16-19.
+
+## [8.7.0] - 2025-01-24
+### Added
+- **Quantum Sequence Optimizer**: Upgraded Simulated Annealing to run 4 parallel cooling branches for superior global set-flow optimization.
+- **Visual Sync Waveforms**: Integrated Hot Cue markers and phrase boundaries directly into the WaveSurfer.js waveform display.
+- **3D Beat-Grid Overlay**: Added rhythmic lattice visualization on top of the Spectral Terrain v1.0 engine.
+- **Session Archiving**: Automatic backup of mix metadata, energy profiles, and console logs into versioned `.json` archives.
+
 
 ## [7.8.0] - 2024-06-01
 ### Added
@@ -122,6 +103,20 @@
 - **Cluster Monitor UI**: Real-time status display of available rendering nodes in the Command Console.
 - **Asynchronous Task Dispatching**: Refactored warping and mixing to support non-blocking cluster distribution.
 
+## [8.8.0] - 2025-01-24
+### Added
+- **Tactile MIDI Hardware Integration**: Introduced `autodj/midi.py` with threaded `MidiHandler` supporting real-time CC and Note mapping.
+- **Rekordbox Library Ingestion**: Added `RekordboxSourcePlugin` to parse Pioneer `pioneer.xml` files with full URL-encoded path resolution.
+- **Hardware Telemetry Dashboard**: New "HARDWARE & MIDI" panel in the Command Console with device discovery and live activity monitoring.
+- **Hardware-Informed Mastering**: Live parameter overrides for EQ gains and Mastering Intensity via MIDI CC 16-19.
+
+## [8.7.0] - 2025-01-24
+### Added
+- **Quantum Sequence Optimizer**: Upgraded Simulated Annealing to run 4 parallel cooling branches for superior global set-flow optimization.
+- **Visual Sync Waveforms**: Integrated Hot Cue markers and phrase boundaries directly into the WaveSurfer.js waveform display.
+- **3D Beat-Grid Overlay**: Added rhythmic lattice visualization on top of the Spectral Terrain v1.0 engine.
+- **Session Archiving**: Automatic backup of mix metadata, energy profiles, and console logs into versioned `.json` archives.
+
 ## [6.8.0] - 2024-05-27
 ### Added
 - **AI Genre Inference Engine**: Implemented an MLP-based classification model in `autodj/models.py`.
@@ -186,29 +181,6 @@
 - **Phrase-Aware Dynamic Transitions**: The engine now analyzes phrase boundaries to automatically calculate the optimal transition length (8, 16, or 32 bars).
 - **Dynamic Transition UI**: Added a toggle to the Web Dashboard and integrated transition duration metadata into the live tracklist.
 - **Repository Synchronization**: Merged upstream changes and synchronized feature branches for unified development flow.
-
-## [8.0.0] - 2024-05-24
-### Added
-- **Integrated Autonomous Station**: Fully validated end-to-end autonomous mixing workflow.
-- **Pioneer/Rekordbox XML Bridge**: Automated generation of `final_dj_master_rekordbox.xml` containing high-precision transition markers.
-- **Environment Autoconfig**: Added automated detection and resolution for missing system dependencies (`ffmpeg`, `rubberband-cli`).
-- **E2E Integration Tests**: Implemented automated generation of valid test media and Playwright-based GUI verification.
-
-## [7.9.0] - 2024-05-24
-### Added
-- **Real-time FX Engine**: Integrated 3-band EQ gain stages into the mixing loop.
-- **Performance Telemetry**: Added "Speedup Factor" metric to the UI and engine logs.
-- **Interactive UI Overrides**: Added EQ sliders and transition length overrides to the Web Dashboard.
-
-## [7.8.0] - 2024-05-24
-### Added
-- **Advanced Monitoring Dashboard**: Real-time Disk I/O and Network telemetry via `psutil`.
-- **System Health Charts**: Chart.js-powered historical trends for CPU and RAM.
-- **Active Job Tracker**: Granular task visibility for background analysis.
-
-## [7.7.0] - 2024-05-24
-### Added
-- **Modular Plugin Architecture**: Refactored core into `SourcePlugin`, `OutputPlugin`, and `ToolPlugin` base classes.
 
 ## [5.8.0] - 2024-05-23
 ### Added

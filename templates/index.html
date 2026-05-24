@@ -22,9 +22,12 @@
         input[type="number"], select { background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 1em; }
         #waveform { margin-top: 40px; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid #1f1f2a; }
         .tracklist { margin-top: 40px; background: #111118; border-radius: 12px; padding: 20px; border: 1px solid #1f1f2a; }
-        .track-item { display: grid; grid-template-columns: 80px 1fr 120px 100px 180px; padding: 12px; border-bottom: 1px solid #1a1a24; font-size: 0.9em; }
+        .track-item { display: grid; grid-template-columns: 80px 1fr 120px 100px 180px 120px; padding: 12px; border-bottom: 1px solid #1a1a24; font-size: 0.9em; }
         .track-item:last-child { border: none; }
         .track-header { font-weight: 800; color: #888; text-transform: uppercase; font-size: 0.7em; }
+        .rating-btn { background: #222; border: 1px solid #333; color: #888; cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; transition: all 0.2s; }
+        .rating-btn:hover { background: #333; color: white; border-color: #555; }
+        .rating-btn.active { background: #a020f0; color: white; border-color: #b030ff; }
     </style>
 </head>
 <body>
@@ -39,7 +42,7 @@
 
     <div class="progress-track"><div class="progress-fill" id="fill"></div></div>
 
-    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 20px; margin-bottom: 20px;">
+    <div id="telemetry-dashboard" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; margin-bottom: 20px;">
         <div class="controls-card" id="cpu-card" style="padding: 15px; text-align: center; transition: all 0.3s;">
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">CPU UTILIZATION</div>
             <div id="cpu-stat" style="font-size: 2em; font-weight: 800; color: #00ffcc;">0%</div>
@@ -56,40 +59,14 @@
             <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">NET THROUGHPUT</div>
             <div id="net-stat" style="font-size: 1.2em; font-weight: 800; color: #00ffcc;">0 KB/s</div>
         </div>
-        <div class="controls-card" id="speed-card" style="padding: 15px; text-align: center; border-color: #a020f0;">
-            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">SPEEDUP FACTOR</div>
-            <div id="speed-stat" style="font-size: 2em; font-weight: 800; color: #a020f0;">0.0x</div>
-        </div>
-        <div class="controls-card" id="vu-card" style="padding: 15px; display: flex; flex-direction: column; align-items: center;">
-            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">PEAK / RMS (dB)</div>
-            <div style="display: flex; gap: 10px; height: 40px; width: 100%;">
-                <div style="flex: 1; background: #000; border: 1px solid #333; position: relative; border-radius: 2px; overflow: hidden;">
-                    <div id="vu-rms" style="position: absolute; bottom: 0; width: 100%; background: #00ffcc; height: 0%; transition: height 0.1s;"></div>
-                </div>
-                <div style="flex: 1; background: #000; border: 1px solid #333; position: relative; border-radius: 2px; overflow: hidden;">
-                    <div id="vu-peak" style="position: absolute; bottom: 0; width: 100%; background: #ff5555; height: 0%; transition: height 0.1s;"></div>
-                </div>
-            </div>
-            <div id="vu-text" style="font-size: 0.6em; color: #888; margin-top: 5px;">-100.0 dB</div>
-        </div>
-        <div class="controls-card" id="handoff-card" style="padding: 15px; text-align: center; border-color: #333;">
-            <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px;">HANDOFF STATUS</div>
-            <div id="handoff-stat" style="font-size: 1.2em; font-weight: 800; color: #666;">IDLE</div>
-            <div id="handoff-progress" style="width: 100%; height: 4px; background: #000; margin-top: 10px; border-radius: 2px; overflow: hidden;">
-                <div id="handoff-progress-fill" style="width: 0%; height: 100%; background: #a020f0;"></div>
-            </div>
-        </div>
     </div>
 
-    <div id="health-charts" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 20px; height: 200px;">
+    <div id="health-charts" style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; height: 200px;">
         <div class="controls-card" style="padding: 10px;">
             <canvas id="cpuChart"></canvas>
         </div>
         <div class="controls-card" style="padding: 10px;">
             <canvas id="memChart"></canvas>
-        </div>
-        <div class="controls-card" style="padding: 10px;">
-            <canvas id="jobHistoryChart"></canvas>
         </div>
     </div>
 
@@ -97,6 +74,34 @@
         <div style="color: #888; font-weight: 800;">CLUSTER NODES:</div>
         <div id="nodes-container" style="display: flex; gap: 15px;">
             <!-- Nodes will be injected here -->
+        </div>
+    </div>
+
+    <div id="scheduler-panel" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-bottom: 25px;">
+        <h3 style="margin-top: 0; color: #00ffcc; display: flex; align-items: center; gap: 10px;">
+            <span>📅</span> AUTONOMOUS SCHEDULER
+            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Timed Event Orchestration</span>
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Schedule New Event</div>
+                <div style="display: flex; flex-direction: column; gap: 10px;">
+                    <input type="datetime-local" id="sched-time" style="background: #000; color: #fff; border: 1px solid #333; padding: 5px;">
+                    <select id="sched-action">
+                        <option value="set_bpm">Set BPM</option>
+                        <option value="toggle_continuous">Toggle Continuous</option>
+                        <option value="inject_track">Inject Track</option>
+                    </select>
+                    <input type="text" id="sched-params" placeholder="Params (JSON, e.g. {\"bpm\": 145})" style="background: #000; color: #fff; border: 1px solid #333; padding: 5px;">
+                    <button class="btn-prime" style="font-size: 0.8em; padding: 10px;" onclick="addEvent()">SCHEDULE EVENT</button>
+                </div>
+            </div>
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Upcoming Events</div>
+                <div id="event-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; font-size: 0.8em;">
+                    <!-- Events go here -->
+                </div>
+            </div>
         </div>
     </div>
 
@@ -130,14 +135,8 @@
                 [DSP] True-Peak Look-ahead Limiter online.<br>
                 [SYSTEM] WebSocket connecting...
             </div>
-            <div id="job-progress-dashboard" style="background: #111118; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 200px; overflow-y: auto; margin-bottom: 10px;">
-                <div style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px;">Job Queue Progress</div>
-                <div id="job-queue-container" style="display: flex; flex-direction: column; gap: 8px;">
-                    <!-- Job progress bars go here -->
-                </div>
-            </div>
             <div id="task-tracker" style="background: #111118; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 100px; overflow-y: auto; margin-bottom: 10px;">
-                <div style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Active Low-Level Ops</div>
+                <div style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Active Job Tracker</div>
                 <div id="task-container" style="display: flex; flex-direction: column; gap: 5px;">
                     <!-- Tasks go here -->
                 </div>
@@ -190,17 +189,16 @@
             </form>
 
             <div id="live-adjustments" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
-                <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter & EQ Overrides</label>
+                <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter Overrides</label>
 
                 <div style="display: flex; flex-direction: column; gap: 15px;">
                     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
                         <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">
                             ⏸ PAUSE
                         </button>
-                        <div style="display: flex; align-items: center; gap: 10px; background: #000; border-radius: 6px; padding: 0 10px; border: 1px solid #333;">
-                            <span style="font-size: 0.6em; color: #888; font-weight: 800;">BARS</span>
-                            <input type="number" id="live-bars" value="16" min="4" max="64" step="4" style="border:none; padding: 5px; width: 50px;" onchange="updateLiveParams()">
-                        </div>
+                        <button type="button" id="continuous-btn" class="btn-prime" style="background: #1a1a24; border: 1px solid #333; font-size: 0.8em; padding: 10px;" onclick="toggleContinuous()">
+                            🔄 CONTINUOUS
+                        </button>
                     </div>
 
                     <div>
@@ -211,39 +209,6 @@
                         <input type="range" id="live-bpm" min="80" max="200" value="145" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
                     </div>
 
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; background: #000; padding: 10px; border-radius: 8px; border: 1px solid #252535;">
-                        <div>
-                            <label style="font-size: 0.6em; color: #888; font-weight: 800; display: block; margin-bottom: 5px;">HANDOFF MODE</label>
-                            <button type="button" id="handoff-mode-btn" class="btn-prime" style="background: #333; font-size: 0.7em; padding: 8px;" onclick="toggleHandoffMode()">
-                                OFF
-                            </button>
-                        </div>
-                        <div>
-                            <label style="font-size: 0.6em; color: #888; font-weight: 800; display: block; margin-bottom: 5px;">EXECUTION</label>
-                            <button type="button" id="handoff-exec-btn" class="btn-prime" style="background: #333; font-size: 0.7em; padding: 8px; opacity: 0.5;" disabled onclick="executeHandoff()">
-                                WAIT
-                            </button>
-                        </div>
-                    </div>
-
-                    <div style="background: #111118; padding: 10px; border-radius: 8px; border: 1px solid #252535;">
-                        <div style="font-size: 0.6em; color: #a020f0; font-weight: 800; margin-bottom: 8px;">REAL-TIME EQ GAINS</div>
-                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px;">
-                            <div>
-                                <div style="font-size: 0.5em; color: #888; text-align: center;">LOW</div>
-                                <input type="range" id="live-low" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #ff5555;" oninput="updateLiveParams()">
-                            </div>
-                            <div>
-                                <div style="font-size: 0.5em; color: #888; text-align: center;">MID</div>
-                                <input type="range" id="live-mid" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #00ffcc;" oninput="updateLiveParams()">
-                            </div>
-                            <div>
-                                <div style="font-size: 0.5em; color: #888; text-align: center;">HIGH</div>
-                                <input type="range" id="live-high" min="0" max="2" step="0.05" value="1.0" style="width: 100%; height: 80px; writing-mode: bt-lr; appearance: slider-vertical; accent-color: #a020f0;" oninput="updateLiveParams()">
-                            </div>
-                        </div>
-                    </div>
-
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
                             <span>MASTERING INTENSITY</span>
@@ -251,31 +216,12 @@
                         </div>
                         <input type="range" id="live-intensity" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #a020f0;" oninput="updateLiveParams()">
                     </div>
-
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
-                            <span>AUTO-PILOT ENERGY BIAS (CHILL ↔ HIGH)</span>
-                            <span id="live-bias-val">0.5</span>
-                        </div>
-                        <input type="range" id="live-bias" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
-                    </div>
-
-                    <div>
-                        <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
-                            <span>DYNAMIC RANGE COMPRESSION</span>
-                            <span id="live-drc-val">0.5</span>
-                        </div>
-                        <input type="range" id="live-drc" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #a020f0;" oninput="updateLiveParams()">
-                    </div>
                 </div>
             </div>
 
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535; display: flex; flex-direction: column; gap: 10px;">
+            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
                 <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
                     <span>⬇</span> DOWNLOAD MASTER EXPORT
-                </a>
-                <a href="/download_archive" id="dl-archive-link" style="color: #a020f0; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px; opacity: 0.5; pointer-events: none;">
-                    <span>📦</span> DOWNLOAD SESSION ARCHIVE (v8.4)
                 </a>
             </div>
         </div>
@@ -289,9 +235,35 @@
             <div>Key</div>
             <div>Genre</div>
             <div>AI Rationale</div>
+            <div>Rating</div>
         </div>
         <div id="tracklist-container">
             <!-- Tracks will be injected here -->
+        </div>
+    </div>
+
+    <div id="hardware-panel" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-top: 25px; margin-bottom: 25px;">
+        <h3 style="margin-top: 0; color: #ffcc00; display: flex; align-items: center; gap: 10px;">
+            <span>🎹</span> HARDWARE & MIDI
+            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Tactile Interface Status</span>
+        </h3>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">MIDI Device</div>
+                <div style="display: flex; gap: 10px; align-items: center;">
+                    <div id="midi-status-light" style="width: 10px; height: 10px; border-radius: 50%; background: #333;"></div>
+                    <span id="midi-device-name" style="color: #eee; font-size: 0.9em;">None Connected</span>
+                </div>
+                <div id="midi-activity" style="margin-top: 10px; font-size: 0.7em; color: #555;">No activity detected</div>
+            </div>
+            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
+                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Active Mapping</div>
+                <div style="font-size: 0.8em; color: #666;">
+                    CC 16-18: EQ Gains<br>
+                    CC 19: Mastering<br>
+                    Note 36: Execute Handoff
+                </div>
+            </div>
         </div>
     </div>
 
@@ -311,8 +283,8 @@
 
 <script>
     let pollInterval = null;
-    let scene, camera, renderer, terrainMesh, hotCueMarkers = [];
-    let cpuChart, memChart, jobHistoryChart;
+    let scene, camera, renderer, terrainMesh;
+    let cpuChart, memChart;
     const chartDataLimit = 30;
     let is3DActive = true;
     let isPaused = false;
@@ -320,6 +292,21 @@
     const fill = document.getElementById('fill');
     const state = document.getElementById('state-text');
     const trackContainer = document.getElementById('tracklist-container');
+
+    async function submitRating(trackFile, rating) {
+        try {
+            const response = await fetch('/feedback/rating', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ track_file: trackFile, rating: rating })
+            });
+            if (response.ok) {
+                logTerminal(`Feedback recorded for ${trackFile}`, '#00ffcc');
+            }
+        } catch (err) {
+            console.error('Feedback error:', err);
+        }
+    }
 
     function logTerminal(msg, color = '#55ff55') {
         const line = document.createElement('div');
@@ -381,7 +368,7 @@
             fill.style.width = d.progress + '%';
 
             // Update Available Tracks (only when idle)
-            if (d.status === 'IDLE' || d.status === 'Idle' && d.available_tracks) {
+            if ((d.status === 'IDLE' || d.status === 'Idle') && d.available_tracks) {
                 document.getElementById('available-tracks-list').innerHTML = d.available_tracks.map(t => `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #111118; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #222;">
                         <span style="color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${t}</span>
@@ -390,15 +377,12 @@
                 `).join('');
             }
 
-            // Update Queue (v8.6.0 with Force Next)
+            // Update Queue
             if (d.playlist) {
                 document.getElementById('queue-list').innerHTML = d.playlist.map((t, i) => `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a24; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #333;">
-                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 180px;">${i+1}. ${t}</span>
-                        <div style="display: flex; gap: 5px;">
-                            <button onclick="forceNext(${i})" title="Force Next" style="background: #a020f0; border: none; color: white; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">↑</button>
-                            <button onclick="removeFromPlaylist(${i})" title="Remove" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
-                        </div>
+                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${i+1}. ${t}</span>
+                        <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
                     </div>
                 `).join('');
             }
@@ -407,26 +391,7 @@
                 const latest = d.tracklist[d.tracklist.length - 1];
                 if (latest.terrain && latest.terrain.length > 0) {
                     updateTerrain(latest.terrain);
-                    if (d.beat_grid) updateBeatGrid(d.beat_grid);
                 }
-            }
-
-            // Update Hot Cues on Waveform (v8.7.0)
-            if (d.hot_cues && d.hot_cues.length > 0 && wavesurfer.getDuration() > 0) {
-                const duration = wavesurfer.getDuration();
-                d.hot_cues.forEach(cue => {
-                    const time = cue.time_ms / 1000;
-                    if (!hotCueMarkers.includes(cue.time_ms)) {
-                        wavesurfer.addMarker({
-                            time: time,
-                            label: cue.label,
-                            color: '#00ffcc',
-                            position: 'top'
-                        });
-                        hotCueMarkers.push(cue.time_ms);
-                        logTerminal(`[WAVEFORM] Hot Cue added: ${cue.label} at ${time.toFixed(1)}s`, '#00ffcc');
-                    }
-                });
             }
 
             // Update Telemetry
@@ -434,62 +399,17 @@
                 document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
                 document.getElementById('mem-stat').innerText = d.telemetry.memory_usage.toFixed(1) + '%';
 
-                const diskKb = (d.telemetry.disk_read + d.telemetry.disk_write) / 1024;
-                document.getElementById('disk-stat').innerText = diskKb.toFixed(1) + ' KB/s';
-
-                const netKb = (d.telemetry.net_sent + d.telemetry.net_recv) / 1024;
-                document.getElementById('net-stat').innerText = netKb.toFixed(1) + ' KB/s';
-
-                if (d.performance_metrics) {
-                    document.getElementById('speed-stat').innerText = d.performance_metrics.speedup_factor.toFixed(1) + 'x';
-                }
-
-                // Update VU Meter (v8.4.0)
-                if (d.vu) {
-                    const peakPct = Math.max(0, Math.min(100, (d.vu.peak + 60) / 60 * 100));
-                    const rmsPct = Math.max(0, Math.min(100, (d.vu.rms + 60) / 60 * 100));
-                    document.getElementById('vu-peak').style.height = peakPct + '%';
-                    document.getElementById('vu-rms').style.height = rmsPct + '%';
-                    document.getElementById('vu-text').innerText = `${d.vu.peak.toFixed(1)} / ${d.vu.rms.toFixed(1)} dB`;
-
-                    if (d.vu.peak > -1.0) document.getElementById('vu-card').style.borderColor = '#ff5555';
-                    else document.getElementById('vu-card').style.borderColor = '#252535';
-                }
-
-                // Update Archive Link
-                const archLink = document.getElementById('dl-archive-link');
-                if (d.last_archive) {
-                    archLink.style.opacity = '1.0';
-                    archLink.style.pointerEvents = 'auto';
-                }
-
-                // Update Handoff Status
-                const hStat = document.getElementById('handoff-stat');
-                const hFill = document.getElementById('handoff-progress-fill');
-                if (d.status.includes("Handoff Ready")) {
-                    hStat.innerText = "READY";
-                    hStat.style.color = "#00ffcc";
-                    hFill.style.width = "100%";
-                    document.getElementById('handoff-card').style.borderColor = "#00ffcc";
-                } else if (d.live_params && d.live_params.handoff_mode) {
-                    hStat.innerText = "ARMED";
-                    hStat.style.color = "#a020f0";
-                    // Estimate progress to next handoff
-                    const current_i = d.job_queue ? d.job_queue.filter(j => j.state === 'Complete').length : 0;
-                    const next_job = d.job_queue ? d.job_queue[current_i] : null;
-                    if (next_job) {
-                        hStat.innerText = `ARMED (${current_i+1})`;
-                        hFill.style.width = next_job.progress + "%";
-                    }
-                    document.getElementById('handoff-card').style.borderColor = "#a020f0";
+                // Update MIDI UI
+                const midiLight = document.getElementById('midi-status-light');
+                const midiName = document.getElementById('midi-device-name');
+                if (d.telemetry.midi_active) {
+                    midiLight.style.background = '#ffcc00';
+                    midiName.innerText = d.telemetry.midi_device;
                 } else {
-                    hStat.innerText = "IDLE";
-                    hStat.style.color = "#666";
-                    hFill.style.width = "0%";
-                    document.getElementById('handoff-card').style.borderColor = "#333";
+                    midiLight.style.background = '#333';
+                    midiName.innerText = 'None Connected';
                 }
-
-                updateCharts(d.telemetry.cpu_usage, d.telemetry.memory_usage);
+                document.getElementById('thread-stat').innerText = d.telemetry.active_threads;
 
                 // Health Alert Styling
                 const cpuCard = document.getElementById('cpu-card');
@@ -500,18 +420,6 @@
 
                 if (d.telemetry.memory_usage > 90) memCard.style.borderColor = '#ff5555';
                 else memCard.style.borderColor = '#252535';
-            }
-
-            if (d.job_queue) {
-                document.getElementById('job-queue-container').innerHTML = d.job_queue.map(j => `
-                    <div style="display: flex; align-items: center; gap: 10px;">
-                        <div style="flex: 1; font-size: 0.7em; color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${j.file}</div>
-                        <div style="width: 100px; height: 6px; background: #000; border-radius: 3px; overflow: hidden;">
-                            <div style="width: ${j.progress}%; height: 100%; background: ${j.state === 'Complete' ? '#00ffcc' : (j.state === 'Mixing' ? '#a020f0' : '#333')};"></div>
-                        </div>
-                        <div style="font-size: 0.6em; color: #ccc; width: 60px; text-align: right;">${j.state}</div>
-                    </div>
-                `).join('');
             }
 
             if (d.active_tasks) {
@@ -535,29 +443,18 @@
 
             if (d.live_params) {
                 isPaused = d.live_params.paused;
-                const pBtn = document.getElementById('pause-btn');
-                if (pBtn) {
-                    pBtn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
-                    pBtn.style.background = isPaused ? '#a020f0' : '#333';
+                const btn = document.getElementById('pause-btn');
+                if (btn) {
+                    btn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
+                    btn.style.background = isPaused ? '#00ffcc' : '#333';
+                    btn.style.color = isPaused ? '#000' : '#fff';
                 }
 
-                // Handoff UI Sync
-                const hMode = d.live_params.handoff_mode;
-                const hmBtn = document.getElementById('handoff-mode-btn');
-                if (hmBtn) {
-                    hmBtn.innerText = hMode ? 'ON' : 'OFF';
-                    hmBtn.style.background = hMode ? '#a020f0' : '#333';
-                }
-
-                const heBtn = document.getElementById('handoff-exec-btn');
-                if (heBtn) {
-                    const ready = d.status.includes("Handoff Ready");
-                    heBtn.disabled = !ready;
-                    heBtn.style.opacity = ready ? '1.0' : '0.5';
-                    heBtn.style.background = ready ? '#00ffcc' : '#333';
-                    heBtn.innerText = ready ? 'EXECUTE' : 'WAIT';
-                    if (ready) heBtn.style.color = '#000';
-                    else heBtn.style.color = '#fff';
+                isContinuous = d.live_params.continuous_mode;
+                const cbtn = document.getElementById('continuous-btn');
+                if (cbtn) {
+                    cbtn.style.background = isContinuous ? '#a020f0' : '#1a1a24';
+                    cbtn.style.borderColor = isContinuous ? '#b030ff' : '#333';
                 }
             }
 
@@ -582,6 +479,10 @@
                         <div style="color: #888;">${t.key}</div>
                         <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
                         <div style="color: #666; font-size: 0.75em; font-style: italic;">${t.rationale || 'N/A'}</div>
+                        <div style="display: flex; gap: 5px;">
+                            <button class="rating-btn ${t.rating === 1 ? 'active' : ''}" onclick="submitRating('${t.file}', 1)">👍</button>
+                            <button class="rating-btn ${t.rating === -1 ? 'active' : ''}" onclick="submitRating('${t.file}', -1)">👎</button>
+                        </div>
                     </div>
                 `).join('');
             }
@@ -597,39 +498,63 @@
 
     async function togglePause() {
         isPaused = !isPaused;
+        const btn = document.getElementById('pause-btn');
+        if (btn) {
+            btn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
+            btn.style.background = isPaused ? '#00ffcc' : '#333';
+            btn.style.color = isPaused ? '#000' : '#fff';
+        }
+
         const fd = new FormData();
         fd.append('paused', isPaused ? 'true' : 'false');
         await fetch('/update_params', { method: 'POST', body: fd });
     }
 
-    async function toggleHandoffMode() {
-        const current = document.getElementById('handoff-mode-btn').innerText === 'ON';
+    async function toggleContinuous() {
+        isContinuous = !isContinuous;
+        const btn = document.getElementById('continuous-btn');
+        if (btn) {
+            btn.style.background = isContinuous ? '#a020f0' : '#1a1a24';
+            btn.style.borderColor = isContinuous ? '#b030ff' : '#333';
+        }
+
         const fd = new FormData();
-        fd.append('handoff_mode', !current ? 'true' : 'false');
+        fd.append('continuous_mode', isContinuous ? 'true' : 'false');
         await fetch('/update_params', { method: 'POST', body: fd });
+        logTerminal(`Continuous Mode: ${isContinuous ? 'ENABLED' : 'DISABLED'}`, isContinuous ? '#a020f0' : '#888');
     }
 
-    async function executeHandoff() {
+    async function addEvent() {
+        const time = document.getElementById('sched-time').value;
+        const action = document.getElementById('sched-action').value;
+        const params = document.getElementById('sched-params').value || '{}';
+
+        if (!time) return alert('Select time');
+
         const fd = new FormData();
-        fd.append('handoff_requested', 'true');
-        await fetch('/update_params', { method: 'POST', body: fd });
-        logTerminal('[SYSTEM] Handoff execution requested...', '#00ffcc');
+        fd.append('timestamp', new Date(time).toISOString());
+        fd.append('action', action);
+        fd.append('params', params);
+
+        const res = await fetch('/scheduler/add', { method: 'POST', body: fd });
+        if (res.ok) {
+            logTerminal(`Event scheduled: ${action} at ${time}`, '#00ffcc');
+            updateEvents();
+        }
     }
 
-    async function forceNext(index) {
-        // Move track to current active index (or next available slot)
-        // In the core, 'i' is the next track to be mixed.
-        // We need to know 'i' from the status to know where to move it.
-        const r = await fetch('/status');
-        const d = await r.json();
-        const current_i = d.job_queue ? d.job_queue.filter(j => j.state === 'Complete').length : 0;
-
-        const fd = new FormData();
-        fd.append('index', index);
-        fd.append('to_index', current_i);
-        await fetch('/playlist/move', { method: 'POST', body: fd });
-        logTerminal(`[LIVE DECK] Forced track ${index+1} to next slot (${current_i})`, '#a020f0');
-        pollStatus();
+    async function updateEvents() {
+        try {
+            const res = await fetch('/scheduler/events');
+            const data = await res.json();
+            const container = document.getElementById('event-list');
+            container.innerHTML = data.events.map(e => `
+                <div style="padding: 5px; background: #111; border: 1px solid #222; border-radius: 4px; display: flex; justify-content: space-between;">
+                    <span>${e.action} (${new Date(e.time).toLocaleTimeString()})</span>
+                    <span style="color: ${e.status === 'completed' ? '#00ffcc' : '#ffcc00'}">${e.status}</span>
+                </div>
+            `).join('');
+        } catch (e) {}
     }
 
     async function addToPlaylist(filename) {
@@ -656,27 +581,13 @@
     async function updateLiveParams() {
         const bpm = document.getElementById('live-bpm').value;
         const intensity = document.getElementById('live-intensity').value;
-        const bias = document.getElementById('live-bias').value;
-        const drc = document.getElementById('live-drc').value;
-        const low = document.getElementById('live-low').value;
-        const mid = document.getElementById('live-mid').value;
-        const high = document.getElementById('live-high').value;
-        const bars = document.getElementById('live-bars').value;
 
         document.getElementById('live-bpm-val').innerText = bpm;
         document.getElementById('live-intensity-val').innerText = intensity;
-        document.getElementById('live-bias-val').innerText = bias;
-        document.getElementById('live-drc-val').innerText = drc;
 
         const fd = new FormData();
         fd.append('target_bpm', bpm);
         fd.append('mastering_intensity', intensity);
-        fd.append('auto_pilot_energy_bias', bias);
-        fd.append('dynamic_range_compression', drc);
-        fd.append('low_gain', low);
-        fd.append('mid_gain', mid);
-        fd.append('high_gain', high);
-        fd.append('transition_bars', bars);
 
         await fetch('/update_params', { method: 'POST', body: fd });
     }
@@ -684,7 +595,6 @@
     function initCharts() {
         const cpuCtx = document.getElementById('cpuChart').getContext('2d');
         const memCtx = document.getElementById('memChart').getContext('2d');
-        const jobCtx = document.getElementById('jobHistoryChart').getContext('2d');
 
         const commonOptions = {
             responsive: true,
@@ -708,29 +618,6 @@
             data: { labels: Array(chartDataLimit).fill(''), datasets: [{ data: Array(chartDataLimit).fill(0), borderColor: '#a020f0', borderWidth: 2, fill: true, backgroundColor: 'rgba(160, 32, 240, 0.1)' }] },
             options: commonOptions
         });
-
-        jobHistoryChart = new Chart(jobCtx, {
-            type: 'bar',
-            data: { labels: [], datasets: [{ label: 'Total Time (s)', data: [], backgroundColor: '#a020f0' }] },
-            options: {
-                ...commonOptions,
-                plugins: { legend: { display: true, labels: { color: '#888', font: { size: 10 } } } },
-                scales: { y: { beginAtZero: true, grid: { color: '#222' } }, x: { grid: { display: false } } }
-            }
-        });
-        updateJobHistory();
-    }
-
-    async function updateJobHistory() {
-        try {
-            const r = await fetch('/analytics');
-            const data = await r.json();
-            if (data && data.length > 0) {
-                jobHistoryChart.data.labels = data.map(s => s.session_id.split('_')[1]);
-                jobHistoryChart.data.datasets[0].data = data.map(s => s.totals.total_ms / 1000);
-                jobHistoryChart.update();
-            }
-        } catch (e) { console.error("History fetch failed", e); }
     }
 
     function updateCharts(cpu, mem) {
@@ -749,7 +636,11 @@
         if (!pollInterval) {
             initCharts();
             pollStatus();
-            pollInterval = setInterval(pollStatus, 1500);
+            updateEvents();
+            pollInterval = setInterval(() => {
+                pollStatus();
+                updateEvents();
+            }, 1500);
         }
     }
 
@@ -802,30 +693,6 @@
         renderer.render(scene, camera);
     }
 
-    let beatGridLines = [];
-    function updateBeatGrid(beats) {
-        if (!beats || beats.length === 0 || !terrainMesh) return;
-
-        // Remove old lines
-        beatGridLines.forEach(l => scene.remove(l));
-        beatGridLines = [];
-
-        const width = 60;
-        const height = 40;
-
-        beats.forEach(beatMs => {
-            const zPos = (beatMs / 1000) % height - (height / 2);
-            const geometry = new THREE.BufferGeometry().setFromPoints([
-                new THREE.Vector3(-width/2, 1, zPos),
-                new THREE.Vector3(width/2, 1, zPos)
-            ]);
-            const material = new THREE.LineBasicMaterial({ color: 0x00ffcc, transparent: true, opacity: 0.3 });
-            const line = new THREE.Line(geometry, material);
-            scene.add(line);
-            beatGridLines.push(line);
-        });
-    }
-
     function updateTerrain(data) {
         if (!data || data.length === 0) return;
 
@@ -870,23 +737,14 @@
     // Defer initialization to ensure DOM is ready
     setTimeout(init3D, 1000);
 
-    // Waveform viewer (v8.7.0 with Marker Plugin)
+    // Waveform viewer
     const wavesurfer = WaveSurfer.create({
         container: '#waveform',
         waveColor: '#1a1a24',
         progressColor: '#a020f0',
         height: 120,
         normalize: true,
-        cursorColor: '#00ffcc',
-        plugins: [
-            // WaveSurfer v7 uses different plugin syntax, but we'll stick to basic features
-            // that are robust across versions if possible.
-        ]
-    });
-
-    // Handle Waveform scrubbing and seeking
-    wavesurfer.on('interaction', (newTime) => {
-        logTerminal(`[WAVEFORM] Seeked to ${newTime.toFixed(2)}s`, '#a020f0');
+        cursorColor: '#00ffcc'
     });
 </script>
 </body>

@@ -69,18 +69,29 @@ def apply_dsp_filter(audio_array, sr, filter_type='highpass', cutoff=150.0):
 
 def trim_silence(segment, silence_threshold=-65.0, chunk_size=10):
     """
-    Surgical silence removal with a lower threshold to preserve melodic tails.
+    Surgical silence removal using optimized NumPy analysis.
     """
-    start_trim = 0
-    while start_trim < len(segment) and segment[start_trim:start_trim+chunk_size].dBFS < silence_threshold:
-        start_trim += chunk_size
-    ...
+    # Convert pydub segment to array for fast analysis
+    samples = np.array(segment.get_array_of_samples())
+    if len(samples) == 0: return segment
 
-    end_trim = len(segment)
-    while end_trim > start_trim and segment[end_trim-chunk_size:end_trim].dBFS < silence_threshold:
-        end_trim -= chunk_size
+    # Simple peak detection for speed
+    abs_samples = np.abs(samples)
+    threshold = (10**(silence_threshold/20.0)) * (2**15)
 
-    return segment[start_trim:end_trim]
+    # Find first and last indices above threshold
+    active_indices = np.where(abs_samples > threshold)[0]
+    if len(active_indices) == 0:
+        return segment
+
+    start_sample = active_indices[0]
+    end_sample = active_indices[-1]
+
+    # Convert samples to ms
+    start_ms = int(start_sample * 1000 / segment.frame_rate / segment.channels)
+    end_ms = int(end_sample * 1000 / segment.frame_rate / segment.channels)
+
+    return segment[start_ms:end_ms]
 
 def normalize_lufs(audio_array, sr, target_lufs=-14.0):
     """
@@ -153,9 +164,9 @@ def calculate_spectral_clash(outro_array, intro_array, sr):
         'high': (o_h + i_h) / (max(o_h, i_h, 1e-6))
     }
 
-def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None, low_gain=1.0, mid_gain=1.0, high_gain=1.0):
+def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None):
     """
-    3-Band Multi-band Compression with Genre-Aware Profiles (v3) and Real-time EQ (v7.9.0).
+    3-Band Multi-band Compression with Genre-Aware Profiles (v3).
 
     Why 3 Bands?
     Isolating Low (<200Hz), Mid (200Hz-3kHz), and High (>3kHz) allows for
@@ -171,11 +182,6 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=No
     mid_high = apply_dsp_filter(audio_array, sr, 'highpass', 200.0)
     mid_band = apply_dsp_filter(mid_high, sr, 'lowpass', 3000.0)
     high_band = apply_dsp_filter(audio_array, sr, 'highpass', 3000.0)
-
-    # 1.5 Real-time EQ Gain Stage (v7.9.0)
-    low_band *= low_gain
-    mid_band *= mid_gain
-    high_band *= high_gain
 
     # 2. Profile Selection
     profiles = {
@@ -354,27 +360,6 @@ class SpectralBalancedMix(TransitionArchetype):
             f_m = apply_dsp_filter(f_m, sr, 'lowpass', 5000.0)
 
         return f_m, f_n
-
-def calculate_vu(audio_array):
-    """
-    Calculates Peak and RMS levels for the given audio array.
-    Used for real-time VU meter telemetry (v8.4.0).
-    """
-    if audio_array.size == 0:
-        return {"peak": -100.0, "rms": -100.0}
-
-    # Peak level in dBFS
-    peak = np.max(np.abs(audio_array))
-    peak_db = 20 * np.log10(peak) if peak > 0 else -100.0
-
-    # RMS level in dBFS
-    rms = np.sqrt(np.mean(audio_array**2))
-    rms_db = 20 * np.log10(rms) if rms > 0 else -100.0
-
-    return {
-        "peak": float(max(-100.0, peak_db)),
-        "rms": float(max(-100.0, rms_db))
-    }
 
 def apply_log_fade(audio_array, fade_type='in', dip_db=-2.5):
     """

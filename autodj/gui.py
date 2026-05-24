@@ -2,10 +2,10 @@
 Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.6.0).
 7.6.0: The Visual Era (Spectral Terrain 3D).
 """
+from pydantic import BaseModel
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, JSONResponse, Response
-from fastapi.encoders import jsonable_encoder
 import uvicorn
 import os
 import asyncio
@@ -17,26 +17,23 @@ from .dsp import ArchetypeRegistry
 from .cluster import cluster
 from .monitoring import monitor
 from .plugins import PluginRegistry
+from .scheduling import get_scheduler
+
+class RatingRequest(BaseModel):
+    track_file: str
+    rating: int
 
 app = FastAPI(title=f"Auto DJ v{__version__} Console")
 templates = Jinja2Templates(directory="templates")
 
 mixing_status = {
     "status": "Idle",
+    "active_source": "local_folder",
+    "input_folder": config.INPUT_FOLDER,
     "tracklist": [],
-    "job_queue": [],  # Detailed progress for current session
     "playlist": [],
     "active_tasks": {},
-    "performance_metrics": {
-        "speedup_factor": 0.0,
-        "avg_task_time": 0.0,
-        "estimated_completion": "N/A"
-    },
     "progress": 0,
-    "vu": {"peak": -100.0, "rms": -100.0},
-    "hot_cues": [],  # List of {time_ms, label}
-    "beat_grid": [], # List of relative beat positions for the current track
-    "last_archive": None,
     "version": __version__,
     "parallel_cores": os.cpu_count() or 1,
     "telemetry": {
@@ -47,22 +44,16 @@ mixing_status = {
         "disk_write": 0,
         "net_sent": 0,
         "net_recv": 0,
+        "midi_active": False,
+        "midi_device": "None",
         "is_healthy": True,
         "is_throttled": False
     },
     "live_params": {
         "mastering_intensity": 0.5,
         "target_bpm": config.TARGET_BPM,
-        "low_gain": 1.0,
-        "mid_gain": 1.0,
-        "high_gain": 1.0,
-        "transition_bars": config.TRANSITION_BARS,
         "paused": False,
-        "auto_pilot": False,
-        "auto_pilot_energy_bias": 0.5,  # 0: Chill, 1: High Energy
-        "dynamic_range_compression": 0.5,
-        "handoff_mode": False,
-        "handoff_requested": False
+        "continuous_mode": False
     }
 }
 
@@ -109,6 +100,7 @@ async def index(request: Request):
 @app.on_event("startup")
 async def startup_event():
     asyncio.create_task(update_telemetry())
+    get_scheduler(mixing_status).start()
 
 async def update_telemetry():
     """Background task to poll system performance metrics."""
@@ -157,7 +149,24 @@ async def get_status():
     if mixing_status["status"] == "Idle":
         import glob
         status_data["available_tracks"] = [os.path.basename(f) for f in glob.glob(os.path.join(config.INPUT_FOLDER, "*")) if any(f.endswith(ext) for ext in config.SUPPORTED_EXTENSIONS)]
-    return JSONResponse(content=jsonable_encoder(status_data))
+
+    # Update MIDI telemetry if handler exists
+    from .midi import PluginRegistry
+    midi_tool = PluginRegistry.get_tools().get("midi_hardware")
+    if midi_tool and hasattr(midi_tool, 'handler') and midi_tool.handler:
+        status_data["telemetry"]["midi_active"] = midi_tool.handler.running
+        status_data["telemetry"]["midi_device"] = midi_tool.handler.port_name or "Auto-Detect"
+
+    return JSONResponse(status_data)
+
+@app.get("/midi/devices")
+async def get_midi_devices():
+    """Returns a list of available MIDI input devices."""
+    import mido
+    try:
+        return {"devices": mido.get_input_names()}
+    except Exception:
+        return {"devices": []}
 
 @app.post("/playlist/add")
 async def playlist_add(filename: str = Form(...)):
@@ -172,60 +181,47 @@ async def playlist_remove(index: int = Form(...)):
         mixing_status["playlist"].pop(index)
     return {"status": "Removed", "playlist": mixing_status["playlist"]}
 
-@app.post("/playlist/move")
-async def playlist_move(index: int = Form(...), to_index: int = Form(...)):
-    """Moves a track within the dynamic playlist."""
-    if 0 <= index < len(mixing_status["playlist"]) and 0 <= to_index < len(mixing_status["playlist"]):
-        track = mixing_status["playlist"].pop(index)
-        mixing_status["playlist"].insert(to_index, track)
-    return {"status": "Moved", "playlist": mixing_status["playlist"]}
-
 @app.post("/cluster/reset")
 async def cluster_reset(node_id: str = Form(...)):
     """Resets failed states for a node."""
     cluster.reset_node(node_id)
     return {"status": "Reset", "node": node_id}
 
+
+@app.post("/feedback/rating")
+async def submit_rating(req: RatingRequest):
+    """Saves user rating for a track transition."""
+    for t in mixing_status["tracklist"]:
+        if t["file"] == req.track_file:
+            t["rating"] = req.rating
+            break
+    os.makedirs("logs", exist_ok=True)
+    feedback_file = "logs/feedback.json"
+    feedback_data = []
+    if os.path.exists(feedback_file):
+        try:
+            with open(feedback_file, "r") as f: feedback_data = json.load(f)
+        except: pass
+    feedback_data.append({"track_file": req.track_file, "rating": req.rating, "timestamp": __import__("datetime").datetime.now().isoformat()})
+    with open(feedback_file, "w") as f: json.dump(feedback_data, f, indent=2)
+    return {"status": "Recorded"}
+
 @app.post("/update_params")
 async def update_params(
     mastering_intensity: float = Form(None),
     target_bpm: float = Form(None),
-    low_gain: float = Form(None),
-    mid_gain: float = Form(None),
-    high_gain: float = Form(None),
-    transition_bars: int = Form(None),
     paused: bool = Form(None),
-    auto_pilot: bool = Form(None),
-    auto_pilot_energy_bias: float = Form(None),
-    dynamic_range_compression: float = Form(None),
-    handoff_mode: bool = Form(None),
-    handoff_requested: bool = Form(None)
+    continuous_mode: bool = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
         mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
     if target_bpm is not None:
         mixing_status["live_params"]["target_bpm"] = target_bpm
-    if low_gain is not None:
-        mixing_status["live_params"]["low_gain"] = low_gain
-    if mid_gain is not None:
-        mixing_status["live_params"]["mid_gain"] = mid_gain
-    if high_gain is not None:
-        mixing_status["live_params"]["high_gain"] = high_gain
-    if transition_bars is not None:
-        mixing_status["live_params"]["transition_bars"] = transition_bars
     if paused is not None:
         mixing_status["live_params"]["paused"] = paused
-    if auto_pilot is not None:
-        mixing_status["live_params"]["auto_pilot"] = auto_pilot
-    if auto_pilot_energy_bias is not None:
-        mixing_status["live_params"]["auto_pilot_energy_bias"] = auto_pilot_energy_bias
-    if dynamic_range_compression is not None:
-        mixing_status["live_params"]["dynamic_range_compression"] = dynamic_range_compression
-    if handoff_mode is not None:
-        mixing_status["live_params"]["handoff_mode"] = handoff_mode
-    if handoff_requested is not None:
-        mixing_status["live_params"]["handoff_requested"] = handoff_requested
+    if continuous_mode is not None:
+        mixing_status["live_params"]["continuous_mode"] = continuous_mode
     return {"status": "Updated", "params": mixing_status["live_params"]}
 
 @app.websocket("/ws")
@@ -289,6 +285,7 @@ async def start_mixing(
     mixing_status["tracklist"] = []
     mixing_status["live_params"]["target_bpm"] = bpm
     mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
+    mixing_status["active_source"] = source_plugin
 
     background_tasks.add_task(compile_master_set, Args(), status_obj=mixing_status)
     return {"message": "Engine ignited."}
@@ -299,28 +296,31 @@ async def cluster_join(node_id: str = Form(...), cores: int = Form(...)):
     cluster.register_node(node_id, cores)
     return {"status": "Accepted", "node": node_id}
 
+
+@app.get("/scheduler/events")
+async def get_scheduled_events():
+    return {"events": get_scheduler().get_events()}
+
+@app.post("/scheduler/add")
+async def add_scheduled_event(
+    timestamp: str = Form(...),
+    action: str = Form(...),
+    params: str = Form("{}")
+):
+    import json
+    try:
+        p = json.loads(params)
+    except:
+        p = {}
+    event = get_scheduler().add_event(timestamp, action, p)
+    return {"status": "Scheduled", "event": event}
+
 @app.get("/download")
 async def download_master():
     if os.path.exists(config.OUTPUT_FILE):
         return FileResponse(config.OUTPUT_FILE, filename=os.path.basename(config.OUTPUT_FILE))
     return JSONResponse({"error": "Mix not found."}, status_code=404)
 
-@app.get("/download_archive")
-async def download_archive():
-    last_archive = mixing_status.get("last_archive")
-    if last_archive and os.path.exists(last_archive):
-        return FileResponse(last_archive, filename=os.path.basename(last_archive))
-    return JSONResponse({"error": "Archive not found."}, status_code=404)
-
-@app.get("/analytics")
-async def get_analytics():
-    """Returns aggregated performance history for dashboarding."""
-    history_path = "logs/performance_history.json"
-    if os.path.exists(history_path):
-        with open(history_path, "r") as f:
-            return json.load(f)
-    return []
-
 def run_gui(host="0.0.0.0", port=8000):
-    print(f"[*] Auto DJ v{__version__} Console launching on {host}:{port}...")
+    print(f"[*] Auto DJ v{__version__} Console launching...")
     uvicorn.run(app, host=host, port=port)

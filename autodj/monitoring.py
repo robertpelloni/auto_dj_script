@@ -5,7 +5,6 @@ Manages structured logs, error metrics, and incident reports.
 import logging
 import json
 import time
-import os
 from datetime import datetime
 
 class ExecutionMonitor:
@@ -22,13 +21,6 @@ class ExecutionMonitor:
         }
         self.logger = logging.getLogger("AutoDJ.Monitor")
         self.logger.setLevel(logging.INFO)
-
-        # Add file handler for recovery tracking (v7.8.0)
-        os.makedirs("logs", exist_ok=True)
-        log_file = os.path.join("logs", f"autodj_execution.log")
-        fh = logging.FileHandler(log_file)
-        fh.setFormatter(logging.Formatter('%(asctime)s - %(name)s - %(levelname)s - %(message)s'))
-        self.logger.addHandler(fh)
 
     def log_incident(self, severity, module, message, traceback=None):
         """Records a structured incident for the recovery console."""

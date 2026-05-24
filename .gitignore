@@ -8,3 +8,10 @@ psyset_source/
 .jules/
 metamcp.db
 *.db
+# Large media files - use Git LFS or external storage
+*.m4a
+*.wav
+*.mp3
+*.flac
+*.ogg
+*.aiff

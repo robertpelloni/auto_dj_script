@@ -1,6 +1,6 @@
-# 🌌 Auto DJ 8.0.0: The Autonomous Audiophile Engine
+# 🌌 Auto DJ 8.10.0: The Autonomous Audiophile Engine
 
-[![Version](https://img.shields.io/badge/version-8.0.0-blueviolet)](./VERSION.md)
+[![Version](https://img.shields.io/badge/version-8.10.0-blueviolet)](./VERSION.md)
 [![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
 [![Tests](https://img.shields.io/badge/tests-passing-success)](./tests)
 
