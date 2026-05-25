@@ -542,6 +542,35 @@ def compile_master_set(args, status_obj=None):
                     status_obj["status"] = f"Error: Export failed - {e}"
 
 
+def _gentle_crossfade(audio_array, fade_type='in'):
+    """Gentle volume crossfade designed to complement spectral EQ swap.
+    
+    Unlike the aggressive sqrt() equal-power crossfade, this curve:
+    - Fade OUT: stays near unity until 50%, then drops smoothly to 0.
+      This prevents the outro from sounding "abruptly killed" when
+      combined with the LPF sweep in DualFilterSweep.
+    - Fade IN: smooth S-curve from 0 to 1.
+    
+    The S-curve shape (smoothstep) avoids the "hole" at the crossover
+    point while keeping both tracks audible during the overlap.
+    """
+    n = audio_array.shape[1] if audio_array.ndim == 2 else len(audio_array)
+    x = np.linspace(0, 1, n)
+    
+    if fade_type == 'out':
+        # Outro: hold at near-unity, then smooth drop in second half
+        # Using raised cosine: 0.5 * (1 + cos(pi * x^1.5))
+        curve = 0.5 * (1 + np.cos(np.pi * x ** 1.5))
+    else:
+        # Intro: smooth S-curve rise
+        # Using raised cosine: 0.5 * (1 - cos(pi * x^0.7))
+        curve = 0.5 * (1 - np.cos(np.pi * x ** 0.7))
+    
+    if audio_array.ndim == 2:
+        return audio_array * curve[np.newaxis, :]
+    return audio_array * curve
+
+
 def transition_render_worker(args):
     """Parallel worker for rendering a single transition overlap."""
     outro_raw, intro_raw, sr, mode, ms_trans, ideal_p, dsp_kwargs = args
@@ -553,9 +582,9 @@ def transition_render_worker(args):
             f_m_raw = apply_dsp_filter(outro_raw, sr, 'lowpass', dsp_kwargs.get('lowpass', 200.0))
             f_n_raw = apply_dsp_filter(intro_raw, sr, 'highpass', dsp_kwargs.get('highpass', 150.0))
 
-        # Apply Professional Logarithmic Fades
-        f_m_faded = apply_log_fade(f_m_raw, fade_type='out')
-        f_n_faded = apply_log_fade(f_n_raw, fade_type='in')
+        # Apply gentle volume crossfade (complements EQ swap in DualFilterSweep)
+        f_m_faded = _gentle_crossfade(f_m_raw, fade_type='out')
+        f_n_faded = _gentle_crossfade(f_n_raw, fade_type='in')
 
         # Mix-Bus Summation
         min_len = min(f_m_faded.shape[1], f_n_faded.shape[1]) if f_m_faded.ndim == 2 else min(len(f_m_faded), len(f_n_faded))
