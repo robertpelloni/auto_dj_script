@@ -234,7 +234,8 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     corr = fast_correlate(o_kick[:win], i_kick[:win])
     center = win - 1
     ms_per_beat = 60000.0 / bpm
-    search = int(sr * (60/bpm) * 0.5)
+    # Search +/-1 beat (was +/-0.5, which caused edge-of-window artifacts at -200ms)
+    search = int(sr * (60/bpm) * 1.0)
     start = max(0, center - search)
     end = min(len(corr), center + search)
     slice_c = corr[start:end]
@@ -243,28 +244,53 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
 
     lag = np.argmax(slice_c) - (len(slice_c) // 2)
 
-    # Confidence check
+    # Stricter confidence check: peak must be 1.5x the average (was 1.25x)
     peak_val = np.max(slice_c)
     avg_val = np.mean(np.abs(slice_c))
-    if peak_val < avg_val * 1.25:
+    if peak_val < avg_val * 1.5:
+        return 0
+
+    # Reject edge-of-window hits (likely spurious)
+    if abs(lag) > search * 0.9:
         return 0
 
     return int(lag * 1000 / sr)
 
 
 def get_genre_archetype(y, sr, bpm=None):
-    """Genre classification using spectral centroid heuristic."""
-    # Simple centroid estimation via FFT
+    """Genre classification using spectral centroid + BPM heuristics."""
     if y.ndim == 2:
         y = np.mean(y, axis=0)
     fft = np.abs(np.fft.rfft(y[:min(len(y), sr*30)]))
     freqs = np.fft.rfftfreq(len(y[:min(len(y), sr*30)]), 1.0/sr)
     centroid = np.sum(freqs * fft) / (np.sum(fft) + 1e-10)
-    if centroid > 3000:
-        return "High-Energy", "Standard Psytrance"
-    elif centroid > 1500:
-        return "Techno", "Progressive"
-    return "Ambient", "Chillout"
+
+    # BPM-aware classification
+    if bpm and bpm >= 170:
+        return "Hi-Tech", "Fast psytrance (170+ BPM)"
+    elif bpm and bpm >= 145:
+        if centroid > 4000:
+            return "Full-On", "High-energy psytrance"
+        elif centroid > 2800:
+            return "Full-On", "Standard psytrance"
+        else:
+            return "Progressive", "Groovy psytrance"
+    elif bpm and bpm >= 130:
+        if centroid > 3500:
+            return "Progressive", "Energetic progressive"
+        elif centroid > 2000:
+            return "Progressive", "Standard progressive"
+        else:
+            return "Minimal", "Minimal progressive"
+    elif bpm and bpm >= 115:
+        if centroid > 3000:
+            return "Progressive", "Mid-tempo psytrance"
+        else:
+            return "Downtempo", "Chillout psytrance"
+    else:
+        if centroid > 2000:
+            return "Downtempo", "Ambient psytrance"
+        return "Ambient", "Chillout"
 
 
 def extract_spectral_terrain(y, sr):
