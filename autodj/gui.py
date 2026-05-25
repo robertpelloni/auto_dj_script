@@ -140,6 +140,9 @@ async def get_status():
     status_data = dict(mixing_status)
     status_data["cluster"] = cluster.get_status()
     status_data["monitoring"] = monitor.get_status()
+    status_data["scaling"] = cluster.scaler.get_scaling_metrics()
+    status_data["telemetry"]["active_workers"] = cluster.get_worker_count()
+
     # Populate available tracks if idle
     if mixing_status["status"] == "Idle":
         import glob

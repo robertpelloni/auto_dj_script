@@ -46,9 +46,8 @@ def get_track_duration(file_path):
     """
     Quickly retrieves the duration of an audio file in seconds.
     """
-    import soundfile as sf
-    info = sf.info(file_path)
-    return info.duration
+    import librosa
+    return librosa.get_duration(path=file_path)
 
 def export_rekordbox_xml(tracklist, output_xml_path):
     """

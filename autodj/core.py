@@ -1,5 +1,4 @@
 """ Core Orchestration Engine | Auto DJ Script (7.6.0)
-==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
 
@@ -95,12 +94,9 @@ def dynamic_warp(y, sr, native_bpm, start_target_bpm, end_target_bpm):
             # Rubber Band --tempo X: X > 1.0 is faster.
             print(f"    [RB] rate={rate:.4f} in={fin.name}")
             subprocess.run(["rubberband", "--tempo", str(rate), fin.name, fout.name], check=True)
-            out_y, sr_out = sf.read(fout.name, dtype='float32')
-            if out_y.ndim == 2:
-                out_y = out_y.T
+            out_y, _ = librosa.load(fout.name, sr=sr, mono=False)
             os.remove(fin.name); os.remove(fout.name)
             
-            # Force stereo return
             if out_y.ndim == 1:
                 out_y = np.vstack([out_y, out_y])
             return out_y
@@ -155,9 +151,7 @@ def analyze_track_worker(f):
 
         native_bpm, _, _ = get_native_bpm(y, sr)
         
-        # Pure-numpy genre archetype
-        y_mono = np.mean(y, axis=0) if y.ndim == 2 else y
-        genre, rationale = get_genre_archetype(y_mono, sr, bpm=native_bpm)
+        genre, rationale = get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr, bpm=native_bpm)
         terrain = extract_spectral_terrain(y, sr)
 
         return {
@@ -165,7 +159,9 @@ def analyze_track_worker(f):
             'bpm': native_bpm,
             'key': get_musical_key(y if y.ndim == 1 else librosa.to_mono(y), sr),
             'energy': get_energy_profile(y if y.ndim == 1 else librosa.to_mono(y), sr),
-            'genre': get_genre_archetype(y if y.ndim == 1 else librosa.to_mono(y), sr)
+            'genre': genre,
+            'rationale': rationale,
+            'terrain': terrain
         }
     except Exception as e:
         print(f"[ERROR] analyze_track_worker failed for {f}: {e}")
@@ -189,6 +185,7 @@ def find_optimal_order(files, status_obj=None):
             status_obj["active_tasks"].pop(f, None)
             status_obj["status"] = f"Analyzing Library ({i+1}/{total})"
             status_obj["progress"] = int(((i + 1) / total) * 50)
+
 
         if 'error' not in r:
             print(f"  [{i+1}/{total}] {os.path.basename(f)}: BPM={r['bpm']:.1f}, Key={r['key']}, Genre={r['genre']}")
@@ -373,23 +370,26 @@ def compile_master_set(args, status_obj=None):
             print(f"[WARN] Skipping track {i}: warp failed")
             continue
 
-        # In-Memory Conversion (Bypassing FFmpeg/Disk)
-        nxt = ndarray_to_pydub(y_w, sr)
-        nxt = trim_silence(nxt)
+        # In-Memory Buffer Conversion (v7.0.0 Optimized)
+        # Avoids disk I/O for temporary track preparation
+        buf = io.BytesIO()
+        sf.write(buf, y_w.T, sr, format='WAV', subtype='PCM_16')
+        buf.seek(0)
+        nxt = trim_silence(AudioSegment.from_file(buf, format="wav"))
         processed_tracks.append((nxt, y_w, sr))
 
         if master is None:
             master = nxt
             # Anchor the global grid to the first beat of the first track
-            _, _, master_grid_offset, _ = analyze_geometry(nxt, sr, start_bpm, args.beats_per_bar, args.transition_bars)
-            track_meta = {'timestamp': "00:00:00", 'file': os.path.basename(all_files[i]),
+            _, _, master_grid_offset = analyze_geometry(nxt, sr, start_bpm, args.beats_per_bar, args.transition_bars)
+            tracklist.append({'timestamp': "00:00:00", 'file': os.path.basename(all_files[i]),
                                'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
                                'genre': meta_list[i]['genre'],
                                'rationale': meta_list[i].get('rationale', ''),
                                'terrain': meta_list[i].get('terrain', []),
-                               'start_ms': 0}
-            tracklist.append(track_meta)
+                               'start_ms': 0})
             current_time_ms = len(master)
+            i += 1
             continue
 
         prev_nxt, prev_y_w, _ = processed_tracks[i-1]
@@ -398,7 +398,7 @@ def compile_master_set(args, status_obj=None):
         current_target_bpm = status_obj.get("live_params", {}).get("target_bpm", start_bpm) if status_obj else start_bpm
         t_s_bpm = current_target_bpm + (end_bpm - current_target_bpm) * (i / num_tracks)
 
-        beats, theoretical_ms_trans, first_beat_ms, last_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
+        beats, theoretical_ms_trans, first_beat_ms = analyze_geometry(nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
         ph = detect_phrases(y_w, sr)
 
         # 1. Theoretical Transition Prep (v7.2.0)
@@ -415,18 +415,18 @@ def compile_master_set(args, status_obj=None):
 
         # Initial overlap
         ms_trans = max(ideal_p, first_beat_ms + int(ms_per_bar * 4))
-        
+
         # 2. Intelligent Tail Extension
-        remaining_outro = len(master) - master_last_kick
-        if ms_trans > remaining_outro:
+        if ms_trans > (len(master) - tracklist[-1]['start_ms']):
             loop_bar = identify_loopable_phrase(prev_y_w, sr, t_s_bpm, args.beats_per_bar)
-            needed_ms = ms_trans - remaining_outro
+            needed_ms = ms_trans - (len(master) - tracklist[-1]['start_ms'])
             num_loops = int(np.ceil(needed_ms / (len(loop_bar) / sr * 1000))) + 1
             ext_segment = np.tile(loop_bar, num_loops)
             master += ndarray_to_pydub(ext_segment, sr)
             current_time_ms = len(master)
 
-        # 3. Final Precise Phase Alignment
+        # 3. Final Precise Phase Alignment (Relative to First Kick of Mix)
+        # Expected Kick = master_grid_offset + (N * grid_size)
         current_kick_pos = (current_time_ms - ms_trans + first_beat_ms)
         relative_pos = current_kick_pos - master_grid_offset
         phase_error = relative_pos % grid_size
@@ -434,7 +434,7 @@ def compile_master_set(args, status_obj=None):
         if phase_error != 0:
              ms_trans += int(phase_error)
 
-        # 4. Sample-Accurate Nudging
+        # 4. Sample-Accurate Nudging (High-Res Kick Alignment)
         m_slice = pydub_to_ndarray(master[-ms_trans:])
         n_slice = pydub_to_ndarray(nxt[:ms_trans])
         sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
@@ -447,7 +447,7 @@ def compile_master_set(args, status_obj=None):
         # CORRECT DIRECTION: Subtract nudge to align transients
         ms_trans -= sync_nudge
 
-        print(f"  [SYNC] Energy-Anchor Lock. Tail: {len(master)-master_last_kick}ms. Nudge: {sync_nudge}ms.")
+        print(f"  [SYNC] 8-Bar Phrase Locked. Offset: {master_grid_offset}ms. Nudge: {sync_nudge}ms. Final Overlap: {ms_trans/1000:.1f}s")
 
         ms_trans = min(ms_trans, len(master))
         track_start_ms = len(master) - ms_trans
@@ -573,9 +573,8 @@ def transition_render_worker(args):
         f_m_faded = apply_log_fade(f_m_raw, fade_type='out')
         f_n_faded = apply_log_fade(f_n_raw, fade_type='in')
 
-        # Precise Mix-Bus Summation (Fixed off-by-one)
-        min_len = min(f_m_faded.shape[1], f_n_faded.shape[1])
-        summed = f_m_faded[:, :min_len] + f_n_faded[:, :min_len]
+        # Precise Mix-Bus Summation
+        summed = f_m_faded + f_n_faded
 
         # Safety: Apply Limiter to prevent digital clipping in the mix-bus
         summed = apply_limiter(summed)

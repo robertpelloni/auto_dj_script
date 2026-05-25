@@ -29,6 +29,28 @@ class RenderCluster:
     def __init__(self):
         self.nodes = [ClusterNode("LocalHost", cores=os.cpu_count() or 1)]
         self._executor = None
+        self._current_workers = 2
+        from .autoscaler import AutoScaler
+        self.scaler = AutoScaler(self)
+
+    def get_worker_count(self):
+        return self._current_workers
+
+    def scale_up(self):
+        if self._current_workers < (os.cpu_count() or 4):
+            self._current_workers += 1
+            self.refresh_executor()
+
+    def scale_down(self):
+        if self._current_workers > 1:
+            self._current_workers -= 1
+            self.refresh_executor()
+
+    def refresh_executor(self):
+        """Restarts the executor with the new worker count."""
+        if self._executor:
+            self._executor.shutdown(wait=False)
+        self._executor = ProcessPoolExecutor(max_workers=self._current_workers)
 
     def register_node(self, node_id, cores):
         """Registers a new remote node in the cluster."""
@@ -40,11 +62,17 @@ class RenderCluster:
                 return
         self.nodes.append(ClusterNode(node_id, cores=cores))
 
-    def get_executor(self):
-        """Returns the persistent ProcessPoolExecutor instance."""
+    def get_executor(self, status_obj=None):
+        """Returns the persistent ProcessPoolExecutor instance, performing auto-scaling check."""
+        # Perform scaling evaluation
+        command = self.scaler.evaluate(status_obj)
+        if command == "UP":
+            self.scale_up()
+        elif command == "DOWN":
+            self.scale_down()
+
         if self._executor is None:
-            # Throttle to 2 workers to prevent MemoryError on large tracks
-            self._executor = ProcessPoolExecutor(max_workers=2)
+            self._executor = ProcessPoolExecutor(max_workers=self._current_workers)
         return self._executor
 
     def shutdown(self):
