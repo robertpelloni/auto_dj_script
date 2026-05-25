@@ -53,23 +53,46 @@ class StatefulIIR:
         return out
 
 def get_butter_coeffs(cutoff, sr, btype='lowpass'):
-    """
-    Calculates 1st-order IIR coefficients for stability.
-    """
-    nyquist = 0.5 * sr
-    f = cutoff / nyquist
-    if btype == 'lowpass':
-        alpha = f / (f + 1)
-        return np.array([alpha, alpha]), np.array([1.0, alpha - 1.0])
-    else:
-        alpha = 1.0 / (f + 1)
-        return np.array([alpha, -alpha]), np.array([1.0, alpha - 1.0])
+    """Calculates IIR filter coefficients. Uses scipy for 4th-order when available."""
+    try:
+        from scipy.signal import butter
+        b, a = butter(4, cutoff / (0.5 * sr), btype=btype)
+        return b, a
+    except ImportError:
+        # Fallback: 1st-order coefficients
+        nyquist = 0.5 * sr
+        f = cutoff / nyquist
+        if btype == 'lowpass':
+            alpha = f / (f + 1)
+            return np.array([alpha, alpha]), np.array([1.0, alpha - 1.0])
+        else:
+            alpha = 1.0 / (f + 1)
+            return np.array([alpha, -alpha]), np.array([1.0, alpha - 1.0])
 
 def apply_iir_filter(data, b, a):
-    """One-shot stateless filter (wraps StatefulIIR)."""
-    num_ch = data.shape[0] if data.ndim == 2 else 1
-    f = StatefulIIR(b, a, num_channels=num_ch)
-    return f.process(data)
+    """One-shot filter using scipy's compiled C implementation for speed.
+    Falls back to StatefulIIR if scipy is unavailable."""
+    try:
+        from scipy.signal import lfilter
+        if data.ndim == 2:
+            out = np.zeros_like(data)
+            for ch in range(data.shape[0]):
+                out[ch] = lfilter(b, a, data[ch])
+            return out
+        return lfilter(b, a, data)
+    except ImportError:
+        num_ch = data.shape[0] if data.ndim == 2 else 1
+        f = StatefulIIR(b, a, num_channels=num_ch)
+        return f.process(data)
 
 def fast_correlate(o_k, i_k):
-    return np.correlate(o_k, i_k, mode='full')
+    """FFT-based cross-correlation. O(n log n) instead of O(n^2)."""
+    n = len(o_k) + len(i_k) - 1
+    # Pad to next power of 2 for FFT efficiency
+    fft_size = 1
+    while fft_size < n:
+        fft_size *= 2
+    O = np.fft.rfft(o_k, n=fft_size)
+    I = np.fft.rfft(i_k, n=fft_size)
+    corr = np.fft.irfft(O * np.conj(I), n=fft_size)
+    return corr[:n]
