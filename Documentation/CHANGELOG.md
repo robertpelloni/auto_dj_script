@@ -1,21 +1,12 @@
 # Changelog
 
-## [8.10.0] - 2025-01-24
+## [8.11.0] - 2025-01-24
 ### Added
-- **Autonomous Scheduling Module**: Introduced `autodj/scheduling.py` for orchestrating timed and event-driven tasks.
-- **Timed Event Orchestration**: ISO-timestamped action scheduling for Start/Stop, BPM Ramping, and Track Injections.
-- **Scheduler UI Panel**: New "AUTONOMOUS SCHEDULER" tab in the Command Console with event creation and monitoring.
-- **Persistent Event Logging**: Backend tracking of scheduled events in `logs/scheduler.json`.
-
-## [8.9.1] - 2025-01-24
-### Fixed
-- **Sliding Window Memory Management**: Implemented automatic pruning of heavy audio arrays in `core.py` to prevent RAM exhaustion during long continuous sets.
-
-## [8.9.0] - 2025-01-24
-### Added
-- **Continuous Execution Mode**: Automated queue replenishment from active source plugins for non-stop autonomous performance.
-- **Transition Feedback Mechanism**: Interactive rating system in the Web Dashboard for real-time model reinforcement.
-- **Feedback Analytics**: Backend logging of user ratings to `logs/feedback.json` for stylistic refinement.
+- **Preference-Aware Orchestration**: Enhanced `SmartReplenishTool` with harmonic scoring and user preference integration (Genre/Energy).
+- **Expanded Scheduler API**: Added `set_preference`, `clear_queue`, and `trigger_replenish` actions.
+- **Dynamic Bias Controls**: Real-time sliders for Energy Bias and Genre Preference in the Command Console.
+- **Scheduler History UI**: Persistent reverse-chronological log of executed and pending events.
+- **Heuristic Harmonic Selection**: Automated queue replenishment now prioritizes tracks with matching keys and energy profiles.
 
 ## [8.8.0] - 2025-01-24
 ### Added
@@ -30,7 +21,6 @@
 - **Visual Sync Waveforms**: Integrated Hot Cue markers and phrase boundaries directly into the WaveSurfer.js waveform display.
 - **3D Beat-Grid Overlay**: Added rhythmic lattice visualization on top of the Spectral Terrain v1.0 engine.
 - **Session Archiving**: Automatic backup of mix metadata, energy profiles, and console logs into versioned `.json` archives.
-
 
 ## [7.8.0] - 2024-06-01
 ### Added
@@ -102,20 +92,6 @@
 - **Persistent Cluster Executor**: Optimized the mixing pipeline to use node-aware process pools.
 - **Cluster Monitor UI**: Real-time status display of available rendering nodes in the Command Console.
 - **Asynchronous Task Dispatching**: Refactored warping and mixing to support non-blocking cluster distribution.
-
-## [8.8.0] - 2025-01-24
-### Added
-- **Tactile MIDI Hardware Integration**: Introduced `autodj/midi.py` with threaded `MidiHandler` supporting real-time CC and Note mapping.
-- **Rekordbox Library Ingestion**: Added `RekordboxSourcePlugin` to parse Pioneer `pioneer.xml` files with full URL-encoded path resolution.
-- **Hardware Telemetry Dashboard**: New "HARDWARE & MIDI" panel in the Command Console with device discovery and live activity monitoring.
-- **Hardware-Informed Mastering**: Live parameter overrides for EQ gains and Mastering Intensity via MIDI CC 16-19.
-
-## [8.7.0] - 2025-01-24
-### Added
-- **Quantum Sequence Optimizer**: Upgraded Simulated Annealing to run 4 parallel cooling branches for superior global set-flow optimization.
-- **Visual Sync Waveforms**: Integrated Hot Cue markers and phrase boundaries directly into the WaveSurfer.js waveform display.
-- **3D Beat-Grid Overlay**: Added rhythmic lattice visualization on top of the Spectral Terrain v1.0 engine.
-- **Session Archiving**: Automatic backup of mix metadata, energy profiles, and console logs into versioned `.json` archives.
 
 ## [6.8.0] - 2024-05-27
 ### Added
@@ -211,12 +187,12 @@
 
 ## [5.2.0] - 2024-05-20
 ### Added
-- **True-Peak Limiter**: Integrated a soft-knee look-ahead limiter into the mastering chain in \`dsp.py\`.
+- **True-Peak Limiter**: Integrated a soft-knee look-ahead limiter into the mastering chain in `dsp.py`.
 
 ## [5.1.0] - 2024-05-20
 ### Added
-- **Universal Version Synchronization**: Established \`VERSION.md\` as the single source of truth.
-- **Directive Consolidation**: Unified all project instructions into \`GLOBAL_LLM_DIRECTIVE.md\`.
+- **Universal Version Synchronization**: Established `VERSION.md` as the single source of truth.
+- **Directive Consolidation**: Unified all project instructions into `GLOBAL_LLM_DIRECTIVE.md`.
 
 ## [5.0.0] - 2024-05-19
 ### Added

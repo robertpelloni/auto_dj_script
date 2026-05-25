@@ -19,15 +19,14 @@
         .btn-prime { background: #a020f0; color: white; border: none; padding: 15px 40px; border-radius: 10px; font-weight: 700; cursor: pointer; width: 100%; font-size: 1.1em; box-shadow: 0 4px 15px rgba(160, 32, 240, 0.3); transition: all 0.2s; }
         .btn-prime:hover:not(:disabled) { background: #b030ff; transform: translateY(-2px); }
         .btn-prime:disabled { background: #333; cursor: not-allowed; opacity: 0.5; }
-        input[type="number"], select { background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 1em; }
+        input[type="number"], input[type="datetime-local"], select { background: #000; border: 1px solid #333; color: white; padding: 12px; border-radius: 6px; width: 100%; box-sizing: border-box; font-size: 1em; }
         #waveform { margin-top: 40px; border-radius: 10px; overflow: hidden; background: #000; border: 1px solid #1f1f2a; }
         .tracklist { margin-top: 40px; background: #111118; border-radius: 12px; padding: 20px; border: 1px solid #1f1f2a; }
-        .track-item { display: grid; grid-template-columns: 80px 1fr 120px 100px 180px 120px; padding: 12px; border-bottom: 1px solid #1a1a24; font-size: 0.9em; }
+        .track-item { display: grid; grid-template-columns: 80px 1fr 120px 100px 180px 120px; padding: 12px; border-bottom: 1px solid #1a1a24; font-size: 0.9em; align-items: center; }
         .track-item:last-child { border: none; }
         .track-header { font-weight: 800; color: #888; text-transform: uppercase; font-size: 0.7em; }
-        .rating-btn { background: #222; border: 1px solid #333; color: #888; cursor: pointer; padding: 2px 8px; border-radius: 4px; font-size: 0.8em; transition: all 0.2s; }
-        .rating-btn:hover { background: #333; color: white; border-color: #555; }
-        .rating-btn.active { background: #a020f0; color: white; border-color: #b030ff; }
+        .feedback-btn { background: #222; border: 1px solid #333; color: #888; border-radius: 4px; padding: 4px 8px; cursor: pointer; transition: 0.2s; }
+        .feedback-btn:hover { border-color: #a020f0; color: #fff; }
     </style>
 </head>
 <body>
@@ -70,58 +69,18 @@
         </div>
     </div>
 
-    <div id="cluster-monitor" style="background: #111118; padding: 15px; border-radius: 10px; border: 1px solid #1f1f2a; margin-bottom: 20px; font-size: 0.8em; display: flex; gap: 20px;">
-        <div style="color: #888; font-weight: 800;">CLUSTER NODES:</div>
-        <div id="nodes-container" style="display: flex; gap: 15px;">
-            <!-- Nodes will be injected here -->
-        </div>
-    </div>
-
-    <div id="scheduler-panel" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-bottom: 25px;">
-        <h3 style="margin-top: 0; color: #00ffcc; display: flex; align-items: center; gap: 10px;">
-            <span>📅</span> AUTONOMOUS SCHEDULER
-            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Timed Event Orchestration</span>
-        </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
-                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Schedule New Event</div>
-                <div style="display: flex; flex-direction: column; gap: 10px;">
-                    <input type="datetime-local" id="sched-time" style="background: #000; color: #fff; border: 1px solid #333; padding: 5px;">
-                    <select id="sched-action">
-                        <option value="set_bpm">Set BPM</option>
-                        <option value="toggle_continuous">Toggle Continuous</option>
-                        <option value="inject_track">Inject Track</option>
-                    </select>
-                    <input type="text" id="sched-params" placeholder="Params (JSON, e.g. {\"bpm\": 145})" style="background: #000; color: #fff; border: 1px solid #333; padding: 5px;">
-                    <button class="btn-prime" style="font-size: 0.8em; padding: 10px;" onclick="addEvent()">SCHEDULE EVENT</button>
-                </div>
-            </div>
-            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
-                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Upcoming Events</div>
-                <div id="event-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; font-size: 0.8em;">
-                    <!-- Events go here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div id="live-deck" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-bottom: 25px;">
         <h3 style="margin-top: 0; color: #00ffcc; display: flex; align-items: center; gap: 10px;">
             <span>🎚</span> LIVE DECK PLAYLIST
-            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Build your set in real-time</span>
         </h3>
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
             <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
                 <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Available Tracks</div>
-                <div id="available-tracks-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;">
-                    <!-- Tracks go here -->
-                </div>
+                <div id="available-tracks-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;"></div>
             </div>
             <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
                 <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Current Queue</div>
-                <div id="queue-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;">
-                    <!-- Queue goes here -->
-                </div>
+                <div id="queue-list" style="height: 150px; overflow-y: auto; display: flex; flex-direction: column; gap: 5px;"></div>
             </div>
         </div>
     </div>
@@ -129,37 +88,32 @@
     <div class="grid">
         <div style="display: flex; flex-direction: column; gap: 20px;">
             <div class="log-area" id="terminal" style="height: 250px;">
-                [SYSTEM] Kernel v{{ version }} active...<br>
-                [SYSTEM] Parallel Warp Engine standing by...<br>
-                [MIR] CQT Key Detection loaded.<br>
-                [DSP] True-Peak Look-ahead Limiter online.<br>
-                [SYSTEM] WebSocket connecting...
+                [SYSTEM] Kernel v{{ version }} active...
             </div>
-            <div id="task-tracker" style="background: #111118; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 100px; overflow-y: auto; margin-bottom: 10px;">
+            <div id="task-tracker" style="background: #111118; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 100px; overflow-y: auto;">
                 <div style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 8px;">Active Job Tracker</div>
-                <div id="task-container" style="display: flex; flex-direction: column; gap: 5px;">
-                    <!-- Tasks go here -->
-                </div>
+                <div id="task-container"></div>
             </div>
-            <div id="incident-log" style="background: #0a0a10; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a; height: 130px; overflow-y: auto;">
-                <div style="font-size: 0.7em; color: #888; font-weight: 800; text-transform: uppercase; margin-bottom: 10px;">Incident Recovery Log</div>
-                <div id="incident-container" style="font-family: 'Fira Code', monospace; font-size: 0.75em; line-height: 1.4;">
-                    <!-- Incidents go here -->
+            <div id="scheduler-panel" style="background: #111118; border-radius: 10px; padding: 15px; border: 1px solid #1f1f2a;">
+                <h4 style="margin: 0 0 10px 0; color: #00ffcc; font-size: 0.8em; text-transform: uppercase;">Autonomous Scheduler</h4>
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <input type="datetime-local" id="sched-time" style="font-size: 0.7em;">
+                    <select id="sched-action" style="font-size: 0.7em;">
+                        <option value="set_bpm">Set BPM</option>
+                        <option value="toggle_continuous">Continuous Toggle</option>
+                        <option value="inject_track">Inject Track</option>
+                        <option value="set_preference">Update Bias</option>
+                    </select>
+                    <button onclick="addEvent()" style="background: #a020f0; color: white; border: none; border-radius: 4px; font-size: 0.7em; cursor: pointer;">SCHEDULE</button>
                 </div>
+                <input type="text" id="sched-params" placeholder='Params (JSON) e.g. {"bpm": 140}' style="background: #000; border: 1px solid #333; color: white; padding: 8px; border-radius: 4px; width: 100%; font-size: 0.7em; margin-bottom: 10px;">
+                <div id="event-list" style="min-height: 20px; max-height: 100px; overflow-y: auto; font-size: 0.7em; color: #888;">No events scheduled</div>
             </div>
         </div>
         <div class="controls-card">
             <form id="launch-form">
                 <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Set BPM Profile</label>
                 <input type="number" name="bpm" value="{{ config.TARGET_BPM }}" step="0.1">
-                <br><br>
-                <label style="font-size: 0.7em; color: #888; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; display: block;">Transition Archetype Override</label>
-                <select name="archetype">
-                    <option value="auto">Auto (Genre-Aware)</option>
-                    {% for name, cls in archetypes.items() %}
-                    <option value="{{ name }}">{{ cls.display_name }}</option>
-                    {% endfor %}
-                </select>
                 <br><br>
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div>
@@ -179,28 +133,19 @@
                         </select>
                     </div>
                 </div>
-                <br><br>
+                <br>
                 <label style="cursor:pointer; font-size: 0.9em; display: flex; align-items: center; gap: 10px; color: #ccc;">
-                    <input type="checkbox" name="reorder" checked style="width: 20px; height: 20px; accent-color: #a020f0;">
-                    Simulated Annealing Optimization
+                    <input type="checkbox" name="continuous_mode" checked style="width: 20px; height: 20px; accent-color: #00ffcc;">
+                    Continuous Autopilot Mode
                 </label>
-                <br><br>
+                <br>
                 <button type="submit" class="btn-prime" id="launch-btn">🚀 INITIATE SESSION</button>
             </form>
 
             <div id="live-adjustments" style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
                 <label style="font-size: 0.7em; color: #00ffcc; font-weight: 800; text-transform: uppercase; margin-bottom: 12px; display: block;">Live Parameter Overrides</label>
-
                 <div style="display: flex; flex-direction: column; gap: 15px;">
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
-                        <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">
-                            ⏸ PAUSE
-                        </button>
-                        <button type="button" id="continuous-btn" class="btn-prime" style="background: #1a1a24; border: 1px solid #333; font-size: 0.8em; padding: 10px;" onclick="toggleContinuous()">
-                            🔄 CONTINUOUS
-                        </button>
-                    </div>
-
+                    <button type="button" id="pause-btn" class="btn-prime" style="background: #333; font-size: 0.8em; padding: 10px;" onclick="togglePause()">⏸ PAUSE EXECUTION</button>
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
                             <span>TARGET BPM</span>
@@ -208,22 +153,35 @@
                         </div>
                         <input type="range" id="live-bpm" min="80" max="200" value="145" style="width: 100%; accent-color: #00ffcc;" oninput="updateLiveParams()">
                     </div>
-
                     <div>
                         <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
-                            <span>MASTERING INTENSITY</span>
-                            <span id="live-intensity-val">0.5</span>
+                            <span>ENERGY BIAS</span>
+                            <span id="live-energy-val">0.5</span>
                         </div>
-                        <input type="range" id="live-intensity" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #a020f0;" oninput="updateLiveParams()">
+                        <input type="range" id="live-energy" min="0" max="1" step="0.01" value="0.5" style="width: 100%; accent-color: #ffcc00;" oninput="updateLiveParams()">
+                    </div>
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.7em; color: #888; margin-bottom: 5px;">
+                            <span>GENRE PREFERENCE</span>
+                        </div>
+                        <select id="live-genre-pref" style="font-size: 0.8em; padding: 5px;" onchange="updateLiveParams()">
+                            <option value="Any">Any</option>
+                            <option value="Ambient">Ambient</option>
+                            <option value="Techno">Techno</option>
+                            <option value="House">House</option>
+                            <option value="High-Energy">High-Energy</option>
+                        </select>
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
 
-            <div style="margin-top: 25px; padding-top: 20px; border-top: 1px solid #252535;">
-                <a href="/download" id="dl-link" style="color: #00ffcc; text-decoration: none; font-size: 0.9em; font-weight: 600; display: flex; align-items: center; gap: 8px;">
-                    <span>⬇</span> DOWNLOAD MASTER EXPORT
-                </a>
-            </div>
+    <div id="hardware-panel" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-top: 25px;">
+        <h3 style="margin-top: 0; color: #ffcc00; display: flex; align-items: center; gap: 10px;"><span>🎹</span> HARDWARE & MIDI</h3>
+        <div style="display: flex; gap: 20px; font-size: 0.8em; color: #888;">
+            <div id="midi-status-light" style="width: 10px; height: 10px; border-radius: 50%; background: #333;"></div>
+            <span id="midi-device-name">None Connected</span>
         </div>
     </div>
 
@@ -235,47 +193,12 @@
             <div>Key</div>
             <div>Genre</div>
             <div>AI Rationale</div>
-            <div>Rating</div>
+            <div>Feedback</div>
         </div>
-        <div id="tracklist-container">
-            <!-- Tracks will be injected here -->
-        </div>
+        <div id="tracklist-container"></div>
     </div>
 
-    <div id="hardware-panel" style="background: #111118; padding: 20px; border-radius: 12px; border: 1px solid #1f1f2a; margin-top: 25px; margin-bottom: 25px;">
-        <h3 style="margin-top: 0; color: #ffcc00; display: flex; align-items: center; gap: 10px;">
-            <span>🎹</span> HARDWARE & MIDI
-            <span style="font-size: 0.5em; color: #666; font-weight: 400; text-transform: uppercase;">Tactile Interface Status</span>
-        </h3>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
-            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
-                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">MIDI Device</div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <div id="midi-status-light" style="width: 10px; height: 10px; border-radius: 50%; background: #333;"></div>
-                    <span id="midi-device-name" style="color: #eee; font-size: 0.9em;">None Connected</span>
-                </div>
-                <div id="midi-activity" style="margin-top: 10px; font-size: 0.7em; color: #555;">No activity detected</div>
-            </div>
-            <div style="background: #08080a; padding: 15px; border-radius: 8px; border: 1px solid #1a1a24;">
-                <div style="font-size: 0.7em; color: #888; font-weight: 800; margin-bottom: 10px; text-transform: uppercase;">Active Mapping</div>
-                <div style="font-size: 0.8em; color: #666;">
-                    CC 16-18: EQ Gains<br>
-                    CC 19: Mastering<br>
-                    Note 36: Execute Handoff
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div id="visualizer-container" style="margin-top: 40px; position: relative; border-radius: 20px; overflow: hidden; height: 500px; background: #000; border: 1px solid #1f1f2a;">
-        <div style="position: absolute; top: 20px; left: 20px; z-index: 100; display: flex; gap: 10px;">
-            <div style="background: rgba(0,0,0,0.8); padding: 10px 15px; border-radius: 8px; border: 1px solid #333; font-size: 0.7em; color: #00ffcc; font-weight: 800;">
-                SPECTRAL TERRAIN v1.0
-            </div>
-            <button onclick="toggleVisualizer()" style="background: rgba(160,32,240,0.4); border: 1px solid #a020f0; color: white; padding: 5px 15px; border-radius: 8px; cursor: pointer; font-size: 0.7em; font-weight: 800;">
-                TOGGLE MODE
-            </button>
-        </div>
+    <div id="visualizer-container" style="margin-top: 40px; border-radius: 20px; overflow: hidden; height: 400px; background: #000; border: 1px solid #1f1f2a; position: relative;">
         <div id="webgl-output" style="width: 100%; height: 100%;"></div>
         <div id="waveform" style="position: absolute; bottom: 0; left: 0; width: 100%; z-index: 10; opacity: 0.5;"></div>
     </div>
@@ -285,28 +208,11 @@
     let pollInterval = null;
     let scene, camera, renderer, terrainMesh;
     let cpuChart, memChart;
-    const chartDataLimit = 30;
-    let is3DActive = true;
     let isPaused = false;
     const term = document.getElementById('terminal');
     const fill = document.getElementById('fill');
     const state = document.getElementById('state-text');
     const trackContainer = document.getElementById('tracklist-container');
-
-    async function submitRating(trackFile, rating) {
-        try {
-            const response = await fetch('/feedback/rating', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ track_file: trackFile, rating: rating })
-            });
-            if (response.ok) {
-                logTerminal(`Feedback recorded for ${trackFile}`, '#00ffcc');
-            }
-        } catch (err) {
-            console.error('Feedback error:', err);
-        }
-    }
 
     function logTerminal(msg, color = '#55ff55') {
         const line = document.createElement('div');
@@ -315,51 +221,6 @@
         term.scrollTop = term.scrollHeight;
     }
 
-    // WebSocket with auto-reconnect
-    let ws;
-    let wsRetryCount = 0;
-    const wsMaxRetries = 30;
-
-    function connectWS() {
-        const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-        const url = `${protocol}//${window.location.host}/ws`;
-        try {
-            ws = new WebSocket(url);
-        } catch (e) {
-            logTerminal('[SYSTEM] WebSocket creation failed. Using polling only.', '#ff5555');
-            return;
-        }
-
-        ws.onopen = () => {
-            wsRetryCount = 0;
-            logTerminal('[SYSTEM] WebSocket connected.', '#00ffcc');
-        };
-
-        ws.onmessage = (event) => {
-            logTerminal(event.data);
-        };
-
-        ws.onclose = (event) => {
-            if (wsRetryCount < wsMaxRetries) {
-                wsRetryCount++;
-                const delay = Math.min(500 * wsRetryCount, 5000);
-                logTerminal(`[SYSTEM] WebSocket closed. Reconnecting in ${delay}ms (attempt ${wsRetryCount})...`, '#ffcc00');
-                setTimeout(connectWS, delay);
-            } else {
-                logTerminal('[SYSTEM] WebSocket retries exhausted. Status polling active.', '#ff5555');
-            }
-        };
-
-        ws.onerror = (err) => {
-            console.error('WebSocket error:', err);
-            // onclose will fire after onerror, so reconnect logic is there
-        };
-    }
-
-    connectWS();
-    startPolling();
-
-    // Status polling — always active for reliable updates
     async function pollStatus() {
         try {
             const r = await fetch('/status');
@@ -367,385 +228,147 @@
             state.innerText = d.status.toUpperCase();
             fill.style.width = d.progress + '%';
 
-            // Update Available Tracks (only when idle)
-            if ((d.status === 'IDLE' || d.status === 'Idle') && d.available_tracks) {
+            if (d.available_tracks) {
                 document.getElementById('available-tracks-list').innerHTML = d.available_tracks.map(t => `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #111118; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #222;">
-                        <span style="color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${t}</span>
-                        <button onclick="addToPlaylist('${t}')" style="background: #a020f0; border: none; color: white; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">+</button>
+                        <span style="color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 200px;">${t}</span>
+                        <button onclick="addToPlaylist('${t}')" style="background: #a020f0; border: none; color: white; border-radius: 4px; padding: 2px 8px; cursor: pointer;">+</button>
                     </div>
                 `).join('');
             }
 
-            // Update Queue
             if (d.playlist) {
                 document.getElementById('queue-list').innerHTML = d.playlist.map((t, i) => `
                     <div style="display: flex; justify-content: space-between; align-items: center; background: #1a1a24; padding: 8px; border-radius: 4px; font-size: 0.8em; border: 1px solid #333;">
-                        <span style="color: #00ffcc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 250px;">${i+1}. ${t}</span>
-                        <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; width: 24px; height: 24px; cursor: pointer; font-weight: 800;">×</button>
+                        <span style="color: #00ffcc;">${i+1}. ${t}</span>
+                        <button onclick="removeFromPlaylist(${i})" style="background: #333; border: none; color: #888; border-radius: 4px; padding: 2px 8px; cursor: pointer;">×</button>
                     </div>
                 `).join('');
             }
 
-            if (d.tracklist && d.tracklist.length > 0) {
-                const latest = d.tracklist[d.tracklist.length - 1];
-                if (latest.terrain && latest.terrain.length > 0) {
-                    updateTerrain(latest.terrain);
-                }
-            }
-
-            // Update Telemetry
             if (d.telemetry) {
                 document.getElementById('cpu-stat').innerText = d.telemetry.cpu_usage.toFixed(1) + '%';
                 document.getElementById('mem-stat').innerText = d.telemetry.memory_usage.toFixed(1) + '%';
-
-                // Update MIDI UI
-                const midiLight = document.getElementById('midi-status-light');
-                const midiName = document.getElementById('midi-device-name');
-                if (d.telemetry.midi_active) {
-                    midiLight.style.background = '#ffcc00';
-                    midiName.innerText = d.telemetry.midi_device;
-                } else {
-                    midiLight.style.background = '#333';
-                    midiName.innerText = 'None Connected';
-                }
-                document.getElementById('thread-stat').innerText = d.telemetry.active_threads;
-
-                // Health Alert Styling
-                const cpuCard = document.getElementById('cpu-card');
-                const memCard = document.getElementById('mem-card');
-
-                if (d.telemetry.cpu_usage > 85) cpuCard.style.borderColor = '#ff5555';
-                else cpuCard.style.borderColor = '#252535';
-
-                if (d.telemetry.memory_usage > 90) memCard.style.borderColor = '#ff5555';
-                else memCard.style.borderColor = '#252535';
+                document.getElementById('midi-device-name').innerText = d.telemetry.midi_device;
+                document.getElementById('midi-status-light').style.background = d.telemetry.midi_active ? '#ffcc00' : '#333';
+                updateCharts(d.telemetry.cpu_usage, d.telemetry.memory_usage);
             }
 
-            if (d.active_tasks) {
-                const tasks = Object.entries(d.active_tasks);
-                document.getElementById('task-container').innerHTML = tasks.length > 0 ? tasks.map(([t, s]) => `
-                    <div style="display: flex; justify-content: space-between; font-size: 0.75em; border-bottom: 1px solid #222; padding-bottom: 2px;">
-                        <span style="color: #888; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 250px;">${t.split('/').pop()}</span>
-                        <span style="color: #00ffcc; font-weight: 800;">${s}</span>
-                    </div>
-                `).join('') : '<div style="color: #444; font-size: 0.75em;">No active background tasks</div>';
-            }
-
-            if (d.monitoring) {
-                document.getElementById('error-rate').innerText = d.monitoring.error_rate;
-                document.getElementById('incident-container').innerHTML = d.monitoring.incidents.map(i => `
-                    <div style="margin-bottom: 5px; color: ${i.severity === 'ERROR' ? '#ff5555' : '#ffcc00'}">
-                        [${i.timestamp}] ${i.module}: ${i.message}
-                    </div>
-                `).reverse().join('');
-            }
-
-            if (d.live_params) {
-                isPaused = d.live_params.paused;
-                const btn = document.getElementById('pause-btn');
-                if (btn) {
-                    btn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
-                    btn.style.background = isPaused ? '#00ffcc' : '#333';
-                    btn.style.color = isPaused ? '#000' : '#fff';
-                }
-
-                isContinuous = d.live_params.continuous_mode;
-                const cbtn = document.getElementById('continuous-btn');
-                if (cbtn) {
-                    cbtn.style.background = isContinuous ? '#a020f0' : '#1a1a24';
-                    cbtn.style.borderColor = isContinuous ? '#b030ff' : '#333';
-                }
-            }
-
-            if (d.cluster && d.cluster.length > 0) {
-                document.getElementById('nodes-container').innerHTML = d.cluster.map(n => `
-                    <div class="cluster-node" style="display: flex; align-items: center; gap: 8px; background: #1a1a24; padding: 5px 10px; border-radius: 5px;">
-                        <span style="width: 8px; height: 8px; border-radius: 50%; background: ${n.failed_tasks > 3 ? '#ff5555' : (n.status === 'Idle' ? '#00ffcc' : '#a020f0')};"></span>
-                        <span style="color: #eee; font-weight: 600;">${n.id}</span>
-                        <span style="color: #666;">[${n.total_tasks - n.failed_tasks}/${n.total_tasks}]</span>
-                        <button onclick="resetNode('${n.id}')" style="background: none; border: none; color: #888; cursor: pointer; font-size: 0.8em; padding: 0;">↺</button>
-                    </div>
-                `).join('');
-            } else {
-                document.getElementById('nodes-container').innerHTML = '<span style="color: #666;">No nodes connected</span>';
-            }
-
-            if (d.tracklist && d.tracklist.length > 0) {
-                trackContainer.innerHTML = d.tracklist.map(t => `
+            if (d.tracklist) {
+                trackContainer.innerHTML = d.tracklist.map((t, i) => `
                     <div class="track-item">
-                        <div style="color: #00ffcc; font-weight: 700;">${t.timestamp}</div>
-                        <div>${t.file}</div>
+                        <div style="color: #00ffcc;">${t.timestamp}</div>
+                        <div style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${t.file}</div>
                         <div style="color: #888;">${t.key}</div>
-                        <div style="color: #a020f0; font-size: 0.8em; font-weight: 700;">${t.genre}</div>
-                        <div style="color: #666; font-size: 0.75em; font-style: italic;">${t.rationale || 'N/A'}</div>
+                        <div style="color: #a020f0; font-weight: 700;">${t.genre}</div>
+                        <div style="color: #666; font-size: 0.7em;">${t.rationale || 'N/A'}</div>
                         <div style="display: flex; gap: 5px;">
-                            <button class="rating-btn ${t.rating === 1 ? 'active' : ''}" onclick="submitRating('${t.file}', 1)">👍</button>
-                            <button class="rating-btn ${t.rating === -1 ? 'active' : ''}" onclick="submitRating('${t.file}', -1)">👎</button>
+                            <button class="feedback-btn" onclick="sendFeedback(${i}, 1)">👍</button>
+                            <button class="feedback-btn" onclick="sendFeedback(${i}, -1)">👎</button>
                         </div>
                     </div>
                 `).join('');
+                if (d.tracklist.length > 0 && d.tracklist[d.tracklist.length-1].terrain) {
+                    updateTerrain(d.tracklist[d.tracklist.length-1].terrain);
+                }
             }
-            if (d.status === 'Complete') {
-                document.getElementById('launch-btn').disabled = false;
-                if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
-                try { wavesurfer.load('/download'); } catch(e) {}
-            }
-        } catch (err) {
-            console.error('Polling error:', err);
-        }
+        } catch (e) {}
     }
 
-    async function togglePause() {
-        isPaused = !isPaused;
-        const btn = document.getElementById('pause-btn');
-        if (btn) {
-            btn.innerText = isPaused ? '▶ RESUME' : '⏸ PAUSE';
-            btn.style.background = isPaused ? '#00ffcc' : '#333';
-            btn.style.color = isPaused ? '#000' : '#fff';
-        }
-
+    async function sendFeedback(idx, rating) {
         const fd = new FormData();
-        fd.append('paused', isPaused ? 'true' : 'false');
-        await fetch('/update_params', { method: 'POST', body: fd });
-    }
-
-    async function toggleContinuous() {
-        isContinuous = !isContinuous;
-        const btn = document.getElementById('continuous-btn');
-        if (btn) {
-            btn.style.background = isContinuous ? '#a020f0' : '#1a1a24';
-            btn.style.borderColor = isContinuous ? '#b030ff' : '#333';
-        }
-
-        const fd = new FormData();
-        fd.append('continuous_mode', isContinuous ? 'true' : 'false');
-        await fetch('/update_params', { method: 'POST', body: fd });
-        logTerminal(`Continuous Mode: ${isContinuous ? 'ENABLED' : 'DISABLED'}`, isContinuous ? '#a020f0' : '#888');
+        fd.append('track_index', idx);
+        fd.append('rating', rating);
+        await fetch('/feedback', { method: 'POST', body: fd });
+        logTerminal(`Feedback recorded for track ${idx}`, '#a020f0');
     }
 
     async function addEvent() {
         const time = document.getElementById('sched-time').value;
         const action = document.getElementById('sched-action').value;
         const params = document.getElementById('sched-params').value || '{}';
-
         if (!time) return alert('Select time');
-
         const fd = new FormData();
         fd.append('timestamp', new Date(time).toISOString());
         fd.append('action', action);
         fd.append('params', params);
-
-        const res = await fetch('/scheduler/add', { method: 'POST', body: fd });
-        if (res.ok) {
-            logTerminal(`Event scheduled: ${action} at ${time}`, '#00ffcc');
-            updateEvents();
-        }
+        await fetch('/scheduler/add', { method: 'POST', body: fd });
+        updateEvents();
     }
 
     async function updateEvents() {
         try {
             const res = await fetch('/scheduler/events');
             const data = await res.json();
-            const container = document.getElementById('event-list');
-            container.innerHTML = data.events.map(e => `
-                <div style="padding: 5px; background: #111; border: 1px solid #222; border-radius: 4px; display: flex; justify-content: space-between;">
-                    <span>${e.action} (${new Date(e.time).toLocaleTimeString()})</span>
+            document.getElementById('event-list').innerHTML = data.events.map(e => `
+                <div style="border-bottom: 1px solid #222; padding: 2px 0; display: flex; justify-content: space-between;">
+                    <span>${e.action} @ ${new Date(e.time).toLocaleTimeString()}</span>
                     <span style="color: ${e.status === 'completed' ? '#00ffcc' : '#ffcc00'}">${e.status}</span>
                 </div>
-            `).join('');
+            `).reverse().join('');
         } catch (e) {}
     }
 
-    async function addToPlaylist(filename) {
+    async function togglePause() {
+        isPaused = !isPaused;
         const fd = new FormData();
-        fd.append('filename', filename);
-        await fetch('/playlist/add', { method: 'POST', body: fd });
-        pollStatus();
-    }
-
-    async function removeFromPlaylist(index) {
-        const fd = new FormData();
-        fd.append('index', index);
-        await fetch('/playlist/remove', { method: 'POST', body: fd });
-        pollStatus();
-    }
-
-    async function resetNode(nodeId) {
-        const fd = new FormData();
-        fd.append('node_id', nodeId);
-        await fetch('/cluster/reset', { method: 'POST', body: fd });
-        logTerminal(`[CLUSTER] Manual reset initiated for ${nodeId}`, '#ffcc00');
+        fd.append('paused', isPaused ? 'true' : 'false');
+        await fetch('/update_params', { method: 'POST', body: fd });
     }
 
     async function updateLiveParams() {
-        const bpm = document.getElementById('live-bpm').value;
-        const intensity = document.getElementById('live-intensity').value;
-
-        document.getElementById('live-bpm-val').innerText = bpm;
-        document.getElementById('live-intensity-val').innerText = intensity;
-
         const fd = new FormData();
-        fd.append('target_bpm', bpm);
-        fd.append('mastering_intensity', intensity);
-
+        fd.append('target_bpm', document.getElementById('live-bpm').value);
+        fd.append('energy_bias', document.getElementById('live-energy').value);
+        fd.append('genre_preference', document.getElementById('live-genre-pref').value);
         await fetch('/update_params', { method: 'POST', body: fd });
     }
 
     function initCharts() {
-        const cpuCtx = document.getElementById('cpuChart').getContext('2d');
-        const memCtx = document.getElementById('memChart').getContext('2d');
-
-        const commonOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: { min: 0, max: 100, grid: { color: '#222' } },
-                x: { display: false }
-            },
-            plugins: { legend: { display: false } },
-            elements: { line: { tension: 0.4 }, point: { radius: 0 } }
-        };
-
-        cpuChart = new Chart(cpuCtx, {
-            type: 'line',
-            data: { labels: Array(chartDataLimit).fill(''), datasets: [{ data: Array(chartDataLimit).fill(0), borderColor: '#00ffcc', borderWidth: 2, fill: true, backgroundColor: 'rgba(0, 255, 204, 0.1)' }] },
-            options: commonOptions
-        });
-
-        memChart = new Chart(memCtx, {
-            type: 'line',
-            data: { labels: Array(chartDataLimit).fill(''), datasets: [{ data: Array(chartDataLimit).fill(0), borderColor: '#a020f0', borderWidth: 2, fill: true, backgroundColor: 'rgba(160, 32, 240, 0.1)' }] },
-            options: commonOptions
-        });
+        const common = { responsive: true, maintainAspectRatio: false, scales: { y: { min: 0, max: 100 }, x: { display: false } }, plugins: { legend: { display: false } } };
+        cpuChart = new Chart(document.getElementById('cpuChart').getContext('2d'), { type: 'line', data: { labels: Array(30).fill(''), datasets: [{ data: Array(30).fill(0), borderColor: '#00ffcc', fill: true }] }, options: common });
+        memChart = new Chart(document.getElementById('memChart').getContext('2d'), { type: 'line', data: { labels: Array(30).fill(''), datasets: [{ data: Array(30).fill(0), borderColor: '#a020f0', fill: true }] }, options: common });
     }
 
     function updateCharts(cpu, mem) {
-        if (!cpuChart || !memChart) return;
-
-        cpuChart.data.datasets[0].data.push(cpu);
-        cpuChart.data.datasets[0].data.shift();
-        cpuChart.update('none');
-
-        memChart.data.datasets[0].data.push(mem);
-        memChart.data.datasets[0].data.shift();
-        memChart.update('none');
+        if (!cpuChart) return;
+        cpuChart.data.datasets[0].data.push(cpu); cpuChart.data.datasets[0].data.shift(); cpuChart.update('none');
+        memChart.data.datasets[0].data.push(mem); memChart.data.datasets[0].data.shift(); memChart.update('none');
     }
 
-    function startPolling() {
-        if (!pollInterval) {
-            initCharts();
-            pollStatus();
-            updateEvents();
-            pollInterval = setInterval(() => {
-                pollStatus();
-                updateEvents();
-            }, 1500);
-        }
-    }
-
-    // Form submission
     document.getElementById('launch-form').onsubmit = async (e) => {
         e.preventDefault();
-        document.getElementById('launch-btn').disabled = true;
         const fd = new FormData(e.target);
-        logTerminal('[SYSTEM] Mission initialized. Analyzing library...', '#a020f0');
         await fetch('/start', { method: 'POST', body: fd });
-        startPolling();
+        if (!pollInterval) pollInterval = setInterval(() => { pollStatus(); updateEvents(); }, 1500);
     };
 
     function init3D() {
-        console.log("Initializing 3D Engine...");
         const container = document.getElementById('webgl-output');
-        if (!container) {
-            console.error("Container #webgl-output not found!");
-            return;
-        }
         scene = new THREE.Scene();
-        camera = new THREE.PerspectiveCamera(75, container.clientWidth / container.clientHeight, 0.1, 1000);
+        camera = new THREE.PerspectiveCamera(75, container.clientWidth/container.clientHeight, 0.1, 1000);
         renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         renderer.setSize(container.clientWidth, container.clientHeight);
         container.appendChild(renderer.domElement);
-
-        const ambientLight = new THREE.AmbientLight(0x404040);
-        scene.add(ambientLight);
-        const pointLight = new THREE.PointLight(0xa020f0, 2, 100);
-        pointLight.position.set(0, 20, 10);
-        scene.add(pointLight);
-
-        camera.position.set(0, 15, 30);
-        camera.lookAt(0, 0, 0);
-
+        scene.add(new THREE.AmbientLight(0x404040));
+        camera.position.set(0, 15, 30); camera.lookAt(0, 0, 0);
         animate();
     }
-
-    function animate() {
-        requestAnimationFrame(animate);
-        if (terrainMesh && is3DActive) {
-            // "Fly-over" effect: Slowly advance through the terrain
-            terrainMesh.position.z += 0.05;
-            if (terrainMesh.position.z > 20) terrainMesh.position.z = -20;
-
-            // Subtle energy pulsing
-            const time = Date.now() * 0.001;
-            terrainMesh.material.emissiveIntensity = 0.5 + Math.sin(time * 2) * 0.2;
-        }
-        renderer.render(scene, camera);
-    }
-
+    function animate() { requestAnimationFrame(animate); if (terrainMesh) { terrainMesh.position.z += 0.05; if (terrainMesh.position.z > 20) terrainMesh.position.z = -20; } renderer.render(scene, camera); }
     function updateTerrain(data) {
-        if (!data || data.length === 0) return;
-
         if (terrainMesh) scene.remove(terrainMesh);
-
-        const width = data[0].length;
-        const height = data.length;
-        const geometry = new THREE.PlaneGeometry(60, 40, width - 1, height - 1);
-
-        const vertices = geometry.attributes.position.array;
-        for (let i = 0; i < height; i++) {
-            for (let j = 0; j < width; j++) {
-                const idx = (i * width + j) * 3;
-                // Use spectral intensity for height
-                const intensity = (data[i][j] + 80) / 80; // Normalize dB range
-                vertices[idx + 2] = intensity * 10;
-            }
-        }
-        geometry.attributes.position.needsUpdate = true;
-        geometry.computeVertexNormals();
-
-        const material = new THREE.MeshPhongMaterial({
-            color: 0x00ffcc,
-            wireframe: true,
-            transparent: true,
-            opacity: 0.6,
-            emissive: 0xa020f0,
-            emissiveIntensity: 0.5
-        });
-
-        terrainMesh = new THREE.Mesh(geometry, material);
-        terrainMesh.rotation.x = -Math.PI / 3;
+        const w = data[0].length, h = data.length;
+        const geom = new THREE.PlaneGeometry(60, 40, w-1, h-1);
+        const verts = geom.attributes.position.array;
+        for (let i=0; i<h; i++) for (let j=0; j<w; j++) verts[(i*w+j)*3+2] = (data[i][j]+80)/8;
+        geom.attributes.position.needsUpdate = true;
+        terrainMesh = new THREE.Mesh(geom, new THREE.MeshPhongMaterial({ color: 0x00ffcc, wireframe: true }));
+        terrainMesh.rotation.x = -Math.PI/3;
         scene.add(terrainMesh);
     }
 
-    function toggleVisualizer() {
-        is3DActive = !is3DActive;
-        document.getElementById('webgl-output').style.display = is3DActive ? 'block' : 'none';
-        document.getElementById('waveform').style.opacity = is3DActive ? '0.5' : '1.0';
-    }
-
-    // Defer initialization to ensure DOM is ready
-    setTimeout(init3D, 1000);
-
-    // Waveform viewer
-    const wavesurfer = WaveSurfer.create({
-        container: '#waveform',
-        waveColor: '#1a1a24',
-        progressColor: '#a020f0',
-        height: 120,
-        normalize: true,
-        cursorColor: '#00ffcc'
-    });
+    initCharts();
+    setTimeout(init3D, 500);
 </script>
 </body>
 </html>

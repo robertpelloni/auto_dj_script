@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (v8.10.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (v8.8.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 - [x] **High-Performance Parallel Engine**: Metadata extraction.
@@ -38,6 +38,8 @@
     - [x] **MIDI Controller Support**: Direct tactile control via MIDI protocol.
     - [x] **Rekordbox Library Bridge**: Direct ingestion of `pioneer.xml`.
     - [x] **Hardware Dashboard**: MIDI mapping and activity monitoring in UI.
+
+
 - [x] **Continuous Feedback & Execution (v8.9)**:
     - [x] **Automated Queue Replenishment**: Continuous autonomous operation.
     - [x] **Real-time Transition Rating**: Direct user feedback integration.
@@ -45,6 +47,10 @@
 - [x] **Autonomous Scheduler (v8.10)**:
     - [x] **Timed Event Orchestration**: ISO-timestamped action scheduling.
     - [x] **Event-Driven Triggers**: Automated BPM shifts and track injections.
+- [x] **Preference-Aware Orchestration (v8.11)**:
+    - [x] **Scoring Heuristic**: Harmonic/Genre/Energy weighted selection.
+    - [x] **Bias Controls**: Real-time preference overrides in UI.
+    - [x] **Scheduler History**: Persistent event tracking.
 - [ ] **AI Genre Evolution**: Deep Learning (CNN) for style inference.
 
 ---

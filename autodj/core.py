@@ -1,4 +1,3 @@
-import sys
 """ Core Orchestration Engine | Auto DJ Script (7.6.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
@@ -276,7 +275,7 @@ def compile_master_set(args, status_obj=None):
 
     # Phase 2: Cluster-Accelerated Warping (50-75%)
     if status_obj:
-        status_obj["status"] = f"Warping {num_tracks} tracks (Cluster: {cluster.nodes[0].id})"
+        status_obj["status"] = f"Warping {num_tracks} tracks"
 
     wait_for_health(status_obj)
 
@@ -285,33 +284,7 @@ def compile_master_set(args, status_obj=None):
     end_bpm = (args.end_bpm or start_bpm)
 
     warp_tasks = []
-
-    i = 0
-    while i < len(all_files):
-        if status_obj and status_obj.get('playlist'):
-             # Sync all_files with current playlist
-             current_playlist_paths = [os.path.join(config.INPUT_FOLDER, f) for f in status_obj['playlist']]
-             # Only append new ones to preserve order and avoid re-processing
-             for pf in current_playlist_paths:
-                 if pf not in all_files:
-                     all_files.append(pf)
-
-        if i >= len(warped_results):
-            # Just-in-Time Warping for dynamic queue injections (v8.9.0)
-            target_bpm = status_obj.get('live_params', {}).get('target_bpm', start_bpm) if status_obj else start_bpm
-            t_s_bpm = target_bpm
-            t_e_bpm = target_bpm
-            tar_key = meta_list[i-1]['key'] if i > 0 else None
-
-            # Analyze metadata for new track
-            nbpm, aud, nsr = get_native_bpm(all_files[i])
-            mkey = get_musical_key(aud if aud.ndim==1 else librosa.to_mono(aud), nsr)
-            gnr, _ = get_genre_archetype(aud if aud.ndim==1 else librosa.to_mono(aud), nsr, bpm=nbpm)
-            meta_list.append({'bpm': nbpm, 'key': mkey, 'genre': gnr})
-
-            y_w, sr = warp_worker((all_files[i], nbpm, t_s_bpm, t_e_bpm, mkey, tar_key, True))
-            warped_results.append((y_w, sr))
-
+    for i in range(num_tracks):
         t_s_bpm = start_bpm + (end_bpm - start_bpm) * (i / num_tracks)
         t_e_bpm = start_bpm + (end_bpm - start_bpm) * ((i + 1) / num_tracks)
         tar_key = meta_list[i-1]['key'] if i > 0 else None
@@ -319,7 +292,7 @@ def compile_master_set(args, status_obj=None):
 
     warped_results = [None] * num_tracks
     executor = cluster.get_executor()
-    futures = {executor.submit(warp_worker, task): i for i, task in enumerate(warp_tasks)}
+    futures = {executor.submit(warp_worker, task): idx for idx, task in enumerate(warp_tasks)}
     for future in as_completed(futures):
         idx = futures[future]
         if status_obj:
@@ -358,29 +331,37 @@ def compile_master_set(args, status_obj=None):
 
     i = 0
     while i < len(all_files):
+        # 1. Dynamic Queue Replenishment (Continuous Mode)
         if status_obj and status_obj.get('playlist'):
-             # Sync all_files with current playlist
-             current_playlist_paths = [os.path.join(config.INPUT_FOLDER, f) for f in status_obj['playlist']]
-             # Only append new ones to preserve order and avoid re-processing
+             current_playlist_paths = []
+             for item in status_obj['playlist']:
+                 p = item if os.path.isabs(item) else os.path.join(config.INPUT_FOLDER, item)
+                 current_playlist_paths.append(p)
+
              for pf in current_playlist_paths:
                  if pf not in all_files:
                      all_files.append(pf)
 
+        # 2. Dynamic Warp for newly injected tracks
         if i >= len(warped_results):
-            # Just-in-Time Warping for dynamic queue injections (v8.9.0)
-            target_bpm = status_obj.get('live_params', {}).get('target_bpm', start_bpm) if status_obj else start_bpm
-            t_s_bpm = target_bpm
-            t_e_bpm = target_bpm
-            tar_key = meta_list[i-1]['key'] if i > 0 else None
+            try:
+                target_bpm = status_obj.get('live_params', {}).get('target_bpm', start_bpm) if status_obj else start_bpm
+                y_raw, sr_orig = sf.read(all_files[i], dtype='float32')
+                if y_raw.ndim == 2: y_raw = y_raw.T
 
-            # Analyze metadata for new track
-            nbpm, aud, nsr = get_native_bpm(all_files[i])
-            mkey = get_musical_key(aud if aud.ndim==1 else librosa.to_mono(aud), nsr)
-            gnr, _ = get_genre_archetype(aud if aud.ndim==1 else librosa.to_mono(aud), nsr, bpm=nbpm)
-            meta_list.append({'bpm': nbpm, 'key': mkey, 'genre': gnr})
+                # Metadata Analysis
+                nbpm, _, _ = get_native_bpm(y_raw, sr_orig)
+                mkey = get_musical_key(y_raw if y_raw.ndim==1 else librosa.to_mono(y_raw), sr_orig)
+                gnr, _ = get_genre_archetype(y_raw if y_raw.ndim==1 else librosa.to_mono(y_raw), sr_orig, bpm=nbpm)
+                meta_list.append({'bpm': nbpm, 'key': mkey, 'genre': gnr})
 
-            y_w, sr = warp_worker((all_files[i], nbpm, t_s_bpm, t_e_bpm, mkey, tar_key, True))
-            warped_results.append((y_w, sr))
+                # Warping
+                tar_key = meta_list[i-1]['key'] if i > 0 else None
+                y_w, sr = warp_worker((all_files[i], nbpm, target_bpm, target_bpm, mkey, tar_key, True))
+                warped_results.append((y_w, sr))
+            except Exception as e:
+                print(f"[ERROR] Dynamic warp failed for {all_files[i]}: {e}")
+                warped_results.append((None, None))
 
         y_w, sr = warped_results[i]
         if y_w is None:
@@ -524,14 +505,10 @@ def compile_master_set(args, status_obj=None):
 
         master = m_body + mix_bus + n_body
         current_time_ms = len(master)
-        # Sliding Window Memory Management (v8.9.1)
         if status_obj and status_obj.get('live_params', {}).get('continuous_mode'):
             if i > 3:
-                # Clear heavy arrays to save RAM during long sessions
-                if i-3 < len(warped_results):
-                    warped_results[i-3] = None
-                if i-3 < len(processed_tracks):
-                    processed_tracks[i-3] = None
+                if i-3 < len(warped_results): warped_results[i-3] = None
+                if i-3 < len(processed_tracks): processed_tracks[i-3] = None
 
         i += 1
 
@@ -620,10 +597,11 @@ class SmartReplenishTool(ToolPlugin):
     """
     Autonomous tool that monitors the live queue and automatically replenishes it
     from the selected source plugin when the track count drops below a threshold.
+    Enhanced in v8.11.0 with scoring heuristic and preference bias.
     """
     name = "smart_replenish"
     display_name = "Smart Replenish"
-    description = "Automatically adds new tracks to the queue when running low."
+    description = "Automatically adds new tracks to the queue based on harmonic compatibility and preferences."
 
     def on_track_start(self, track_meta, status_obj=None, **kwargs):
         if not status_obj or not status_obj.get('live_params', {}).get('continuous_mode'):
@@ -632,20 +610,56 @@ class SmartReplenishTool(ToolPlugin):
         playlist = status_obj.get('playlist', [])
         tracklist = status_obj.get('tracklist', [])
 
-        # If queue is low, find new tracks
         if len(playlist) < 3:
             source_name = status_obj.get('active_source', 'local_folder')
             source_cls = PluginRegistry.get_sources().get(source_name)
-            if source_cls:
-                source = source_cls()
-                all_tracks = source.get_tracks(folder=status_obj.get('input_folder'))
+            if not source_cls: return
 
-                # Filter out tracks already played or in queue
-                already_seen = set(t['file'] for t in tracklist) | set(playlist)
-                candidates = [t for t in all_tracks if os.path.basename(t) not in already_seen and t not in already_seen]
+            source = source_cls()
+            all_tracks = source.get_tracks(folder=status_obj.get('input_folder'))
 
-                if candidates:
-                    import random
-                    new_track = random.choice(candidates)
-                    status_obj['playlist'].append(os.path.basename(new_track))
-                    print(f"[*] Smart Replenish: Added {os.path.basename(new_track)} to queue.")
+            already_seen = set(t['file'] for t in tracklist) | set(playlist)
+            candidates = [t for t in all_tracks if os.path.basename(t) not in already_seen and t not in already_seen]
+
+            if not candidates: return
+
+            # Scoring Heuristic (v8.11.0)
+            from .analysis import get_native_bpm, get_musical_key, get_genre_archetype, get_energy_profile, is_harmonically_compatible
+
+            last_track = tracklist[-1] if tracklist else None
+            pref_genre = status_obj['live_params'].get('genre_preference', 'Any')
+            pref_energy = status_obj['live_params'].get('energy_bias', 0.5)
+
+            best_candidate = None
+            best_score = -1000
+
+            # Only sample a subset for speed if library is huge
+            import random
+            sample = random.sample(candidates, min(10, len(candidates)))
+
+            for c_path in sample:
+                try:
+                    # Quick partial analysis
+                    y, sr = sf.read(c_path, stop=sr*30 if 'sr' in locals() else 44100*30)
+                    if y.ndim == 2: y = y.T
+                    mono = y if y.ndim==1 else librosa.to_mono(y)
+                    c_key = get_musical_key(mono, sr)
+                    c_genre, _ = get_genre_archetype(mono, sr)
+                    c_energy = get_energy_profile(mono, sr)
+
+                    score = 0
+                    if last_track:
+                         l_key = last_track['key'].split(' (')[0]
+                         if is_harmonically_compatible(l_key, c_key): score += 50
+
+                    if pref_genre != 'Any' and c_genre == pref_genre: score += 30
+                    score -= abs(c_energy - pref_energy) * 40
+
+                    if score > best_score:
+                        best_score = score
+                        best_candidate = c_path
+                except: continue
+
+            target = best_candidate if best_candidate else random.choice(candidates)
+            status_obj['playlist'].append(os.path.basename(target))
+            print(f"[*] Smart Replenish: Added {os.path.basename(target)} to queue (Score: {best_score}).")

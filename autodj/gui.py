@@ -2,7 +2,6 @@
 Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.6.0).
 7.6.0: The Visual Era (Spectral Terrain 3D).
 """
-from pydantic import BaseModel
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, JSONResponse, Response
@@ -19,17 +18,11 @@ from .monitoring import monitor
 from .plugins import PluginRegistry
 from .scheduling import get_scheduler
 
-class RatingRequest(BaseModel):
-    track_file: str
-    rating: int
-
 app = FastAPI(title=f"Auto DJ v{__version__} Console")
 templates = Jinja2Templates(directory="templates")
 
 mixing_status = {
     "status": "Idle",
-    "active_source": "local_folder",
-    "input_folder": config.INPUT_FOLDER,
     "tracklist": [],
     "playlist": [],
     "active_tasks": {},
@@ -53,7 +46,9 @@ mixing_status = {
         "mastering_intensity": 0.5,
         "target_bpm": config.TARGET_BPM,
         "paused": False,
-        "continuous_mode": False
+        "continuous_mode": False,
+        "energy_bias": 0.5,
+        "genre_preference": "Any"
     }
 }
 
@@ -187,31 +182,14 @@ async def cluster_reset(node_id: str = Form(...)):
     cluster.reset_node(node_id)
     return {"status": "Reset", "node": node_id}
 
-
-@app.post("/feedback/rating")
-async def submit_rating(req: RatingRequest):
-    """Saves user rating for a track transition."""
-    for t in mixing_status["tracklist"]:
-        if t["file"] == req.track_file:
-            t["rating"] = req.rating
-            break
-    os.makedirs("logs", exist_ok=True)
-    feedback_file = "logs/feedback.json"
-    feedback_data = []
-    if os.path.exists(feedback_file):
-        try:
-            with open(feedback_file, "r") as f: feedback_data = json.load(f)
-        except: pass
-    feedback_data.append({"track_file": req.track_file, "rating": req.rating, "timestamp": __import__("datetime").datetime.now().isoformat()})
-    with open(feedback_file, "w") as f: json.dump(feedback_data, f, indent=2)
-    return {"status": "Recorded"}
-
 @app.post("/update_params")
 async def update_params(
     mastering_intensity: float = Form(None),
     target_bpm: float = Form(None),
     paused: bool = Form(None),
-    continuous_mode: bool = Form(None)
+    continuous_mode: bool = Form(None),
+    energy_bias: float = Form(None),
+    genre_preference: str = Form(None)
 ):
     """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
@@ -222,7 +200,59 @@ async def update_params(
         mixing_status["live_params"]["paused"] = paused
     if continuous_mode is not None:
         mixing_status["live_params"]["continuous_mode"] = continuous_mode
+    if energy_bias is not None:
+        mixing_status["live_params"]["energy_bias"] = energy_bias
+    if genre_preference is not None:
+        mixing_status["live_params"]["genre_preference"] = genre_preference
     return {"status": "Updated", "params": mixing_status["live_params"]}
+
+@app.get("/scheduler/events")
+async def scheduler_events():
+    sched = get_scheduler(mixing_status)
+    return {"events": [{"id": i, "time": e["time"].isoformat(), "action": e["action"], "params": e["params"], "status": e["status"]} for i, e in enumerate(sched.events)]}
+
+@app.post("/scheduler/add")
+async def scheduler_add(timestamp: str = Form(...), action: str = Form(...), params: str = Form("{}")):
+    import json
+    from datetime import datetime
+    try:
+        dt = datetime.fromisoformat(timestamp.replace('Z', '+00:00'))
+        p = json.loads(params)
+        get_scheduler(mixing_status).add_event(dt, action, p)
+        return {"status": "Added"}
+    except Exception as e:
+        return JSONResponse({"status": "Error", "message": str(e)}, status_code=400)
+
+@app.post("/feedback")
+async def post_feedback(track_index: int = Form(...), rating: int = Form(...)):
+    """Logs user feedback (1 for Up, -1 for Down) for a track."""
+    import json
+    from datetime import datetime
+    feedback_file = "logs/feedback.json"
+    os.makedirs("logs", exist_ok=True)
+
+    entry = {
+        "timestamp": datetime.now().isoformat(),
+        "track_index": track_index,
+        "rating": rating
+    }
+
+    if 0 <= track_index < len(mixing_status["tracklist"]):
+        entry["track"] = mixing_status["tracklist"][track_index]["file"]
+        entry["genre"] = mixing_status["tracklist"][track_index]["genre"]
+        entry["key"] = mixing_status["tracklist"][track_index]["key"]
+
+    try:
+        data = []
+        if os.path.exists(feedback_file):
+            with open(feedback_file, "r") as f:
+                data = json.load(f)
+        data.append(entry)
+        with open(feedback_file, "w") as f:
+            json.dump(data, f, indent=4)
+        return {"status": "Feedback Recorded"}
+    except Exception as e:
+        return JSONResponse({"status": "Error", "message": str(e)}, status_code=500)
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -285,7 +315,6 @@ async def start_mixing(
     mixing_status["tracklist"] = []
     mixing_status["live_params"]["target_bpm"] = bpm
     mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
-    mixing_status["active_source"] = source_plugin
 
     background_tasks.add_task(compile_master_set, Args(), status_obj=mixing_status)
     return {"message": "Engine ignited."}
@@ -295,25 +324,6 @@ async def cluster_join(node_id: str = Form(...), cores: int = Form(...)):
     """API endpoint for remote nodes to join the cluster."""
     cluster.register_node(node_id, cores)
     return {"status": "Accepted", "node": node_id}
-
-
-@app.get("/scheduler/events")
-async def get_scheduled_events():
-    return {"events": get_scheduler().get_events()}
-
-@app.post("/scheduler/add")
-async def add_scheduled_event(
-    timestamp: str = Form(...),
-    action: str = Form(...),
-    params: str = Form("{}")
-):
-    import json
-    try:
-        p = json.loads(params)
-    except:
-        p = {}
-    event = get_scheduler().add_event(timestamp, action, p)
-    return {"status": "Scheduled", "event": event}
 
 @app.get("/download")
 async def download_master():

@@ -1,25 +1,20 @@
-# 📝 Immediate Tasks (8.8.0)
+# 📝 Immediate Tasks (8.11.0)
 
 ## 🚀 Features (Immediate Implementation)
-- [ ] **MIDI Hardware Integration**:
-    - [ ] Install `mido` and `python-rtmidi`.
-    - [ ] Implement `autodj/midi.py` for controller mapping.
-    - [ ] Link MIDI CCs to EQ Gains (Low/Mid/High).
-    - [ ] Link MIDI Notes to "Execute Handoff" and "Force Next".
-- [ ] **Rekordbox Library Plugin**:
-    - [ ] Create `RekordboxSourcePlugin` to parse `pioneer.xml`.
-    - [ ] Extract Hot Cues and Memory Cues for automated alignment.
-- [ ] **Hardware UI Dashboard**:
-    - [ ] Add "Hardware" tab to Web Console.
-    - [ ] MIDI activity indicator and mapping table.
+- [ ] **AI Genre Evolution**:
+    - [ ] Transition from heuristic to CNN-based style classification in `models.py`.
+    - [ ] Train weights on curated library of 1000+ tracks.
+- [ ] **Mobile Companion App**:
+    - [ ] Flutter-based status dashboard.
+    - [ ] Firebase Cloud Messaging integration for mix completion notifications.
 
 ## 🛠 Improvements & Refactoring
-- [ ] **Optimization**: Reduce latency between MIDI input and DSP parameter updates.
-- [ ] **Robustness**: Handle MIDI device disconnects/reconnects gracefully.
+- [ ] **DSP Performance**: Benchmark and optimize 10th-order Butterworth implementation.
+- [ ] **Distributed SA**: Implement multi-node Simulated Annealing (True Quantum).
 
 ## 📚 Documentation
-- [ ] Update `DEPLOY.md` with MIDI library dependencies.
-- [ ] Create `Documentation/MIDI_MAPPING.md` for user configuration.
+- [ ] Create `Documentation/SCHEDULING_SPEC.md` for advanced event orchestration.
+- [ ] Update `MANUAL.md` with Preference Bias instructions.
 
 ---
 *Keep on goin'! Don't stop the party!*
