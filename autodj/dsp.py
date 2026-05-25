@@ -103,49 +103,53 @@ class DualFilterSweep(TransitionArchetype):
 
     @staticmethod
     def apply(outro_array, intro_array, sr, **kwargs):
-        """
-        Stateful Progressive Sweep. Ensures zero-discontinuity glides.
-        """
+        """Progressive filter sweep using scipy lfilter for speed and stability."""
         total_samples = outro_array.shape[1] if outro_array.ndim == 2 else len(outro_array)
-        if total_samples == 0: return outro_array, intro_array
-            
+        if total_samples == 0:
+            return outro_array, intro_array
+
         block_size = int(sr * 0.1)
         f_m = np.copy(outro_array)
         f_n = np.copy(intro_array)
-        num_ch = f_m.shape[0] if f_m.ndim == 2 else 1
-        
-        # Initial dummy filters to hold state
-        b_m, a_m = get_butter_coeffs(20000.0, sr, btype='lowpass')
-        b_n, a_n = get_butter_coeffs(15000.0, sr, btype='highpass')
-        filter_m = StatefulIIR(b_m, a_m, num_channels=num_ch)
-        filter_n = StatefulIIR(b_n, a_n, num_channels=num_ch)
-        
+
+        try:
+            from scipy.signal import lfilter
+            use_scipy = True
+        except ImportError:
+            use_scipy = False
+
         for start in range(0, total_samples, block_size):
             end = min(total_samples, start + block_size)
             progress = start / total_samples
-            
-            # Dynamic Frequencies
+
             lp_f = 20000.0 if progress < 0.7 else 20000 * (1500 / 20000) ** ((progress - 0.7) / 0.3)
             hp_f = 15000 * (20 / 15000) ** progress
-            
-            # Update filter coefficients while preserving state (z)
-            filter_m.b, filter_m.a = get_butter_coeffs(lp_f, sr, btype='lowpass')
-            filter_n.b, filter_n.a = get_butter_coeffs(hp_f, sr, btype='highpass')
-            
-            chunk_m = f_m[:, start:end] if f_m.ndim == 2 else f_m[start:end].reshape(1, -1)
-            chunk_n = f_n[:, start:end] if f_n.ndim == 2 else f_n[start:end].reshape(1, -1)
-            
-            if chunk_m.shape[1] > 0:
-                res_m = filter_m.process(chunk_m)
-                if f_m.ndim == 2: f_m[:, start:end] = res_m
-                else: f_m[start:end] = res_m.flatten()
-                
-            if chunk_n.shape[1] > 0:
-                res_n = filter_n.process(chunk_n)
-                if f_n.ndim == 2: f_n[:, start:end] = res_n
-                else: f_n[start:end] = res_n.flatten()
-                
+
+            b_m, a_m = get_butter_coeffs(lp_f, sr, btype='lowpass')
+            b_n, a_n = get_butter_coeffs(hp_f, sr, btype='highpass')
+
+            chunk_m = f_m[:, start:end] if f_m.ndim == 2 else f_m[start:end]
+            chunk_n = f_n[:, start:end] if f_n.ndim == 2 else f_n[start:end]
+
+            if chunk_m.shape[-1] > 0:
+                if use_scipy:
+                    if chunk_m.ndim == 2:
+                        for ch in range(chunk_m.shape[0]):
+                            f_m[ch, start:end] = lfilter(b_m, a_m, chunk_m[ch])
+                    else:
+                        f_m[start:end] = lfilter(b_m, a_m, chunk_m)
+
+            if chunk_n.shape[-1] > 0:
+                if use_scipy:
+                    if chunk_n.ndim == 2:
+                        for ch in range(chunk_n.shape[0]):
+                            f_n[ch, start:end] = lfilter(b_n, a_n, chunk_n[ch])
+                    else:
+                        f_n[start:end] = lfilter(b_n, a_n, chunk_n)
+
         return f_m, f_n
+
+
 
 def apply_bass_swap(outro, intro, sr, **kwargs):
     return apply_dsp_filter(outro, sr, 'highpass', 150.0), apply_dsp_filter(intro, sr, 'lowpass', 150.0)

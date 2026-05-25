@@ -9,8 +9,70 @@ from .np_signal import get_butter_coeffs, apply_iir_filter, fast_correlate
 
 
 def get_musical_key(y, sr):
-    """Stub: Returns default key. Full CQT analysis available in librosa branch."""
-    return "G Minor"
+    """Musical key detection using pure-numpy chromagram + Krumhansl-Schmuckler profiling."""
+    if y.ndim == 2:
+        y_mono = np.mean(y, axis=0)
+    else:
+        y_mono = y
+
+    n_fft = 8192
+    hop = n_fft // 2
+    y_short = y_mono[:min(len(y_mono), sr * 30)]
+
+    # Pre-compute FFT bin → chroma bin mapping
+    freqs = np.fft.rfftfreq(n_fft, 1.0 / sr)
+    min_freq, max_freq = 65.0, 2000.0
+    valid = (freqs >= min_freq) & (freqs <= max_freq)
+    valid_freqs = freqs[valid]
+    if len(valid_freqs) == 0:
+        return "G Minor"
+    midi_notes = 12 * np.log2(valid_freqs / 440.0) + 69
+    chroma_bins = np.round(midi_notes).astype(int) % 12
+    valid_bin_indices = np.where(valid)[0]
+
+    # Vectorized STFT
+    window = np.hanning(n_fft)
+    num_frames = max(1, (len(y_short) - n_fft) // hop + 1)
+    chroma = np.zeros(12)
+
+    if len(y_short) >= n_fft:
+        try:
+            frames = np.lib.stride_tricks.sliding_window_view(y_short, n_fft)[::hop][:num_frames]
+            spectra = np.abs(np.fft.rfft(frames * window, axis=1))
+            for j, c_bin in zip(valid_bin_indices, chroma_bins):
+                chroma[c_bin] += np.sum(spectra[:, j])
+        except Exception:
+            # Fallback for very short audio
+            frame = y_short[:n_fft] * window if len(y_short) >= n_fft else y_short
+            spec = np.abs(np.fft.rfft(frame, n=n_fft))
+            for j, c_bin in zip(valid_bin_indices, chroma_bins):
+                if j < len(spec):
+                    chroma[c_bin] += spec[j]
+
+    if np.max(chroma) < 1e-10:
+        return "G Minor"
+
+    # Krumhansl-Schmuckler key-finding algorithm
+    major_profile = np.array([6.35, 2.23, 3.48, 2.33, 4.38, 4.09, 2.52, 5.19, 2.39, 3.66, 2.29, 2.88])
+    minor_profile = np.array([6.33, 2.68, 3.52, 5.38, 2.60, 3.53, 2.54, 4.75, 3.98, 2.69, 3.34, 3.17])
+
+    def _norm(p):
+        return (p - np.mean(p)) / (np.std(p) + 1e-10)
+
+    maj_n, min_n, chroma_n = _norm(major_profile), _norm(minor_profile), _norm(chroma)
+
+    best_corr, best_key, best_mode = -2, 0, "Major"
+    for i in range(12):
+        rotated = np.roll(chroma_n, i)
+        c_maj = np.dot(rotated, maj_n)
+        c_min = np.dot(rotated, min_n)
+        if c_maj > best_corr:
+            best_corr, best_key, best_mode = c_maj, i, "Major"
+        if c_min > best_corr:
+            best_corr, best_key, best_mode = c_min, i, "Minor"
+
+    notes = ["C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"]
+    return f"{notes[best_key]} {best_mode}"
 
 def get_camelot_key(key_str):
     """Maps standard keys to the Camelot Wheel."""
