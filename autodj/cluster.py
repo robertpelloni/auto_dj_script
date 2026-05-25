@@ -1,16 +1,13 @@
+""" Distributed Rendering Cluster Manager for the Auto DJ system (7.0.0).
+Coordinates rendering tasks across local threads (ThreadPoolExecutor for Windows compatibility).
 """
-Distributed Rendering Cluster Manager for the Auto DJ system (7.0.0).
-Coordinates rendering tasks across multiple local or remote nodes.
-"""
+
 import os
-import multiprocessing
-from concurrent.futures import ProcessPoolExecutor
+from concurrent.futures import ThreadPoolExecutor
+
 
 class ClusterNode:
-    """
-    Represents a rendering node in the cluster.
-    Defaults to local CPU processes.
-    """
+    """ Represents a rendering node in the cluster. Defaults to local CPU threads. """
     def __init__(self, node_id, cores=1):
         self.id = node_id
         self.cores = cores
@@ -18,21 +15,19 @@ class ClusterNode:
         self.failed_tasks = 0
         self.total_tasks = 0
 
+
 class RenderCluster:
     """
     Manages the distribution of audio rendering tasks.
-
-    Architecture:
-    - Segmented Rendering: Each transition/warping task is an independent 'RenderTask'.
-    - Load Balancing: Dispatcher distributes tasks to nodes based on availability.
+    Uses ThreadPoolExecutor (safe on Windows, no pickle issues).
     """
+
     def __init__(self):
         self.nodes = [ClusterNode("LocalHost", cores=os.cpu_count() or 1)]
         self._executor = None
 
     def register_node(self, node_id, cores):
         """Registers a new remote node in the cluster."""
-        # Check if node already exists
         for n in self.nodes:
             if n.id == node_id:
                 n.cores = cores
@@ -41,10 +36,9 @@ class RenderCluster:
         self.nodes.append(ClusterNode(node_id, cores=cores))
 
     def get_executor(self):
-        """Returns the persistent ProcessPoolExecutor instance."""
+        """Returns the persistent ThreadPoolExecutor instance."""
         if self._executor is None:
-            # Throttle to 2 workers to prevent MemoryError on large tracks
-            self._executor = ProcessPoolExecutor(max_workers=2)
+            self._executor = ThreadPoolExecutor(max_workers=max(1, (os.cpu_count() or 2) // 2))
         return self._executor
 
     def shutdown(self):
@@ -72,6 +66,7 @@ class RenderCluster:
             }
             for n in self.nodes
         ]
+
 
 # Global Cluster Instance
 cluster = RenderCluster()

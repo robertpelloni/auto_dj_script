@@ -1,16 +1,50 @@
+""" Lightweight Audio Analysis Module (v9.2.0 - Scipy-Free).
+Uses pure NumPy for stability in restricted environments.
+Fixed: analyze_geometry, find_sync_offset broken references.
 """
-Lightweight Audio Analysis Module (v9.1.0 - Scipy-Free).
-Uses pure NumPy/SciPy for stability in restricted environments.
-"""
+
 import numpy as np
 import soundfile as sf
 from .np_signal import get_butter_coeffs, apply_iir_filter, fast_correlate
 
-def get_musical_key(y, sr): return "G Minor"
-def get_camelot_key(key_str): return "6A"
-def is_harmonically_compatible(key1, key2): return True
+
+def get_musical_key(y, sr):
+    """Stub: Returns default key. Full CQT analysis available in librosa branch."""
+    return "G Minor"
+
+def get_camelot_key(key_str):
+    """Maps standard keys to the Camelot Wheel."""
+    mapping = {
+        'G# Minor': '1A', 'B Major': '1B',
+        'D# Minor': '2A', 'F# Major': '2B',
+        'A# Minor': '3A', 'C# Major': '3B',
+        'F Minor': '4A', 'G# Major': '4B',
+        'C Minor': '5A', 'D# Major': '5B',
+        'G Minor': '6A', 'A# Major': '6B',
+        'D Minor': '7A', 'F Major': '7B',
+        'A Minor': '8A', 'C Major': '8B',
+        'E Minor': '9A', 'G Major': '9B',
+        'B Minor': '10A', 'D Major': '10B',
+        'F# Minor': '11A', 'A Major': '11B',
+        'C# Minor': '12A', 'E Major': '12B'
+    }
+    return mapping.get(key_str, "6A")
+
+def is_harmonically_compatible(key1, key2):
+    """Checks Camelot wheel adjacency."""
+    c1, c2 = get_camelot_key(key1), get_camelot_key(key2)
+    if "Unknown" in (c1, c2):
+        return True
+    n1, m1, n2, m2 = int(c1[:-1]), c1[-1], int(c2[:-1]), c2[-1]
+    if n1 == n2:
+        return True
+    if m1 == m2 and (abs(n1 - n2) in (1, 11)):
+        return True
+    return False
+
 
 def get_native_bpm(y, sr):
+    """BPM detection using autocorrelation on kick envelope."""
     y_mono = np.mean(y, axis=0) if y.ndim == 2 else y
     b, a = get_butter_coeffs(150.0, sr, btype='lowpass')
     y_kick = np.abs(apply_iir_filter(y_mono, b, a))
@@ -21,166 +55,156 @@ def get_native_bpm(y, sr):
     min_lag = int((60/170) * sr / hop)
     max_lag = int((60/120) * sr / hop)
     peaks = corr[min_lag:max_lag]
-    if len(peaks) == 0: return 145.0, y, sr
+    if len(peaks) == 0:
+        return 145.0, y, sr
     best_lag = np.argmax(peaks) + min_lag
     final_bpm = 60.0 / (best_lag * hop / sr)
     return float(final_bpm), y, sr
 
-def get_energy_profile(y, sr): return np.mean(np.abs(y))
+
+def get_energy_profile(y, sr):
+    """Calculates RMS energy."""
+    return np.mean(np.abs(y))
+
 
 def detect_phrases(y, sr):
+    """Detects structural boundaries using energy novelty."""
     y_mono = np.mean(y, axis=0) if y.ndim == 2 else y
     hop = int(sr * 2)
     energy = [np.mean(np.abs(y_mono[i:i+hop])) for i in range(0, len(y_mono), hop)]
     diff = np.abs(np.diff(energy))
     threshold = np.mean(diff) * 2
     breaks = np.where(diff > threshold)[0]
-    return breaks * hop * 1000 / sr
+    return (breaks * hop * 1000 / sr).astype(int)
+
 
 def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
     """
-    Returns (beat_times, theoretical_ms_trans, first_kick, last_kick).
+    Returns (beat_times_ms, theoretical_ms_trans, first_beat_ms, last_beat_ms).
+    Uses pure-numpy kick detection — no scipy/librosa dependency.
     """
     from .utils import pydub_to_ndarray
     y = pydub_to_ndarray(segment)
     y_mono = np.mean(y, axis=0) if y.ndim == 2 else y
-    
-    # Force Kick-only analysis for anchoring
-    nyquist = 0.5 * sr
-    sos_kick = butter(4, 150.0 / nyquist, btype='lowpass', output='sos')
-    samples_kick = sosfiltfilt(sos_kick, samples_mono)
+
+    # Kick detection via low-pass filter
+    b, a = get_butter_coeffs(150.0, sr, btype='lowpass')
+    y_kick = np.abs(apply_iir_filter(y_mono, b, a))
 
     ms_per_beat = 60000.0 / target_bpm
     ms_per_bar = ms_per_beat * beats_per_bar
     ms_per_transition = ms_per_bar * transition_bars
-    
-    # First Kick (Search start)
+
+    # First Kick: search first 10 seconds
     search_start = int(sr * 10)
     window_s = y_kick[:search_start]
     first_kick_sample = np.argmax(window_s) if len(window_s) > 0 else 0
-    first_beat_ms = first_kick_sample * 1000 / sr
-    
-    if len(beat_times_ms) == 0:
-        return [], int(ms_per_transition), 0
+    first_beat_ms = int(first_kick_sample * 1000 / sr)
 
-    # 2. Kick-Locked Downbeat Finder (Version 8.5)
-    # We use a pattern-matching heuristic: Verify the 'One' is part of a 4/4 cycle.
-    search_limit = min(len(beat_times_ms), 32)
-    kick_scores = []
+    # Last Kick: search last 20 seconds
+    search_end = int(sr * 20)
+    window_e = y_kick[-search_end:] if len(y_kick) > search_end else y_kick
+    last_kick_rel = np.argmax(window_e) if len(window_e) > 0 else 0
+    last_kick_sample = len(y_kick) - (len(window_e) - last_kick_rel)
+    last_beat_ms = int(last_kick_sample * 1000 / sr)
 
-    samples_per_beat = int((ms_per_beat / 1000.0) * sr)
+    # Generate beat grid anchored to first kick
+    beat_times_ms = np.arange(first_beat_ms, len(y_mono)*1000/sr, ms_per_beat).astype(int)
 
-    for i in range(search_limit - 4):
-        # Calculate a 'Pattern Score' for this beat being the 'One'
-        # Check energy at i, i+1, i+2, i+3
-        pattern_energy = 0
-        for offset in range(4):
-            b_ms = beat_times_ms[i + offset]
-            start_s = int(max(0, (b_ms - 15) * sr / 1000))
-            end_s = int(min(len(samples_kick), (b_ms + 15) * sr / 1000))
-            pattern_energy += np.max(np.abs(samples_kick[start_s:end_s]))
+    return beat_times_ms, int(ms_per_transition), int(first_beat_ms), int(last_beat_ms)
 
-        # Check for 'Silence' between beats (confirms it's a transient, not a drone)
-        mid_beat_ms = beat_times_ms[i] + (ms_per_beat / 2.0)
-        m_start = int((mid_beat_ms - 15) * sr / 1000)
-        m_end = int((mid_beat_ms + 15) * sr / 1000)
-        mid_energy = np.max(np.abs(samples_kick[m_start:m_end])) if m_start < len(samples_kick) else 1.0
-
-        # High score = Loud beats + Quiet gaps
-        kick_scores.append(pattern_energy / (mid_energy + 0.01))
-
-    # Anchor to the beat with the most consistent 4/4 'pulse'
-    downbeat_idx = np.argmax(kick_scores) if kick_scores else 0
-    first_beat_ms = beat_times_ms[downbeat_idx]
-
-    print(f"  [ANALYSIS] Kick Pattern Lock: Beat {downbeat_idx} at {first_beat_ms}ms (Score: {max(kick_scores):.2f})")
-        
-    return beat_times_ms, int(ms_per_transition), first_beat_ms
 
 def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar):
-    """
-    Analyzes phrase structure to determine optimal transition length.
-    Returns transition bars (8, 16, or 32).
-    """
+    """Analyzes phrase structure to determine optimal transition length."""
     outro_ph = detect_phrases(outro_y, sr)
     intro_ph = detect_phrases(intro_y, sr)
-
-    ms_per_beat = 60000.0 / target_bpm
-    ms_per_bar = ms_per_beat * beats_per_bar
-
-    # Heuristic: Match phrase density to transition standard multiples
+    ms_per_bar = (60000.0 / target_bpm) * beats_per_bar
     if len(outro_ph) > 5 or len(intro_ph) > 5:
-        # High activity: shorter transition
         return 8
     elif len(outro_ph) < 2 and len(intro_ph) < 2:
-        # Low activity: long epic transition
         return 32
     else:
         return 16
 
+
 def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
-    """Finds a high-energy bar for looping."""
+    """Finds a high-energy bar for looping (tail extension)."""
     ms_per_beat = 60000.0 / bpm
     samples_per_bar = int(sr * (ms_per_beat * beats_per_bar / 1000.0))
     # Check last 30 seconds for a high-energy bar
     window = y[:, -int(sr*30):] if y.ndim == 2 else y[-int(sr*30):]
-    # Simple RMS window search
     step = samples_per_bar
     max_e, best_chunk = 0, None
-    for i in range(0, window.shape[1] - step, step):
-        chunk = window[:, i:i+step] if y.ndim == 2 else window[i:i+step]
+    for i in range(0, (window.shape[1] if window.ndim == 2 else len(window)) - step, step):
+        chunk = window[:, i:i+step] if window.ndim == 2 else window[i:i+step]
         e = np.mean(np.abs(chunk))
         if e > max_e:
             max_e, best_chunk = e, chunk
-    return best_chunk if best_chunk is not None else (y[:, -samples_per_bar:] if y.ndim == 2 else y[-samples_per_bar:])
+    if best_chunk is not None:
+        return best_chunk
+    return y[:, -samples_per_bar:] if y.ndim == 2 else y[-samples_per_bar:]
+
 
 def find_sync_offset(outro_y, intro_y, sr, bpm):
     """
-    Finds the sample-accurate offset using Peak-Centric Alignment (Version 8.0).
-    Identifies kick transients and locks their peaks.
+    Finds sample-accurate sync offset using cross-correlation on kick envelopes.
+    Pure numpy — no librosa/scipy dependency.
     """
-    nyquist = 0.5 * sr
-    sos = butter(4, [20.0 / nyquist, 150.0 / nyquist], btype='bandpass', output='sos')
+    # Mono conversion
+    o_m = np.mean(outro_y, axis=0) if outro_y.ndim == 2 else outro_y
+    i_m = np.mean(intro_y, axis=0) if intro_y.ndim == 2 else intro_y
 
-    o_m = librosa.to_mono(outro_y) if outro_y.ndim == 2 else outro_y
-    i_m = librosa.to_mono(intro_y) if intro_y.ndim == 2 else intro_y
-    
-    win = int(sr * (60/bpm) * 8)
-    win = min(win, len(o_k), len(i_k))
-    if win < 100: return 0
-    
-    # 1. Energy Gating: Skip search if signal is too quiet (ambient)
+    # Kick isolation via low-pass
+    b, a = get_butter_coeffs(150.0, sr, btype='lowpass')
+    o_kick = np.abs(apply_iir_filter(o_m, b, a))
+    i_kick = np.abs(apply_iir_filter(i_m, b, a))
+
+    # Energy gate: skip if too quiet
     if np.max(i_kick) < 0.05:
         return 0
 
+    win = int(sr * (60/bpm) * 8)
+    win = min(win, len(o_kick), len(i_kick))
+    if win < 100:
+        return 0
+
+    # Cross-correlate kick envelopes
+    corr = fast_correlate(o_kick[:win], i_kick[:win])
+    center = win - 1
     ms_per_beat = 60000.0 / bpm
-    samples_per_beat = int((ms_per_beat / 1000.0) * sr)
-    
     search = int(sr * (60/bpm) * 0.5)
-    slice_c = corr[max(0, center-search) : min(len(corr), center+search)]
-    if len(slice_c) == 0: return 0
-    
-    correlation = np.correlate(o_slice, i_slice, mode='full')
-    center = len(i_slice) - 1
+    start = max(0, center - search)
+    end = min(len(corr), center + search)
+    slice_c = corr[start:end]
+    if len(slice_c) == 0:
+        return 0
 
-    # Search window: +/- 1.5 full beats (catches most phasing errors)
-    search_samples = int(samples_per_beat * 1.5)
-    start_idx = max(0, center - search_samples)
-    end_idx = min(len(correlation), center + search_samples)
-    window = correlation[start_idx : end_idx]
-    
-    if len(window) == 0: return 0
-    
-    # 3. Confidence Check
-    best_lag_rel = np.argmax(window)
-    peak_val = window[best_lag_rel]
-    avg_val = np.mean(window)
-    
+    lag = np.argmax(slice_c) - (len(slice_c) // 2)
+
+    # Confidence check
+    peak_val = np.max(slice_c)
+    avg_val = np.mean(np.abs(slice_c))
     if peak_val < avg_val * 1.25:
-        return 0 # Low confidence, trust the grid instead
+        return 0
 
-    actual_lag_samples = (start_idx + best_lag_rel) - center
-    return int((actual_lag_samples / sr) * 1000)
+    return int(lag * 1000 / sr)
 
-def get_genre_archetype(y, sr, bpm=None): return "High-Energy", "Standard Psytrance"
-def extract_spectral_terrain(y, sr): return []
+
+def get_genre_archetype(y, sr, bpm=None):
+    """Genre classification using spectral centroid heuristic."""
+    # Simple centroid estimation via FFT
+    if y.ndim == 2:
+        y = np.mean(y, axis=0)
+    fft = np.abs(np.fft.rfft(y[:min(len(y), sr*30)]))
+    freqs = np.fft.rfftfreq(len(y[:min(len(y), sr*30)]), 1.0/sr)
+    centroid = np.sum(freqs * fft) / (np.sum(fft) + 1e-10)
+    if centroid > 3000:
+        return "High-Energy", "Standard Psytrance"
+    elif centroid > 1500:
+        return "Techno", "Progressive"
+    return "Ambient", "Chillout"
+
+
+def extract_spectral_terrain(y, sr):
+    """Stub: Returns empty terrain data."""
+    return []

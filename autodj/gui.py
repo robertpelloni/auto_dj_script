@@ -1,7 +1,5 @@
-"""
-Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (7.6.0).
-7.6.0: The Visual Era (Spectral Terrain 3D).
-"""
+""" Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (8.11.0). """
+
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates
 from fastapi.responses import FileResponse, JSONResponse, Response
@@ -10,6 +8,7 @@ import os
 import asyncio
 import psutil
 import config
+
 from .core import compile_master_set
 from .version import __version__
 from .dsp import ArchetypeRegistry
@@ -30,17 +29,11 @@ mixing_status = {
     "version": __version__,
     "parallel_cores": os.cpu_count() or 1,
     "telemetry": {
-        "cpu_usage": 0,
-        "memory_usage": 0,
-        "active_threads": 0,
-        "disk_read": 0,
-        "disk_write": 0,
-        "net_sent": 0,
-        "net_recv": 0,
-        "midi_active": False,
-        "midi_device": "None",
-        "is_healthy": True,
-        "is_throttled": False
+        "cpu_usage": 0, "memory_usage": 0, "active_threads": 0,
+        "disk_read": 0, "disk_write": 0,
+        "net_sent": 0, "net_recv": 0,
+        "midi_active": False, "midi_device": "None",
+        "is_healthy": True, "is_throttled": False
     },
     "live_params": {
         "mastering_intensity": 0.5,
@@ -52,6 +45,7 @@ mixing_status = {
     }
 }
 
+
 class ConnectionManager:
     def __init__(self):
         self.active_connections: list[WebSocket] = []
@@ -61,7 +55,8 @@ class ConnectionManager:
         self.active_connections.append(websocket)
 
     def disconnect(self, websocket: WebSocket):
-        self.active_connections.remove(websocket)
+        if websocket in self.active_connections:
+            self.active_connections.remove(websocket)
 
     async def broadcast(self, message: str):
         for connection in self.active_connections:
@@ -72,10 +67,12 @@ class ConnectionManager:
 
 manager = ConnectionManager()
 
+
 @app.get("/favicon.ico")
 async def favicon():
     svg = b'<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32"><circle cx="16" cy="16" r="14" fill="#a020f0"/><text x="16" y="22" text-anchor="middle" fill="#fff" font-size="16" font-weight="bold" font-family="sans-serif">DJ</text></svg>'
     return Response(content=svg, media_type="image/svg+xml")
+
 
 @app.get("/")
 async def index(request: Request):
@@ -92,17 +89,12 @@ async def index(request: Request):
         }
     )
 
-@app.on_event("startup")
-async def startup_event():
-    asyncio.create_task(update_telemetry())
-    get_scheduler(mixing_status).start()
 
 async def update_telemetry():
     """Background task to poll system performance metrics."""
-    psutil.cpu_percent()  # Initialize first call
+    psutil.cpu_percent()
     last_disk = psutil.disk_io_counters()
     last_net = psutil.net_io_counters()
-
     while True:
         try:
             cpu = psutil.cpu_percent()
@@ -111,76 +103,64 @@ async def update_telemetry():
             mixing_status["telemetry"]["memory_usage"] = mem
             mixing_status["telemetry"]["active_threads"] = len(psutil.Process().threads())
 
-            # Disk & Net Throughput (v7.8.0)
             now_disk = psutil.disk_io_counters()
             now_net = psutil.net_io_counters()
-
             if last_disk and now_disk:
                 mixing_status["telemetry"]["disk_read"] = (now_disk.read_bytes - last_disk.read_bytes) / config.HEALTH_CHECK_INTERVAL
                 mixing_status["telemetry"]["disk_write"] = (now_disk.write_bytes - last_disk.write_bytes) / config.HEALTH_CHECK_INTERVAL
-
             if last_net and now_net:
                 mixing_status["telemetry"]["net_sent"] = (now_net.bytes_sent - last_net.bytes_sent) / config.HEALTH_CHECK_INTERVAL
                 mixing_status["telemetry"]["net_recv"] = (now_net.bytes_recv - last_net.bytes_recv) / config.HEALTH_CHECK_INTERVAL
-
             last_disk = now_disk
             last_net = now_net
 
-            # Health Logic (v7.2.0)
             is_healthy = (cpu < config.MAX_CPU_LOAD and mem < config.MAX_RAM_LOAD)
             mixing_status["telemetry"]["is_healthy"] = is_healthy
             mixing_status["telemetry"]["is_throttled"] = not is_healthy
-
         except Exception:
             pass
         await asyncio.sleep(config.HEALTH_CHECK_INTERVAL)
+
 
 @app.get("/status")
 async def get_status():
     status_data = dict(mixing_status)
     status_data["cluster"] = cluster.get_status()
     status_data["monitoring"] = monitor.get_status()
-    # Populate available tracks if idle
     if mixing_status["status"] == "Idle":
         import glob
-        status_data["available_tracks"] = [os.path.basename(f) for f in glob.glob(os.path.join(config.INPUT_FOLDER, "*")) if any(f.endswith(ext) for ext in config.SUPPORTED_EXTENSIONS)]
-
-    # Update MIDI telemetry if handler exists
-    from .midi import PluginRegistry
-    midi_tool = PluginRegistry.get_tools().get("midi_hardware")
-    if midi_tool and hasattr(midi_tool, 'handler') and midi_tool.handler:
-        status_data["telemetry"]["midi_active"] = midi_tool.handler.running
-        status_data["telemetry"]["midi_device"] = midi_tool.handler.port_name or "Auto-Detect"
-
+        status_data["available_tracks"] = [os.path.basename(f) for f in glob.glob(os.path.join(config.INPUT_FOLDER, "*"))
+                                            if any(f.endswith(ext) for ext in config.SUPPORTED_EXTENSIONS)]
     return JSONResponse(status_data)
+
 
 @app.get("/midi/devices")
 async def get_midi_devices():
-    """Returns a list of available MIDI input devices."""
-    import mido
     try:
+        import mido
         return {"devices": mido.get_input_names()}
     except Exception:
         return {"devices": []}
 
+
 @app.post("/playlist/add")
 async def playlist_add(filename: str = Form(...)):
-    """Adds a track to the dynamic playlist."""
     mixing_status["playlist"].append(filename)
     return {"status": "Added", "playlist": mixing_status["playlist"]}
 
+
 @app.post("/playlist/remove")
 async def playlist_remove(index: int = Form(...)):
-    """Removes a track from the dynamic playlist."""
     if 0 <= index < len(mixing_status["playlist"]):
         mixing_status["playlist"].pop(index)
     return {"status": "Removed", "playlist": mixing_status["playlist"]}
 
+
 @app.post("/cluster/reset")
 async def cluster_reset(node_id: str = Form(...)):
-    """Resets failed states for a node."""
     cluster.reset_node(node_id)
     return {"status": "Reset", "node": node_id}
+
 
 @app.post("/update_params")
 async def update_params(
@@ -191,7 +171,6 @@ async def update_params(
     energy_bias: float = Form(None),
     genre_preference: str = Form(None)
 ):
-    """Real-time parameter adjustment endpoint."""
     if mastering_intensity is not None:
         mixing_status["live_params"]["mastering_intensity"] = mastering_intensity
     if target_bpm is not None:
@@ -206,10 +185,13 @@ async def update_params(
         mixing_status["live_params"]["genre_preference"] = genre_preference
     return {"status": "Updated", "params": mixing_status["live_params"]}
 
+
 @app.get("/scheduler/events")
 async def scheduler_events():
     sched = get_scheduler(mixing_status)
-    return {"events": [{"id": i, "time": e["time"].isoformat(), "action": e["action"], "params": e["params"], "status": e["status"]} for i, e in enumerate(sched.events)]}
+    return {"events": [{"id": i, "time": e["time"].isoformat(), "action": e["action"],
+                         "params": e["params"], "status": e["status"]} for i, e in enumerate(sched.events)]}
+
 
 @app.post("/scheduler/add")
 async def scheduler_add(timestamp: str = Form(...), action: str = Form(...), params: str = Form("{}")):
@@ -223,25 +205,18 @@ async def scheduler_add(timestamp: str = Form(...), action: str = Form(...), par
     except Exception as e:
         return JSONResponse({"status": "Error", "message": str(e)}, status_code=400)
 
+
 @app.post("/feedback")
 async def post_feedback(track_index: int = Form(...), rating: int = Form(...)):
-    """Logs user feedback (1 for Up, -1 for Down) for a track."""
     import json
     from datetime import datetime
     feedback_file = "logs/feedback.json"
     os.makedirs("logs", exist_ok=True)
-
-    entry = {
-        "timestamp": datetime.now().isoformat(),
-        "track_index": track_index,
-        "rating": rating
-    }
-
+    entry = {"timestamp": datetime.now().isoformat(), "track_index": track_index, "rating": rating}
     if 0 <= track_index < len(mixing_status["tracklist"]):
         entry["track"] = mixing_status["tracklist"][track_index]["file"]
         entry["genre"] = mixing_status["tracklist"][track_index]["genre"]
         entry["key"] = mixing_status["tracklist"][track_index]["key"]
-
     try:
         data = []
         if os.path.exists(feedback_file):
@@ -253,6 +228,7 @@ async def post_feedback(track_index: int = Form(...), rating: int = Form(...)):
         return {"status": "Feedback Recorded"}
     except Exception as e:
         return JSONResponse({"status": "Error", "message": str(e)}, status_code=500)
+
 
 @app.websocket("/ws")
 async def websocket_endpoint(websocket: WebSocket):
@@ -268,6 +244,7 @@ async def websocket_endpoint(websocket: WebSocket):
     finally:
         if websocket in manager.active_connections:
             manager.active_connections.remove(websocket)
+
 
 @app.post("/start")
 async def start_mixing(
@@ -319,11 +296,12 @@ async def start_mixing(
     background_tasks.add_task(compile_master_set, Args(), status_obj=mixing_status)
     return {"message": "Engine ignited."}
 
+
 @app.post("/cluster/join")
 async def cluster_join(node_id: str = Form(...), cores: int = Form(...)):
-    """API endpoint for remote nodes to join the cluster."""
     cluster.register_node(node_id, cores)
     return {"status": "Accepted", "node": node_id}
+
 
 @app.get("/download")
 async def download_master():
@@ -331,6 +309,12 @@ async def download_master():
         return FileResponse(config.OUTPUT_FILE, filename=os.path.basename(config.OUTPUT_FILE))
     return JSONResponse({"error": "Mix not found."}, status_code=404)
 
+
 def run_gui(host="0.0.0.0", port=8000):
     print(f"[*] Auto DJ v{__version__} Console launching...")
+    # Start telemetry and scheduler in background threads
+    try:
+        get_scheduler(mixing_status).start()
+    except Exception:
+        pass
     uvicorn.run(app, host=host, port=port)
