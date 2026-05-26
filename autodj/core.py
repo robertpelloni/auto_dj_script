@@ -533,68 +533,89 @@ def compile_master_set(args, status_obj=None):
             mode = 'progressive'
         dsp_kwargs = {'lowpass': args.lowpass, 'highpass': args.highpass, 'ideal_p': ideal_p}
 
-        if pre_fade_ms > 0 and total_samples > int(crossfade_ms * sr / 1000):
-            pf_s = min(int(pre_fade_ms * sr / 1000), total_samples)
-            # Process only the crossfade portion through the archetype
-            m_cf_raw = m_overlap[:, pf_s:] if m_overlap.ndim == 2 else m_overlap[pf_s:]
-            n_cf_raw = n_intro_full[:, pf_s:] if n_intro_full.ndim == 2 else n_intro_full[pf_s:]
-            arch_plugin = ArchetypeRegistry.get(mode)
-            if arch_plugin:
-                m_cf_proc, n_cf_proc = arch_plugin.apply(m_cf_raw, n_cf_raw, sr, **dsp_kwargs)
+        # DJ-style bass management with no filter transients
+        # Process the ENTIRE overlap through crossover filters (avoids
+        # lfilter startup transients at segment boundaries), then use
+        # gain curves that respect the pre-fade/crossfade structure.
+        from scipy.signal import butter, lfilter
+
+        # Design crossover filters (process full overlap for zero transients)
+        b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype='low')
+        b_hi, a_hi = butter(2, 150.0 / (0.5 * sr), btype='high')
+
+        # Split both tracks into bass and mid/high
+        def _split_bass(audio):
+            n = audio.shape[1] if audio.ndim == 2 else len(audio)
+            if audio.ndim == 2:
+                bass = np.zeros_like(audio)
+                rest = np.zeros_like(audio)
+                for ch in range(audio.shape[0]):
+                    bass[ch] = lfilter(b_lo, a_lo, audio[ch])[:n]
+                    rest[ch] = lfilter(b_hi, a_hi, audio[ch])[:n]
             else:
-                from .dsp import _apply_bass_swap_transition
-                m_cf_proc, n_cf_proc = _apply_bass_swap_transition(m_cf_raw, n_cf_raw, sr)
-            # Reassemble full arrays: pre-fade raw + crossfade processed
-            if m_overlap.ndim == 2:
-                m_proc = np.concatenate([m_overlap[:, :pf_s], m_cf_proc], axis=1)
-                n_proc = np.concatenate([n_intro_full[:, :pf_s], n_cf_proc], axis=1)
-            else:
-                m_proc = np.concatenate([m_overlap[:pf_s], m_cf_proc])
-                n_proc = np.concatenate([n_intro_full[:pf_s], n_cf_proc])
-            # Safeguard: ensure processed arrays match total_samples
-            proc_len = m_proc.shape[1] if m_proc.ndim == 2 else len(m_proc)
-            if proc_len != total_samples:
-                if proc_len < total_samples:
-                    pad = total_samples - proc_len
-                    if m_proc.ndim == 2:
-                        m_proc = np.pad(m_proc, ((0,0),(0,pad)))
-                        n_proc = np.pad(n_proc, ((0,0),(0,pad)))
-                    else:
-                        m_proc = np.pad(m_proc, (0,pad))
-                        n_proc = np.pad(n_proc, (0,pad))
-                else:
-                    if m_proc.ndim == 2:
-                        m_proc = m_proc[:, :total_samples]
-                        n_proc = n_proc[:, :total_samples]
-                    else:
-                        m_proc = m_proc[:total_samples]
-                        n_proc = n_proc[:total_samples]
+                bass = lfilter(b_lo, a_lo, audio)[:n]
+                rest = lfilter(b_hi, a_hi, audio)[:n]
+            return bass, rest
+
+        m_bass, m_rest = _split_bass(m_overlap)
+        n_bass, n_rest = _split_bass(n_intro_full)
+
+        # Build bass gain curves aligned with the crossfade region
+        # During pre-fade: outgoing bass at 100%, incoming bass at 0%
+        # During crossfade: bass swap (outgoing fades out, incoming fades in)
+        pf_s = min(int(pre_fade_ms * sr / 1000), total_samples) if pre_fade_ms > 0 else 0
+        cf_len = total_samples - pf_s
+
+        # Outgoing bass: full during pre-fade, then swap curve during crossfade
+        m_bass_curve = np.ones(total_samples)
+        if cf_len > 0:
+            cf_x = np.linspace(0, 1, cf_len)
+            # Bass stays full for first 40% of crossfade, then fades out
+            m_cf_curve = np.ones(cf_len)
+            mask = cf_x > 0.4
+            m_cf_curve[mask] = 0.5 * (1 + np.cos(np.pi * (cf_x[mask] - 0.4) / 0.4))
+            m_cf_curve[cf_x > 0.8] = 0.02
+            m_bass_curve[pf_s:] = m_cf_curve
+
+        # Incoming bass: silent during pre-fade, then swap curve during crossfade
+        n_bass_curve = np.zeros(total_samples)
+        if cf_len > 0:
+            # Bass silent for first 30% of crossfade, then fades in
+            n_cf_curve = np.zeros(cf_len)
+            mask = cf_x > 0.3
+            n_cf_curve[mask] = 0.5 * (1 - np.cos(np.pi * (cf_x[mask] - 0.3) / 0.4))
+            n_cf_curve[cf_x > 0.7] = 1.0
+            n_bass_curve[pf_s:] = n_cf_curve
+
+        # Recombine: mid/high + bass * gain_curve
+        if m_overlap.ndim == 2:
+            m_proc = m_rest + m_bass * m_bass_curve[np.newaxis, :]
+            n_proc = n_rest + n_bass * n_bass_curve[np.newaxis, :]
         else:
-            # No pre-fade: process entire overlap
-            arch_plugin = ArchetypeRegistry.get(mode)
-            if arch_plugin:
-                m_proc, n_proc = arch_plugin.apply(m_overlap, n_intro_full, sr, **dsp_kwargs)
-            else:
-                from .dsp import _apply_bass_swap_transition
-                m_proc, n_proc = _apply_bass_swap_transition(m_overlap, n_intro_full, sr)
-            # Safeguard: ensure processed arrays match total_samples
-            proc_len = m_proc.shape[1] if m_proc.ndim == 2 else len(m_proc)
+            m_proc = m_rest + m_bass * m_bass_curve
+            n_proc = n_rest + n_bass * n_bass_curve
+
+        # Safeguard: ensure arrays match total_samples
+        for _n in range(2):
+            arr = m_proc if _n == 0 else n_proc
+            proc_len = arr.shape[1] if arr.ndim == 2 else len(arr)
             if proc_len != total_samples:
                 if proc_len < total_samples:
                     pad = total_samples - proc_len
-                    if m_proc.ndim == 2:
-                        m_proc = np.pad(m_proc, ((0,0),(0,pad)))
-                        n_proc = np.pad(n_proc, ((0,0),(0,pad)))
+                    if arr.ndim == 2:
+                        arr = np.pad(arr, ((0,0),(0,pad)))
                     else:
-                        m_proc = np.pad(m_proc, (0,pad))
-                        n_proc = np.pad(n_proc, (0,pad))
+                        arr = np.pad(arr, (0,pad))
                 else:
-                    if m_proc.ndim == 2:
-                        m_proc = m_proc[:, :total_samples]
-                        n_proc = n_proc[:, :total_samples]
+                    if arr.ndim == 2:
+                        arr = arr[:, :total_samples]
                     else:
-                        m_proc = m_proc[:total_samples]
-                        n_proc = n_proc[:total_samples]
+                        arr = arr[:total_samples]
+            if _n == 0:
+                m_proc = arr
+            else:
+                n_proc = arr
+
 
         # Apply volume curves and sum into single continuous mix
         if m_proc.ndim == 2:
