@@ -472,13 +472,30 @@ def compile_master_set(args, status_obj=None):
             mix_bus_raw, _ = transition_render_worker(render_args)
 
         if mix_bus_raw is not None:
+            # Ensure mix_bus has exactly ms_trans duration (pad/trim)
+            expected_samples = int(ms_trans * sr / 1000)
+            if mix_bus_raw.ndim == 2:
+                actual_samples = mix_bus_raw.shape[1]
+            else:
+                actual_samples = len(mix_bus_raw)
+            if actual_samples < expected_samples:
+                pad_len = expected_samples - actual_samples
+                if mix_bus_raw.ndim == 2:
+                    mix_bus_raw = np.pad(mix_bus_raw, ((0,0),(0,pad_len)), mode="constant")
+                else:
+                    mix_bus_raw = np.pad(mix_bus_raw, (0,pad_len), mode="constant")
+            elif actual_samples > expected_samples:
+                if mix_bus_raw.ndim == 2:
+                    mix_bus_raw = mix_bus_raw[:, :expected_samples]
+                else:
+                    mix_bus_raw = mix_bus_raw[:expected_samples]
             mix_bus = ndarray_to_pydub(mix_bus_raw, sr)
             monitor.record_success()
         else:
             monitor.record_failure()
             # Classic Fallback
-            f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, 'lowpass', args.lowpass), sr)
-            f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, 'highpass', args.highpass), sr)
+            f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, "lowpass", args.lowpass), sr)
+            f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, "highpass", args.highpass), sr)
             mix_bus = f_m.fade_out(ms_trans).overlay(f_n.fade_in(ms_trans))
 
         master = m_body + mix_bus + n_body
