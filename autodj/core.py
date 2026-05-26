@@ -404,23 +404,14 @@ def compile_master_set(args, status_obj=None):
             if abs(cl - fixed_p) < config.PHRASE_ANCHOR_TOLERANCE_MS:
                 ideal_p = cl
 
-        # Initial overlap
-        ms_trans = max(ideal_p, first_beat_ms + int(ms_per_bar * 4))
+        # Separate crossfade duration from total overlap
+        # crossfade_ms: the actual DJ transition window (EQ swap + volume fade)
+        # overlap_ms: total time both tracks play simultaneously
+        crossfade_ms = ideal_p
+        overlap_ms = max(ideal_p, first_beat_ms + int(ms_per_bar * 4))
+        ms_trans = overlap_ms  # used for slicing
 
-        # Intelligent Tail Extension
-        remaining_outro = len(master) - last_beat_ms
-        if ms_trans > remaining_outro and prev_y_w is not None:
-            try:
-                loop_bar = identify_loopable_phrase(prev_y_w, sr, t_s_bpm, args.beats_per_bar)
-                needed_ms = ms_trans - remaining_outro
-                loop_ms = loop_bar.shape[1] / sr * 1000 if loop_bar.ndim == 2 else len(loop_bar) / sr * 1000
-                num_loops = int(np.ceil(needed_ms / loop_ms)) + 1
-                ext_segment = np.tile(loop_bar, num_loops)
-                master += ndarray_to_pydub(ext_segment, sr)
-                current_time_ms = len(master)
-            except Exception as e:
-                print(f"  [WARN] Tail extension failed: {e}")
-
+        # (pre_fade_ms computed after beat alignment, below)
         # Beat-Aligned Phase Alignment
         # Instead of a theoretical grid, align the incoming track's first beat
         # to the nearest actual beat in the outgoing track.
@@ -489,17 +480,42 @@ def compile_master_set(args, status_obj=None):
             status_obj["tracklist"] = tracklist
             status_obj["progress"] = 75 + int((i / max(num_tracks-1, 1)) * 25)
 
-        # Gapless Slicing
-        m_body, m_outro = master[:-ms_trans], master[-ms_trans:]
-        n_intro, n_body = nxt[:ms_trans], nxt[ms_trans:]
+        # Two-Phase Overlap: Pre-fade + Crossfade
+        pre_fade_ms = max(0, ms_trans - crossfade_ms)
+        if pre_fade_ms > 0:
+            print(f" [PREFADE] {pre_fade_ms}ms ambient intro under outgoing track")
+        # Pre-fade: incoming track's ambient intro plays quietly under outgoing
+        # Crossfade: actual DJ transition (EQ swap + volume crossfade)
+        m_body = master[:-ms_trans]
+        m_overlap = master[-ms_trans:]
+        n_intro_full = nxt[:ms_trans]
+        n_body = nxt[ms_trans:]
+
+        if pre_fade_ms > 0 and ms_trans > crossfade_ms:
+            # Phase 1: Pre-fade (incoming at low volume under outgoing at full volume)
+            pf_samples = int(pre_fade_ms * sr / 1000)
+            m_pre = pydub_to_ndarray(m_overlap[:pf_samples] if pf_samples < len(m_overlap) else m_overlap)
+            n_pre = pydub_to_ndarray(n_intro_full[:pf_samples] if pf_samples < len(n_intro_full) else n_intro_full)
+            # Incoming at 25% volume for ambient intro, outgoing at 100%
+            pre_fade_mix = m_pre + n_pre * 0.25
+            pre_fade_mix = apply_limiter(pre_fade_mix)
+            pre_bus = ndarray_to_pydub(pre_fade_mix, sr)
+
+            # Phase 2: Crossfade (normal DJ transition on the remainder)
+            m_cf = m_overlap[pf_samples:]
+            n_cf = n_intro_full[pf_samples:]
+        else:
+            # No pre-fade needed: entire overlap is crossfade
+            pre_bus = None
+            m_cf = m_overlap
+            n_cf = n_intro_full
 
         # Archetype Selection -- 'auto' always uses bass-swap transition
         mode = getattr(args, 'archetype', 'auto')
         if mode == 'auto':
             mode = 'progressive'
-
         dsp_kwargs = {'lowpass': args.lowpass, 'highpass': args.highpass, 'ideal_p': ideal_p}
-        render_args = (pydub_to_ndarray(m_outro), pydub_to_ndarray(n_intro), sr, mode, ms_trans, ideal_p, dsp_kwargs)
+        render_args = (pydub_to_ndarray(m_cf), pydub_to_ndarray(n_cf), sr, mode, crossfade_ms, ideal_p, dsp_kwargs)
 
         # Parallel Transition Rendering
         if status_obj:
@@ -516,7 +532,7 @@ def compile_master_set(args, status_obj=None):
 
         if mix_bus_raw is not None:
             # Ensure mix_bus has exactly ms_trans duration (pad/trim)
-            expected_samples = int(ms_trans * sr / 1000)
+            expected_samples = int(crossfade_ms * sr / 1000)
             if mix_bus_raw.ndim == 2:
                 actual_samples = mix_bus_raw.shape[1]
             else:
@@ -537,11 +553,14 @@ def compile_master_set(args, status_obj=None):
         else:
             monitor.record_failure()
             # Classic Fallback
-            f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_outro), sr, "lowpass", args.lowpass), sr)
-            f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_intro), sr, "highpass", args.highpass), sr)
-            mix_bus = f_m.fade_out(ms_trans).overlay(f_n.fade_in(ms_trans))
+            f_m = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(m_cf), sr, "lowpass", args.lowpass), sr)
+            f_n = ndarray_to_pydub(apply_dsp_filter(pydub_to_ndarray(n_cf), sr, "highpass", args.highpass), sr)
+            mix_bus = f_m.fade_out(crossfade_ms).overlay(f_n.fade_in(crossfade_ms))
 
-        master = m_body + mix_bus + n_body
+        master = m_body
+        if pre_bus is not None:
+            master = master + pre_bus
+        master = master + mix_bus + n_body
         current_time_ms = len(master)
 
         # Memory management for continuous mode
