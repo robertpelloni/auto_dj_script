@@ -281,20 +281,10 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
             elif first_detected_ms > median_ibi_ms:
                 n_beats_before = int(first_detected_ms / median_ibi_ms)
                 first_beat_ms = first_detected_ms - int(n_beats_before * median_ibi_ms)
-                # Snap to nearest kick peak for sample accuracy
-                # Only accept peaks with >20% of the track's max kick energy
-                b_lp, a_lp = get_butter_coeffs(100.0, sr, btype='lowpass')
-                full_kick_env = np.abs(apply_iir_filter(y_mono, b_lp, a_lp))
-                max_kick = np.max(full_kick_env)
-                search_s = max(0, first_beat_ms - int(median_ibi_ms * 0.25))
-                search_e = min(len(y_mono), first_beat_ms + int(median_ibi_ms * 0.25))
-                if search_e > search_s:
-                    kick_env = full_kick_env[search_s:search_e]
-                    peak_offset = np.argmax(kick_env)
-                    # Only snap if the peak has significant energy
-                    if kick_env[peak_offset] > max_kick * 0.20:
-                        first_beat_ms = search_s + int(peak_offset * 1000 / sr)
-                    # else: keep the grid-calculated position
+                # Keep the grid-calculated position (onset-aligned)
+                # Do NOT snap to kick peak - librosa onsets are already onset-aligned
+                # and snapping would shift by ~20ms (attack->peak), creating
+                # an inconsistency with the beat array which uses onset positions.
             else:
                 first_beat_ms = first_detected_ms
 
@@ -310,17 +300,7 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
             elif remaining_ms > median_ibi_ms * 0.5:
                 n_beats_after = int(remaining_ms / median_ibi_ms)
                 last_beat_ms = last_detected_ms + int(n_beats_after * median_ibi_ms)
-                # Snap to nearest kick peak (with energy threshold)
-                b_lp, a_lp = get_butter_coeffs(100.0, sr, btype='lowpass')
-                full_kick_env = np.abs(apply_iir_filter(y_mono, b_lp, a_lp))
-                max_kick = np.max(full_kick_env)
-                search_s = max(0, last_beat_ms - int(median_ibi_ms * 0.25))
-                search_e = min(len(y_mono), last_beat_ms + int(median_ibi_ms * 0.25))
-                if search_e > search_s:
-                    kick_env = full_kick_env[search_s:search_e]
-                    peak_offset = np.argmax(kick_env)
-                    if kick_env[peak_offset] > max_kick * 0.20:
-                        last_beat_ms = search_s + int(peak_offset * 1000 / sr)
+                # Keep grid position (onset-aligned, consistent with beat array)
             else:
                 last_beat_ms = last_detected_ms
 
