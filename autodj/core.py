@@ -361,12 +361,16 @@ def compile_master_set(args, status_obj=None):
         # In-Memory Conversion
         nxt = ndarray_to_pydub(y_w, sr)
         nxt = trim_silence(nxt)
-        processed_tracks.append((nxt, y_w, sr))
+        processed_tracks.append((nxt, y_w, sr, None))  # beats added after analyze_geometry
 
         if master is None:
             master = nxt
-            # Anchor the global grid
-            _, _, master_grid_offset, _ = analyze_geometry(nxt, sr, start_bpm, args.beats_per_bar, args.transition_bars)
+            # Anchor the global grid and store first track's beats
+            master_beats, _, master_grid_offset, _ = analyze_geometry(nxt, sr, start_bpm, args.beats_per_bar, args.transition_bars)
+            # Update first track's beats in processed_tracks
+            if len(processed_tracks) > 0:
+                pt = processed_tracks[0]
+                processed_tracks[0] = (pt[0], pt[1], pt[2], master_beats)
             track_meta = {'timestamp': "00:00:00", 'file': os.path.basename(all_files[i]),
                           'key': f"{meta_list[i]['key']} ({get_camelot_key(meta_list[i]['key'])})",
                           'genre': meta_list[i]['genre'], 'rationale': meta_list[i].get('rationale', ''),
@@ -375,7 +379,7 @@ def compile_master_set(args, status_obj=None):
             current_time_ms = len(master)
             continue
 
-        prev_nxt, prev_y_w, _ = processed_tracks[i-1]
+        prev_nxt, prev_y_w, _, _ = processed_tracks[i-1]
 
         # Poll live BPM
         current_target_bpm = status_obj.get("live_params", {}).get("target_bpm", start_bpm) if status_obj else start_bpm
@@ -383,6 +387,10 @@ def compile_master_set(args, status_obj=None):
 
         beats, theoretical_ms_trans, first_beat_ms, last_beat_ms = analyze_geometry(
             nxt, sr, t_s_bpm, args.beats_per_bar, args.transition_bars)
+        # Update processed_tracks with beats for this track
+        if i < len(processed_tracks):
+            pt = processed_tracks[i]
+            processed_tracks[i] = (pt[0], pt[1], pt[2], beats)
 
         ph = detect_phrases(y_w, sr)
         ms_per_beat = 60000.0 / t_s_bpm
@@ -413,12 +421,47 @@ def compile_master_set(args, status_obj=None):
             except Exception as e:
                 print(f"  [WARN] Tail extension failed: {e}")
 
-        # Precise Phase Alignment
+        # Beat-Aligned Phase Alignment
+        # Instead of a theoretical grid, align the incoming track's first beat
+        # to the nearest actual beat in the outgoing track.
         current_kick_pos = (current_time_ms - ms_trans + first_beat_ms)
-        relative_pos = current_kick_pos - master_grid_offset
-        phase_error = relative_pos % grid_size if grid_size > 0 else 0
-        if phase_error != 0:
-            ms_trans += int(phase_error)
+        
+        # Get outgoing track's beat positions for alignment
+        prev_beats = None
+        if i > 0 and i-1 < len(processed_tracks):
+            pt = processed_tracks[i-1]
+            if len(pt) > 3 and pt[3] is not None:
+                prev_beats = pt[3]
+        
+        if prev_beats is not None and len(prev_beats) > 0:
+            # Convert prev track beats to master stream positions
+            # The prev track starts at track_start_ms of the previous transition
+            # For the first transition (i=1), the prev track starts at 0
+            prev_track_start = 0
+            for tm in tracklist:
+                if os.path.basename(all_files[i-1]) in tm.get('file', ''):
+                    prev_track_start = tm.get('start_ms', 0)
+                    break
+            
+            # Outgoing track's beats in master time
+            master_beats = prev_beats + prev_track_start
+            
+            # Find the nearest beat to where the incoming first beat lands
+            if len(master_beats) > 0:
+                nearest_idx = np.argmin(np.abs(master_beats - current_kick_pos))
+                nearest_beat = int(master_beats[nearest_idx])
+                phase_error = nearest_beat - current_kick_pos
+                
+                # Only correct if within 1 bar (don't shift the transition massively)
+                max_correction = int(ms_per_bar)
+                if abs(phase_error) < max_correction:
+                    ms_trans -= phase_error
+        else:
+            # Fallback: theoretical grid alignment
+            relative_pos = current_kick_pos - master_grid_offset
+            phase_error = relative_pos % grid_size if grid_size > 0 else 0
+            if phase_error != 0:
+                ms_trans += int(phase_error)
 
         # Sample-Accurate Nudging
         if ms_trans > 0 and ms_trans < len(master):
