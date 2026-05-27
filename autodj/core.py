@@ -539,26 +539,29 @@ def compile_master_set(args, status_obj=None):
         # gain curves that respect the pre-fade/crossfade structure.
         from scipy.signal import butter, lfilter
 
-        # Design crossover filters (process full overlap for zero transients)
+        # Phase-coherent bass management using subtraction
+        # Instead of splitting into LP+HP bands (which introduces phase shift
+        # and causes audible discontinuities at overlap boundaries), we extract
+        # the bass via lowpass and SUBTRACT it from the original:
+        #   output = (audio - bass) + bass * gain = audio - bass * (1 - gain)
+        # When gain = 1.0: output = audio (exact, no artifacts)
+        # When gain = 0.0: output = audio - bass (highpass effect)
+        # This eliminates ALL phase/timbre issues at boundaries.
         b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype='low')
-        b_hi, a_hi = butter(2, 150.0 / (0.5 * sr), btype='high')
 
-        # Split both tracks into bass and mid/high
-        def _split_bass(audio):
+        # Extract bass component from each track
+        def _get_bass(audio):
             n = audio.shape[1] if audio.ndim == 2 else len(audio)
             if audio.ndim == 2:
                 bass = np.zeros_like(audio)
-                rest = np.zeros_like(audio)
                 for ch in range(audio.shape[0]):
                     bass[ch] = lfilter(b_lo, a_lo, audio[ch])[:n]
-                    rest[ch] = lfilter(b_hi, a_hi, audio[ch])[:n]
             else:
                 bass = lfilter(b_lo, a_lo, audio)[:n]
-                rest = lfilter(b_hi, a_hi, audio)[:n]
-            return bass, rest
+            return bass
 
-        m_bass, m_rest = _split_bass(m_overlap)
-        n_bass, n_rest = _split_bass(n_intro_full)
+        m_bass = _get_bass(m_overlap)
+        n_bass = _get_bass(n_intro_full)
 
         # Build bass gain curves aligned with the crossfade region
         # During pre-fade: outgoing bass at 100%, incoming bass at 0%
@@ -587,13 +590,14 @@ def compile_master_set(args, status_obj=None):
             n_cf_curve[cf_x > 0.7] = 1.0
             n_bass_curve[pf_s:] = n_cf_curve
 
-        # Recombine: mid/high + bass * gain_curve
+        # Recombine using subtraction: audio - bass * (1 - gain)
+        # This is sample-accurate when gain = 1.0 (no phase artifacts)
         if m_overlap.ndim == 2:
-            m_proc = m_rest + m_bass * m_bass_curve[np.newaxis, :]
-            n_proc = n_rest + n_bass * n_bass_curve[np.newaxis, :]
+            m_proc = m_overlap - m_bass * (1 - m_bass_curve[np.newaxis, :])
+            n_proc = n_intro_full - n_bass * (1 - n_bass_curve[np.newaxis, :])
         else:
-            m_proc = m_rest + m_bass * m_bass_curve
-            n_proc = n_rest + n_bass * n_bass_curve
+            m_proc = m_overlap - m_bass * (1 - m_bass_curve)
+            n_proc = n_intro_full - n_bass * (1 - n_bass_curve)
 
         # Safeguard: ensure arrays match total_samples
         for _n in range(2):
