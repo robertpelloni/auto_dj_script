@@ -185,7 +185,7 @@ def get_native_bpm(y, sr):
                 elif 1.6 < ratio < 2.4:
                     bpm = acf_bpm
         else:
-            bpm = tempo
+            pass  # keep bpm from precise_ibi
 
         # Final sanity: clamp to reasonable range
         if bpm < 80:

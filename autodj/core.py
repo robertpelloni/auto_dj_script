@@ -590,6 +590,61 @@ def compile_master_set(args, status_obj=None):
             n_cf_curve[cf_x > 0.7] = 1.0
             n_bass_curve[pf_s:] = n_cf_curve
 
+        # Beat-synced bass ducking to eliminate galloping/flamming
+        # When both tracks' kicks are audible, duck one track's bass
+        # when the other track's kick hits. This creates a "sidechain"
+        # effect that prevents the two kicks from flamming.
+        duck_ms = 25       # duck duration (ms) - just the kick attack
+        duck_depth = 0.6   # how much to reduce the other track's bass
+
+        # Get beat positions within the overlap for both tracks
+        # Incoming track beats (already in ms from track start)
+        n_beats_in_overlap = beats[beats < ms_trans] if len(beats) > 0 else np.array([])
+        # Outgoing track beats: need to find which fall in the overlap
+        if prev_beats is not None and len(prev_beats) > 0:
+            # The outgoing track's duration in ms
+            pt = processed_tracks[i-1] if i-1 < len(processed_tracks) else None
+            if pt and pt[1] is not None:
+                prev_dur_ms = int(pt[1].shape[-1] / sr * 1000) if pt[1].ndim > 0 else 0
+            else:
+                prev_dur_ms = ms_trans  # fallback
+            overlap_start_in_prev = max(0, prev_dur_ms - ms_trans)
+            m_beats_in_overlap = prev_beats[prev_beats >= overlap_start_in_prev] - overlap_start_in_prev
+        else:
+            m_beats_in_overlap = np.array([])
+
+        # Generate duck windows for each beat
+        # At each outgoing beat, duck the incoming track's bass
+        # At each incoming beat, duck the outgoing track's bass
+        def _make_duck_curve(beat_positions_ms, total_samples, sr, duck_ms, depth):
+            """Create a gain curve with dips at each beat position."""
+            curve = np.ones(total_samples)
+            duck_samples = int(duck_ms * sr / 1000)
+            for bt_ms in beat_positions_ms:
+                center = int(bt_ms * sr / 1000)
+                # Raised cosine dip centered on the beat
+                start = max(0, center - duck_samples // 2)
+                end = min(total_samples, center + duck_samples // 2)
+                if end > start:
+                    t = np.linspace(0, 1, end - start)
+                    dip = 1.0 - depth * 0.5 * (1 - np.cos(2 * np.pi * t))
+                    curve[start:end] = np.minimum(curve[start:end], dip)
+            return curve
+
+        # Create duck curves for each track
+        m_duck = _make_duck_curve(n_beats_in_overlap, total_samples, sr, duck_ms, duck_depth)
+        n_duck = _make_duck_curve(m_beats_in_overlap, total_samples, sr, duck_ms, duck_depth)
+
+        # Only apply ducking in the crossfade region (not pre-fade)
+        if pf_s > 0:
+            m_duck[:pf_s] = 1.0  # no ducking during pre-fade
+            n_duck[:pf_s] = 1.0  # no ducking during pre-fade
+
+        # Scale ducking by how much the OTHER track's bass is present
+        # When outgoing bass is high, duck the incoming more (and vice versa)
+        m_bass_curve *= n_duck   # outgoing bass is ducked when incoming kick hits
+        n_bass_curve *= m_duck   # incoming bass is ducked when outgoing kick hits
+
         # Recombine using subtraction: audio - bass * (1 - gain)
         # This is sample-accurate when gain = 1.0 (no phase artifacts)
         if m_overlap.ndim == 2:
