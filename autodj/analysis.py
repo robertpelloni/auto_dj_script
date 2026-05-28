@@ -265,6 +265,33 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
         beat_times_s = librosa.frames_to_time(beat_frames, sr=sr, hop_length=hop)
         beat_times_ms = (beat_times_s * 1000).astype(int)
 
+        # Snap each beat to the nearest kick drum PEAK (not onset).
+        # This ensures that beat alignment between tracks aligns the
+        # perceptual "beat" (the kick peak) rather than the onset,
+        # eliminating galloping caused by different onset-to-peak delays.
+        try:
+            from scipy.signal import butter as _butter, lfilter as _lfilter, find_peaks as _fp
+            _b, _a = _butter(2, 80.0 / (0.5 * sr), btype='low')
+            _kick_env = np.abs(_lfilter(_b, _a, y_mono))
+            _kick_env = _kick_env / (np.max(_kick_env) + 1e-10)
+            _min_dist = int(0.6 * 60 / target_bpm * sr)
+            _kick_peaks, _ = _fp(_kick_env, height=0.2, distance=_min_dist)
+            _kick_peak_ms = (_kick_peaks * 1000.0 / sr).astype(int)
+            
+            if len(_kick_peak_ms) > 10:
+                _snapped = []
+                _max_snap = 30  # max snap distance in ms
+                for bt in beat_times_ms:
+                    _dists = np.abs(_kick_peak_ms - bt)
+                    _nearest_idx = np.argmin(_dists)
+                    if _dists[_nearest_idx] <= _max_snap:
+                        _snapped.append(int(_kick_peak_ms[_nearest_idx]))
+                    else:
+                        _snapped.append(bt)  # keep original if no nearby peak
+                beat_times_ms = np.array(_snapped)
+        except Exception:
+            pass  # if peak detection fails, keep onset-based positions
+
         if len(beat_times_ms) >= 5:
             # Measure the actual beat interval from tracked beats
             ibis_ms = np.diff(beat_times_ms)
@@ -359,40 +386,116 @@ def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
 
 
 def find_sync_offset(outro_y, intro_y, sr, bpm):
-    """Finds sample-accurate sync offset using cross-correlation on kick envelopes."""
+    """Finds sample-accurate sync offset by aligning kick drum peaks.
+    
+    Instead of cross-correlating envelopes (which aligns overall musical
+    patterns), this detects individual kick drum peaks and finds the
+    offset that best aligns them. This ensures the loudest part of each
+    kick lands at the same time, eliminating galloping/flamming.
+    
+    Method:
+    1. Lowpass at 60Hz to isolate just the kick drum body
+    2. Detect peaks in both tracks' kick envelopes
+    3. Try different offsets and count how many peaks align within 10ms
+    4. Return the offset with the most aligned peaks
+    """
+    from scipy.signal import butter, lfilter, find_peaks as sp_find_peaks
+    
     o_m = np.mean(outro_y, axis=0) if outro_y.ndim == 2 else outro_y
     i_m = np.mean(intro_y, axis=0) if intro_y.ndim == 2 else intro_y
 
-    b, a = get_butter_coeffs(150.0, sr, btype='lowpass')
-    o_kick = np.abs(apply_iir_filter(o_m, b, a))
-    i_kick = np.abs(apply_iir_filter(i_m, b, a))
+    # Use a very low cutoff (60Hz) to isolate just the kick drum
+    # This avoids confusion from basslines and mid-range content
+    try:
+        b, a = butter(2, 60.0 / (0.5 * sr), btype='low')
+    except Exception:
+        b, a = get_butter_coeffs(80.0, sr, btype='lowpass')
+    o_kick = np.abs(lfilter(b, a, o_m))
+    i_kick = np.abs(lfilter(b, a, i_m))
 
-    if np.max(i_kick) < 0.05:
+    # Normalize
+    o_max = np.max(o_kick)
+    i_max = np.max(i_kick)
+    if o_max < 1e-6 or i_max < 1e-6:
+        return 0
+    o_kick = o_kick / o_max
+    i_kick = i_kick / i_max
+
+    # Find kick peaks in both tracks
+    min_dist = int(0.7 * 60 / bpm * sr)  # 70% of a beat period
+    o_peaks, _ = sp_find_peaks(o_kick, height=0.15, distance=min_dist)
+    i_peaks, _ = sp_find_peaks(i_kick, height=0.15, distance=min_dist)
+
+    if len(o_peaks) < 4 or len(i_peaks) < 4:
+        # Fallback: use cross-correlation if not enough peaks
+        win = min(len(o_kick), len(i_kick), int(sr * (60 / bpm) * 8))
+        if win < 100:
+            return 0
+        corr = fast_correlate(o_kick[:win], i_kick[:win])
+        center = win - 1
+        search = int(sr * (60 / bpm) * 1.0)
+        start = max(0, center - search)
+        end = min(len(corr), center + search)
+        slice_c = corr[start:end]
+        if len(slice_c) == 0:
+            return 0
+        lag = np.argmax(slice_c) - (len(slice_c) // 2)
+        peak_val = np.max(slice_c)
+        avg_val = np.mean(np.abs(slice_c))
+        if peak_val < avg_val * 1.5:
+            return 0
+        if abs(lag) > search * 0.9:
+            return 0
+        return int(lag * 1000 / sr)
+
+    # Use only the middle portion of peaks (most reliable)
+    # Skip first/last 10% (filter settling, breakdowns)
+    n_skip_o = max(2, len(o_peaks) // 10)
+    n_skip_i = max(2, len(i_peaks) // 10)
+    o_peaks = o_peaks[n_skip_o:max(n_skip_o+1, len(o_peaks)-n_skip_o)]
+    i_peaks = i_peaks[n_skip_i:max(n_skip_i+1, len(i_peaks)-n_skip_i)]
+
+    if len(o_peaks) < 3 or len(i_peaks) < 3:
         return 0
 
-    win = int(sr * (60 / bpm) * 8)
-    win = min(win, len(o_kick), len(i_kick))
-    if win < 100:
+    # Search for the offset that aligns the most peaks
+    ms_per_beat = 60.0 / bpm * 1000
+    max_offset_ms = ms_per_beat  # search +/-1 beat
+    tolerance = int(0.010 * sr)  # 10ms tolerance for "aligned"
+    
+    best_offset = 0
+    best_count = 0
+    
+    # Coarse search: 5ms steps
+    for offset_ms in np.arange(-max_offset_ms, max_offset_ms, 5.0):
+        offset_samples = int(offset_ms * sr / 1000)
+        shifted = i_peaks + offset_samples
+        count = 0
+        for sp in shifted:
+            if np.any(np.abs(o_peaks - sp) <= tolerance):
+                count += 1
+        if count > best_count:
+            best_count = count
+            best_offset = offset_ms
+
+    # Fine search: 1ms steps around the best
+    for offset_ms in np.arange(best_offset - 10, best_offset + 10, 1.0):
+        offset_samples = int(offset_ms * sr / 1000)
+        shifted = i_peaks + offset_samples
+        count = 0
+        for sp in shifted:
+            if np.any(np.abs(o_peaks - sp) <= tolerance):
+                count += 1
+        if count > best_count:
+            best_count = count
+            best_offset = offset_ms
+
+    # Only apply if enough peaks align (at least 30% of incoming peaks)
+    min_aligned = max(3, len(i_peaks) * 0.3)
+    if best_count < min_aligned:
         return 0
 
-    corr = fast_correlate(o_kick[:win], i_kick[:win])
-    center = win - 1
-    ms_per_beat = 60000.0 / bpm
-    search = int(sr * (60 / bpm) * 1.0)
-    start = max(0, center - search)
-    end = min(len(corr), center + search)
-    slice_c = corr[start:end]
-    if len(slice_c) == 0:
-        return 0
-    lag = np.argmax(slice_c) - (len(slice_c) // 2)
-
-    peak_val = np.max(slice_c)
-    avg_val = np.mean(np.abs(slice_c))
-    if peak_val < avg_val * 1.5:
-        return 0
-    if abs(lag) > search * 0.9:
-        return 0
-    return int(lag * 1000 / sr)
+    return int(best_offset)
 
 
 def get_genre_archetype(y, sr, bpm=None):

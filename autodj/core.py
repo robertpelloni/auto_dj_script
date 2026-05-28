@@ -454,15 +454,66 @@ def compile_master_set(args, status_obj=None):
             if phase_error != 0:
                 ms_trans += int(phase_error)
 
-        # Sample-Accurate Nudging
+        # Sample-Accurate Kick-Peak Nudging
+        # Instead of cross-correlating envelopes (which aligns overall musical
+        # patterns and misses the kick peak offset), directly measure the offset
+        # between kick drum peaks from both tracks and correct it.
         if ms_trans > 0 and ms_trans < len(master):
             m_slice = pydub_to_ndarray(master[-ms_trans:])
             n_slice = pydub_to_ndarray(nxt[:ms_trans])
-            sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
+            
+            # Try kick-peak-based sync first
+            sync_nudge = 0
+            try:
+                from scipy.signal import butter as _sb, lfilter as _slf, find_peaks as _sfp
+                _sb_b, _sb_a = _sb(2, 80.0 / (0.5 * sr), btype='low')
+                _min_dist = int(0.6 * 60 / t_s_bpm * sr)
+                
+                # Detect peaks in outgoing
+                _m_mono = np.mean(m_slice, axis=0) if m_slice.ndim == 2 else m_slice
+                _m_kick = np.abs(_slf(_sb_b, _sb_a, _m_mono))
+                _m_max = np.max(_m_kick)
+                if _m_max > 1e-6:
+                    _m_kick_n = _m_kick / _m_max
+                    _m_peaks, _ = _sfp(_m_kick_n, height=0.15, distance=_min_dist)
+                else:
+                    _m_peaks = np.array([])
+                
+                # Detect peaks in incoming
+                _n_mono = np.mean(n_slice, axis=0) if n_slice.ndim == 2 else n_slice
+                _n_kick = np.abs(_slf(_sb_b, _sb_a, _n_mono))
+                _n_max = np.max(_n_kick)
+                if _n_max > 1e-6:
+                    _n_kick_n = _n_kick / _n_max
+                    _n_peaks, _ = _sfp(_n_kick_n, height=0.15, distance=_min_dist)
+                else:
+                    _n_peaks = np.array([])
+                
+                if len(_m_peaks) >= 3 and len(_n_peaks) >= 3:
+                    # Measure the offset between the two sets of peaks
+                    _offsets = []
+                    _max_dist = int(0.45 * 60 / t_s_bpm * sr)  # max half-beat
+                    for _np in _n_peaks[:30]:
+                        _dists = np.abs(_m_peaks - _np)
+                        _nearest_idx = np.argmin(_dists)
+                        if _dists[_nearest_idx] < _max_dist:
+                            _offsets.append(int(_m_peaks[_nearest_idx]) - int(_np))
+                    
+                    if len(_offsets) >= 3:
+                        sync_nudge = int(np.median(_offsets) * 1000 / sr)
+                        print(f" [KICK-SYNC] peaks: out={len(_m_peaks)} in={len(_n_peaks)} offsets={len(_offsets)} nudge={sync_nudge}ms")
+                
+                if sync_nudge == 0:
+                    # Fallback: cross-correlation based sync
+                    sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
+            except Exception as _sync_err:
+                sync_nudge = find_sync_offset(m_slice, n_slice, sr, t_s_bpm)
+            
             max_nudge = int(ms_per_beat * 2.0)
             sync_nudge = max(-max_nudge, min(max_nudge, sync_nudge))
             ms_trans -= sync_nudge
-            print(f"  [SYNC] Nudge: {sync_nudge}ms")
+            print(f" [SYNC] Nudge: {sync_nudge}ms")
+
 
         ms_trans = min(ms_trans, len(master))
         track_start_ms = len(master) - ms_trans
