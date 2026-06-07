@@ -269,13 +269,11 @@ def find_optimal_order(files, status_obj=None):
     return [x["path"] for x in best_o], best_o
 
 
-
 def ms_to_timestamp(ms):
     s = int((ms / 1000) % 60)
     m = int((ms / (1000 * 60)) % 60)
     h = int((ms / (1000 * 60 * 60)) % 24)
     return f"{h:02d}:{m:02d}:{s:02d}"
-
 
     @PluginRegistry.register_tool
     class SmartReplenishTool(ToolPlugin):
@@ -283,9 +281,7 @@ def ms_to_timestamp(ms):
 
         name = "smart_replenish"
         display_name = "Smart Replenish"
-        description = (
-            "Automatically adds new tracks to the queue based on harmonic compatibility."
-        )
+        description = "Automatically adds new tracks to the queue based on harmonic compatibility."
 
         def on_track_start(self, track_meta, status_obj=None, **kwargs):
             if not status_obj or not status_obj.get("live_params", {}).get(
@@ -311,7 +307,10 @@ def ms_to_timestamp(ms):
                     return
                 target = random.choice(candidates)
                 status_obj["playlist"].append(os.path.basename(target))
-                print(f"[*] Smart Replenish: Added {os.path.basename(target)} to queue.")
+                print(
+                    f"[*] Smart Replenish: Added {os.path.basename(target)} to queue."
+                )
+
 
 def compile_master_set(args, status_obj=None):
     """The High-Performance Mixing Pipeline (8.11.0)."""
@@ -718,27 +717,34 @@ def compile_master_set(args, status_obj=None):
         # Process the ENTIRE overlap through crossover filters (avoids
         # lfilter startup transients at segment boundaries), then use
         # gain curves that respect the pre-fade/crossfade structure.
-        from scipy.signal import butter, lfilter
+        from scipy.signal import butter, filtfilt
 
-        # Phase-coherent bass management using subtraction
-        # Instead of splitting into LP+HP bands (which introduces phase shift
-        # and causes audible discontinuities at overlap boundaries), we extract
-        # the bass via lowpass and SUBTRACT it from the original:
-        #   output = (audio - bass) + bass * gain = audio - bass * (1 - gain)
+        # Phase-coherent bass management using zero-phase subtraction.
+        # We extract bass via zero-phase lowpass (filtfilt) and subtract
+        # it from the original:
+        #   output = audio - bass * (1 - gain)
         # When gain = 1.0: output = audio (exact, no artifacts)
         # When gain = 0.0: output = audio - bass (highpass effect)
-        # This eliminates ALL phase/timbre issues at boundaries.
+        #
+        # CRITICAL: filtfilt (zero-phase) replaces lfilter because:
+        #   - lfilter introduces ~1.7ms group delay, misaligning the
+        #     subtracted bass with the original. This creates a +2.1dB
+        #     BOOST around 150-200Hz (constructive interference from phase
+        #     shift) which sounds like "crosstalk ducking" during bass swap.
+        #   - filtfilt has zero group delay, so subtraction is perfectly
+        #     aligned: (1 - |H_LP|*alpha) is always a proper gain reduction
+        #     at bass frequencies, with no frequency-dependent bumps.
+        #
         b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype="low")
 
-        # Extract bass component from each track
+        # Extract bass component using zero-phase filtering
         def _get_bass(audio):
-            n = audio.shape[1] if audio.ndim == 2 else len(audio)
             if audio.ndim == 2:
                 bass = np.zeros_like(audio)
                 for ch in range(audio.shape[0]):
-                    bass[ch] = lfilter(b_lo, a_lo, audio[ch])[:n]
+                    bass[ch] = filtfilt(b_lo, a_lo, audio[ch])
             else:
-                bass = lfilter(b_lo, a_lo, audio)[:n]
+                bass = filtfilt(b_lo, a_lo, audio)
             return bass
 
         m_bass = _get_bass(m_overlap)
@@ -854,7 +860,6 @@ def compile_master_set(args, status_obj=None):
             if i - 3 < len(processed_tracks):
                 processed_tracks[i - 3] = None
         if i == num_tracks - 1:
-
             # Final mix normalization: ensure uniform loudness across the entire mix
             if master:
                 print("[MASTERING] Normalizing final mix to target LUFS...")
@@ -913,7 +918,9 @@ def compile_master_set(args, status_obj=None):
                             status_obj["progress"] = 100
                         tl_path = os.path.splitext(args.output)[0] + "_tracklist.txt"
                         with open(tl_path, "w") as f:
-                            f.write(f"Auto DJ v{__version__} Master Tracklist\n{'=' * 40}\n")
+                            f.write(
+                                f"Auto DJ v{__version__} Master Tracklist\n{'=' * 40}\n"
+                            )
                             for item in tracklist:
                                 f.write(
                                     f"[{item['timestamp']}] {item['file']} ({item['key']}) [{item['genre']}]\n"
@@ -922,7 +929,6 @@ def compile_master_set(args, status_obj=None):
                         print(f"[ERROR] Direct export failed: {e}")
                         if status_obj:
                             status_obj["status"] = f"Error: Export failed - {e}"
-
 
     def _dj_crossfade(audio_array, fade_type="in"):
         """Equal-power crossfade designed for DJ mixer style transitions.
@@ -957,14 +963,15 @@ def compile_master_set(args, status_obj=None):
             return audio_array * curve[np.newaxis, :]
         return audio_array * curve
 
-
     def transition_render_worker(args):
         """Parallel worker for rendering a single transition overlap."""
         outro_raw, intro_raw, sr, mode, ms_trans, ideal_p, dsp_kwargs = args
         try:
             arch_plugin = ArchetypeRegistry.get(mode)
             if arch_plugin:
-                f_m_raw, f_n_raw = arch_plugin.apply(outro_raw, intro_raw, sr, **dsp_kwargs)
+                f_m_raw, f_n_raw = arch_plugin.apply(
+                    outro_raw, intro_raw, sr, **dsp_kwargs
+                )
             else:
                 # Fallback: use the bass swap transition (same as progressive)
                 from .dsp import _apply_bass_swap_transition
@@ -994,5 +1001,3 @@ def compile_master_set(args, status_obj=None):
             print(f"[ERROR] transition_render_worker failed: {e}")
             traceback.print_exc()
             return None, str(e)
-
-

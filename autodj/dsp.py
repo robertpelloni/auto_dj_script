@@ -1,4 +1,4 @@
-""" Digital Signal Processing (DSP) Module | Auto DJ Script (v9.3.0 - Clean Transitions).
+"""Digital Signal Processing (DSP) Module | Auto DJ Script (v9.3.0 - Clean Transitions).
 ==============================================================
 Professional DJ-style transitions that sound like a real DJ mixer.
 
@@ -15,6 +15,7 @@ from .np_signal import get_butter_coeffs, apply_iir_filter
 
 class TransitionArchetype:
     """Base class for all transition plugins."""
+
     name = "Base"
     display_name = "Base Archetype"
 
@@ -40,7 +41,7 @@ class ArchetypeRegistry:
         return cls._registry.get(name)
 
 
-def apply_dsp_filter(audio_array, sr, filter_type='highpass', cutoff=150.0):
+def apply_dsp_filter(audio_array, sr, filter_type="highpass", cutoff=150.0):
     b, a = get_butter_coeffs(cutoff, sr, btype=filter_type)
     return apply_iir_filter(audio_array, b, a)
 
@@ -52,7 +53,7 @@ def trim_silence(segment, silence_threshold=-65.0, chunk_size=10):
         return segment
 
     abs_samples = np.abs(samples)
-    threshold = (10 ** (silence_threshold / 20.0)) * (2 ** 15)
+    threshold = (10 ** (silence_threshold / 20.0)) * (2**15)
 
     active_indices = np.where(abs_samples > threshold)[0]
     if len(active_indices) == 0:
@@ -131,14 +132,30 @@ def _measure_loudness_chunked(audio, sr, chunk_seconds=120):
 
     # Convert to SOS format for numerical stability and state tracking
     # Simple 2nd-order filters -> single SOS section each
-    sos_shelf = np.array([[b_shelf[0], b_shelf[1] if len(b_shelf) > 1 else 0,
-                           b_shelf[2] if len(b_shelf) > 2 else 0,
-                           a_shelf[0], a_shelf[1] if len(a_shelf) > 1 else 0,
-                           a_shelf[2] if len(a_shelf) > 2 else 0]])
-    sos_hp = np.array([[b_hp[0], b_hp[1] if len(b_hp) > 1 else 0,
-                        b_hp[2] if len(b_hp) > 2 else 0,
-                        a_hp[0], a_hp[1] if len(a_hp) > 1 else 0,
-                        a_hp[2] if len(a_hp) > 2 else 0]])
+    sos_shelf = np.array(
+        [
+            [
+                b_shelf[0],
+                b_shelf[1] if len(b_shelf) > 1 else 0,
+                b_shelf[2] if len(b_shelf) > 2 else 0,
+                a_shelf[0],
+                a_shelf[1] if len(a_shelf) > 1 else 0,
+                a_shelf[2] if len(a_shelf) > 2 else 0,
+            ]
+        ]
+    )
+    sos_hp = np.array(
+        [
+            [
+                b_hp[0],
+                b_hp[1] if len(b_hp) > 1 else 0,
+                b_hp[2] if len(b_hp) > 2 else 0,
+                a_hp[0],
+                a_hp[1] if len(a_hp) > 1 else 0,
+                a_hp[2] if len(a_hp) > 2 else 0,
+            ]
+        ]
+    )
 
     chunk_size = int(chunk_seconds * sr)
     total_samples = len(audio)
@@ -159,7 +176,7 @@ def _measure_loudness_chunked(audio, sr, chunk_seconds=120):
         filtered, zi_hp = sosfilt(sos_hp, filtered, zi=zi_hp)
 
         # Accumulate weighted sum of squares
-        weighted_sum_sq += float(np.sum(filtered ** 2))
+        weighted_sum_sq += float(np.sum(filtered**2))
         total_weighted += end - start
 
     if total_weighted == 0 or weighted_sum_sq < 1e-20:
@@ -175,8 +192,12 @@ def apply_limiter(audio_array, threshold=0.99):
     if np.any(mask):
         out = np.where(
             abs_audio > threshold,
-            np.sign(audio_array) * (threshold + (1 - threshold) * np.tanh((abs_audio - threshold) / (1 - threshold))),
-            audio_array
+            np.sign(audio_array)
+            * (
+                threshold
+                + (1 - threshold) * np.tanh((abs_audio - threshold) / (1 - threshold))
+            ),
+            audio_array,
         )
         return out
     return audio_array
@@ -187,7 +208,7 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=No
 
 
 def calculate_spectral_clash(outro_array, intro_array, sr):
-    return {'low': 1.0, 'mid': 1.0, 'high': 1.0}
+    return {"low": 1.0, "mid": 1.0, "high": 1.0}
 
 
 def _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs):
@@ -222,37 +243,37 @@ def _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs):
     intro_bass_curve[mask] = 0.5 * (1 - np.cos(np.pi * (x_in[mask] - 0.3) / 0.4))
     intro_bass_curve[x_in > 0.7] = 1.0
 
-    # Apply bass management using crossover filters
+    # Apply bass management using zero-phase subtraction crossover.
+    # Uses filtfilt (zero-phase) instead of lfilter to avoid the +2.1dB
+    # boost around 150-200Hz caused by lfilter's group delay misaligning
+    # the subtracted bass with the original signal.
+    # Formula: output = audio - bass * (1 - curve)
+    # When curve=1.0: output = audio (no change, exact)
+    # When curve=0.0: output = audio - bass (highpass effect)
     try:
-        from scipy.signal import lfilter, butter
+        from scipy.signal import filtfilt, butter
 
-        # Design crossover filters (2nd-order for gentle slopes)
-        b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype='low')
-        b_hi, a_hi = butter(2, 150.0 / (0.5 * sr), btype='high')
+        b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype="low")
 
-        # Split and recombine each track
+        # Extract bass and subtract with gain curve
         f_m = np.zeros_like(outro_array)
         f_n = np.zeros_like(intro_array)
 
         if outro_array.ndim == 2:
             for ch in range(outro_array.shape[0]):
-                bass = lfilter(b_lo, a_lo, outro_array[ch])[:out_len]
-                rest = lfilter(b_hi, a_hi, outro_array[ch])[:out_len]
-                f_m[ch] = rest + bass * outro_bass_curve
+                bass = filtfilt(b_lo, a_lo, outro_array[ch])
+                f_m[ch] = outro_array[ch] - bass * (1 - outro_bass_curve)
         else:
-            bass = lfilter(b_lo, a_lo, outro_array)[:out_len]
-            rest = lfilter(b_hi, a_hi, outro_array)[:out_len]
-            f_m = rest + bass * outro_bass_curve
+            bass = filtfilt(b_lo, a_lo, outro_array)
+            f_m = outro_array - bass * (1 - outro_bass_curve)
 
         if intro_array.ndim == 2:
             for ch in range(intro_array.shape[0]):
-                bass = lfilter(b_lo, a_lo, intro_array[ch])[:in_len]
-                rest = lfilter(b_hi, a_hi, intro_array[ch])[:in_len]
-                f_n[ch] = rest + bass * intro_bass_curve
+                bass = filtfilt(b_lo, a_lo, intro_array[ch])
+                f_n[ch] = intro_array[ch] - bass * (1 - intro_bass_curve)
         else:
-            bass = lfilter(b_lo, a_lo, intro_array)[:in_len]
-            rest = lfilter(b_hi, a_hi, intro_array)[:in_len]
-            f_n = rest + bass * intro_bass_curve
+            bass = filtfilt(b_lo, a_lo, intro_array)
+            f_n = intro_array - bass * (1 - intro_bass_curve)
 
         return f_m, f_n
 
@@ -262,7 +283,9 @@ def _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs):
 
 
 def apply_bass_swap(outro, intro, sr, **kwargs):
-    return apply_dsp_filter(outro, sr, 'highpass', 150.0), apply_dsp_filter(intro, sr, 'lowpass', 150.0)
+    return apply_dsp_filter(outro, sr, "highpass", 150.0), apply_dsp_filter(
+        intro, sr, "lowpass", 150.0
+    )
 
 
 def apply_echo_out(outro, sr, **kwargs):
