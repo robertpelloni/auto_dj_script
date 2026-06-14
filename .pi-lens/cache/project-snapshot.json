@@ -1,0 +1,291 @@
+{
+  "version": 1,
+  "projectRoot": "C:/Users/hyper/workspace/auto_dj_script",
+  "generatedAt": "2026-06-06T23:41:24.599Z",
+  "seq": 30,
+  "files": {
+    "C:/Users/hyper/workspace/auto_dj_script/auto_dj.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/auto_dj.py",
+      "mtimeMs": 1779754456632.0269,
+      "size": 138,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/__init__.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/__init__.py",
+      "mtimeMs": 1779204152600.8296,
+      "size": 72,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/analysis.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/analysis.py",
+      "mtimeMs": 1779928417164.8047,
+      "size": 21699,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/cli.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/cli.py",
+      "mtimeMs": 1779731377806.4236,
+      "size": 3140,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/cluster.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/cluster.py",
+      "mtimeMs": 1779745953798.0193,
+      "size": 2265,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/core.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/core.py",
+      "mtimeMs": 1780618415936.1416,
+      "size": 42076,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/dsp.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/dsp.py",
+      "mtimeMs": 1779757396789.7483,
+      "size": 6545,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/gui.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/gui.py",
+      "mtimeMs": 1779745953799.5618,
+      "size": 12156,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/midi.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/midi.py",
+      "mtimeMs": 1779731377814.83,
+      "size": 4551,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/models.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/models.py",
+      "mtimeMs": 1779539101103.639,
+      "size": 3246,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/monitoring.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/monitoring.py",
+      "mtimeMs": 1779754456655.0312,
+      "size": 2938,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/np_signal.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/np_signal.py",
+      "mtimeMs": 1779754538048.2834,
+      "size": 3669,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/plugins.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/plugins.py",
+      "mtimeMs": 1780690447936.6516,
+      "size": 11453,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/scheduling.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/scheduling.py",
+      "mtimeMs": 1779731377819.9204,
+      "size": 4430,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/utils.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/utils.py",
+      "mtimeMs": 1779754456658.5918,
+      "size": 3649,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/version.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/autodj/version.py",
+      "mtimeMs": 1779754456661.6377,
+      "size": 777,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/config.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/config.py",
+      "mtimeMs": 1779539101124.253,
+      "size": 1071,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/convert_to_mp3.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/convert_to_mp3.py",
+      "mtimeMs": 1779539104170.6196,
+      "size": 573,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/plugins/__init__.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/plugins/__init__.py",
+      "mtimeMs": 1779539101148.3762,
+      "size": 0,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_analysis.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_analysis.py",
+      "mtimeMs": 1779539101163.1897,
+      "size": 1889,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_dsp.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_dsp.py",
+      "mtimeMs": 1779539101166.9275,
+      "size": 1085,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_integration.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_integration.py",
+      "mtimeMs": 1779539101169.985,
+      "size": 1973,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_midi_logic.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_midi_logic.py",
+      "mtimeMs": 1779731377853.0527,
+      "size": 1318,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_rekordbox_plugin.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_rekordbox_plugin.py",
+      "mtimeMs": 1779731377853.578,
+      "size": 1046,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_v6_4_features.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_v6_4_features.py",
+      "mtimeMs": 1779539101173.0293,
+      "size": 1139,
+      "imports": [],
+      "lastSeq": 0
+    },
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_v8_11.py": {
+      "path": "C:/Users/hyper/workspace/auto_dj_script/tests/test_v8_11.py",
+      "mtimeMs": 1779754456675.7441,
+      "size": 956,
+      "imports": [],
+      "lastSeq": 0
+    }
+  },
+  "symbols": {},
+  "reverseDeps": {
+    "C:/Users/hyper/workspace/auto_dj_script/auto_dj.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/__init__.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/analysis.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/cli.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/cluster.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/core.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/dsp.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/gui.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/midi.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/models.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/monitoring.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/np_signal.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/plugins.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/scheduling.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/utils.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/autodj/version.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/config.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/convert_to_mp3.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/plugins/__init__.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_analysis.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_dsp.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_integration.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_midi_logic.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_rekordbox_plugin.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_v6_4_features.py": [],
+    "C:/Users/hyper/workspace/auto_dj_script/tests/test_v8_11.py": []
+  },
+  "cachedExports": [],
+  "projectRulesScan": {
+    "rules": [],
+    "hasCustomRules": false
+  },
+  "startupScan": {
+    "cwd": "C:\\Users\\hyper\\workspace\\auto_dj_script",
+    "scanRoot": "C:\\Users\\hyper\\workspace\\auto_dj_script",
+    "projectRoot": "C:\\Users\\hyper\\workspace\\auto_dj_script",
+    "canWarmCaches": true,
+    "sourceFileCount": 26
+  },
+  "languageProfile": {
+    "present": {
+      "jsts": false,
+      "python": true,
+      "go": false,
+      "rust": false,
+      "cxx": false,
+      "cmake": false,
+      "fish": false,
+      "shell": false,
+      "json": false,
+      "markdown": false,
+      "css": false,
+      "yaml": true,
+      "sql": true,
+      "ruby": false,
+      "html": false,
+      "docker": false,
+      "php": false,
+      "powershell": false,
+      "prisma": false,
+      "csharp": false,
+      "fsharp": false,
+      "java": false,
+      "kotlin": false,
+      "swift": false,
+      "dart": false,
+      "lua": false,
+      "zig": false,
+      "haskell": false,
+      "elixir": false,
+      "gleam": false,
+      "ocaml": false,
+      "clojure": false,
+      "terraform": false,
+      "nix": false,
+      "toml": true
+    },
+    "configured": {
+      "python": true,
+      "yaml": true,
+      "sql": true,
+      "toml": true
+    },
+    "counts": {
+      "python": 26
+    },
+    "detectedKinds": [
+      "python",
+      "yaml",
+      "sql",
+      "toml"
+    ]
+  },
+  "conventions": {
+    "frameworks": [],
+    "testRunners": [],
+    "buildTools": [],
+    "agentDocs": []
+  }
+}

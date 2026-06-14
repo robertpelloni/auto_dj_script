@@ -1,0 +1,6 @@
+{
+  "signature": "autodj/core.py::📐 Cascade errors in 1 neighbor file(s) — fix before finishing turn:\n<diagnostics file=\"autodj/dsp.py\" reason=\"fallback\">\n  line 121, col 66 rule=cascade:reportCallIssue: No parameter named \"sr\"\n  line 131, col 27 rule=cascade:reportOperatorIssue: Operator \"**\" not supported for types \"Array | Any | tuple[Array | Any, Array | Any]\" and \"Literal[2\n  line 197, col 22 rule=cascade:reportGeneralTypeIssues: \"None\" is not iterable\n  line 197, col 9 rule=cascade:reportAssignmentType: Expression with type \"tuple[Any | Array | Unknown, Unknown | Array | Any, Unknown] | tuple[Any | Unk\n  line 196, col 22 rule=cascade:reportGeneralTypeIssues: \"None\" is not iterable\n  line 196, col 9 rule=cascade:reportAssignmentType: Expression with type \"tuple[Any | Array | Unknown, Unknown | Array | Any, Unknown] | tuple[Any | Unk\n</diagnostics>\n\n🧪 Likely tests for affected neighbors:\n  tests/test_dsp.py (pytest)\n\nℹ️ Advisory — no action required this turn:\nCode-quality warnings introduced/touched this turn: 1\n... (truncated)",
+  "sessionId": "lens-mq11aok7-790979d8",
+  "projectSeqStart": 24,
+  "projectSeqEnd": 25
+}
