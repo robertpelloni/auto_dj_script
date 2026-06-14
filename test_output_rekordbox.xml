@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="4">
+    <TRACK TrackID="1" Name="1200 Micrograms - 2017 - The World Of The Acid Dealer - 1 - The World Of The Acid Dealer.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="364" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\test_playlist\1200 Micrograms - 2017 - The World Of The Acid Dealer - 1 - The World Of The Acid Dealer.flac" AverageBpm="142.45894578444626" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="1200 Micrograms - 2006 - 1200 Micrograms Remixes - 5 - Greece (Save The Robot Mix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="441" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\test_playlist\1200 Micrograms - 2006 - 1200 Micrograms Remixes - 5 - Greece (Save The Robot Mix).flac" AverageBpm="144.8377216706434" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="330.391" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="1200 Micrograms - 2010 - Gramology - 6 - Let It Roll.flac" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="440" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\test_playlist\1200 Micrograms - 2010 - Gramology - 6 - Let It Roll.flac" AverageBpm="144.94097685946167" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="724.002" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="1200 Micrograms - 2007 - Magic Numbers - 3 - Let’s Get This Party Started.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="389" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\test_playlist\1200 Micrograms - 2007 - Magic Numbers - 3 - Let’s Get This Party Started.flac" AverageBpm="147.33959095496402" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1119.956" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="4">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
