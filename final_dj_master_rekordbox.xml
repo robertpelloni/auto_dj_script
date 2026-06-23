@@ -1,23 +1,31 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <DJ_PLAYLISTS Version="1.0.0">
   <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
-  <COLLECTION Entries="3">
-    <TRACK TrackID="1" Name="1200 Micrograms - 2013 - 1200 Mic’s - 4 - We Are Not Alone.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="389" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2013 - 1200 Mic’s - 4 - We Are Not Alone.flac" AverageBpm="143.34149367738272" Tonality="G Major (9B)">
+  <COLLECTION Entries="5">
+    <TRACK TrackID="1" Name="Mad Tribe - Meet the Ding-a-Lings.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="505" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Mad Tribe - Meet the Ding-a-Lings.flac" AverageBpm="149.11186583313295" Tonality="D# Major (5B)">
       <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
     </TRACK>
-    <TRACK TrackID="2" Name="Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="476" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac" AverageBpm="146.32939661749745" Tonality="G Major (9B)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="339.663" Num="0" />
+    <TRACK TrackID="2" Name="Space Tribe - 2020 - Travels Thru Time - 13 - Sex, Drugs and Rock'n Roll.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="444" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Space Tribe - 2020 - Travels Thru Time - 13 - Sex, Drugs and Rock'n Roll.flac" AverageBpm="144.69920095387243" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="451.68" Num="0" />
     </TRACK>
-    <TRACK TrackID="3" Name="ESP - Xtra Sensory.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="477" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\ESP - Xtra Sensory.flac" AverageBpm="146.16141732283464" Tonality="A# Minor (3A)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="783.563" Num="0" />
+    <TRACK TrackID="3" Name="1200 Micrograms - 2016 - Ritualism - 2 - We Want to Be Free.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="387" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2016 - Ritualism - 2 - We Want to Be Free.flac" AverageBpm="144.73077505851862" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="850.369" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="1200 Micrograms - 2003 - Heroes of the Imagination - 7 - DNA.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="484" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2003 - Heroes of the Imagination - 7 - DNA.flac" AverageBpm="148.80884966545858" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1211.948" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="Space Tribe - 2020 - Travels Thru Time - 14 - Psycho Logistics.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="438" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Space Tribe - 2020 - Travels Thru Time - 14 - Psycho Logistics.flac" AverageBpm="147.2174498514116" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1655.27" Num="0" />
     </TRACK>
   </COLLECTION>
   <PLAYLISTS>
     <NODE Name="ROOT" Type="0">
-      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="3">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="5">
         <TRACK Key="1" />
         <TRACK Key="2" />
         <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
       </NODE>
     </NODE>
   </PLAYLISTS>

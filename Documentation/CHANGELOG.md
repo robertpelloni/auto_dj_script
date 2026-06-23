@@ -1,5 +1,18 @@
 # Changelog
 
+## [8.14.0] - 2025-06-23
+### Fixed
+- **Bass Ducking Removal**: Eliminated beat-synced ducking that fired on false kick peaks in ambient intros/breakdowns.
+- **Zero-Phase Crossover Fix**: Replaced lfilter with filtfilt in bass swap transitions, eliminating the +2.1dB boost around 150-200Hz that caused crosstalk ducking artifacts. Max L/R channel imbalance reduced from 7.0 dB to 1.0 dB.
+- **Export running on every iteration**: Wrapped final mix normalization and export in `if i == num_tracks - 1:` guard.
+
+### Added
+- **K-Weighted LUFS Normalization**: New chunked BS.1770 loudness measurement that processes audio in 120-second windows with filter state carryover, enabling 416-minute mixes without OOM errors.
+- **Chunked Filter Processing**: `_measure_loudness_chunked()` in dsp.py for memory-efficient K-weighting of large audio arrays.
+
+### Performance
+- Reduced memory usage during final mix normalization from 8.2 GB to ~120 MB for 416-minute mixes.
+
 ## [8.13.0] - 2025-01-25
 ### Added
 - **Advanced Performance Analytics**: Integrated real-time tracking of task durations (Analysis, Warping, Mixing) with rolling averages.

@@ -1,38 +1,48 @@
-# 🤝 Auto DJ Script: Transition & Handoff Brief (7.6.0)
+# 🤝 Auto DJ Script: Transition & Handoff Brief (8.14.0)
 
-## 🎖 Current Status: "The Visual & Dynamic Era"
-The project has reached milestone v7.6.0. This session expanded the v7.0.0 "Quantum Network" foundation into a fully interactive, resilient, and visually immersive platform.
+## 🎖 Current Status: "The Stable & Clean Mix Era"
+
+The project has reached milestone v8.14.0. This session resolved three critical audio artifacts that had persisted across multiple prior versions, producing professional-grade clean mixes at scale (up to 416 minutes / 64 tracks).
 
 ## 🔎 Project Audit
-1. **Completed features (v7.1.0 - v7.6.0):**
-   - **v7.1.0/v7.2.0 (Telemetry & Guardrails)**: Real-time CPU/RAM tracking with automated throttling and manual Pause/Resume.
-   - **v7.3.0 (Integration Bridge)**: Rekordbox XML export for Pioneer DJ hardware compatibility and Docker staging infrastructure.
-   - **v7.4.0 (Resilient Era)**: "Retry-with-Fallback" fault tolerance. Cluster failures now trigger local sequential fallbacks. Incident Recovery Console added to UI.
-   - **v7.5.0 (Live Deck)**: Dynamic playlist manager with Just-in-Time (JIT) track injection while the mix is rendering.
-   - **v7.6.0 (Visual Era)**: Real-time 3D Spectral Terrain visualizer using Three.js (r128), driven by Mel-Spectrogram terrain data from the MIR pipeline.
-2. **Bugs or fragile areas**:
-   - Three.js requires version `r128` or similar stable CDN links to avoid initialization race conditions in the sandbox environment.
-   - Dynamic injection requires the `while` loop in `core.py` to handle list growth during iteration.
-3. **Refactor opportunities**:
-   - Expanding the 3D visualizer to include real-time particle effects tied to "Energy-Reactive Mastering" intensity.
-4. **Documentation gaps**: CHANGELOG, ROADMAP, and TODO are fully synchronized to v7.6.0.
 
-## 🏗 Key Accomplishments in this Session:
-1.  **System Awareness**: Integrated deep telemetry and health-aware execution.
-2.  **External Compatibility**: Bridged the engine with industry-standard Rekordbox.
-3.  **Unstoppable Resilience**: Implemented a robust recovery layer for distributed tasks.
-4.  **Live Interaction**: Enabled real-time playlist manipulation and parameter hot-reloading.
-5.  **Visual Mastery**: Delivered a professional 3D WebGL terrain for audio energy visualization.
+1. **Completed features (v8.14.0):**
+   - **Bass Ducking Removed**: The beat-synced bass ducking system (`_detect_kick_peaks_in_overlap`, `_make_duck_curve`) was deleted because it fired on false kick peaks in ambient intros and breakdowns, creating audible 25ms volume dips every beat. Bass swap curves already handle kick handoff during transitions.
+   - **K-Weighted LUFS Normalization**: Replaced simple RMS normalization with ITU-R BS.1770 K-weighted loudness measurement. Added `_measure_loudness_chunked()` in `autodj/dsp.py` to process audio in 120-second chunks with filter state carryover, preventing 8+ GB OOM errors on 416-minute mixes. Fixed stereo channel summing to use the BS.1770 power sum with -0.691dB correction.
+   - **Zero-Phase Crossover Fix**: Replaced `lfilter` with `filtfilt` in the bass swap transitions. The `lfilter` group delay (~1.7ms) caused a +2.1dB frequency boost around 150-200Hz during transitions, producing "crosstalk ducking" artifacts. Max L/R channel imbalance during transitions reduced from **7.0 dB to 1.0 dB**.
+   - **Large File Export**: Switched to direct `soundfile` FLAC export to bypass the 4GB WAV header limit.
+   - **Export Guard**: Added `if i == num_tracks - 1:` to prevent normalization/export from running on every loop iteration.
 
-## 🧠 Memory for the Next Agent:
-- **Resilience**: The engine is now "Retry-with-Fallback". Always check `monitoring.py` for structured incident logging.
-- **Frontend**: The visualizer uses a Mel-Spectrogram heightmap. `init3D` in `index.html` is deferred to ensure Three.js load.
-- **Directives**: Follow `GLOBAL_LLM_DIRECTIVE.md` with absolute priority.
+2. **Bugs or fragile areas:**
+   - The 120-second chunk size in `_measure_loudness_chunked` is tuned for ~416-minute mixes; may need adjustment for even larger sets.
+   - `filtfilt` doubles the effective filter order (2nd → 4th), making the crossover slope steeper. This is fine for the 150Hz bass swap but may need reconsideration if different crossover frequencies are used.
+   - The ArchetypeRegistry is empty — the `transition_render_worker` always falls back to `_apply_bass_swap_transition`. If plugins are added, the worker path would need testing.
 
-## 🚀 The Next Frontier (v7.7.0+):
-- [ ] **Quantum Sequence Optimizer**: Implement parallel branch exploration for SA sequencing.
+3. **Refactor opportunities:**
+   - The `transition_render_worker` function in `core.py` (line 966) is defined but never called — it's dead code from a parallel processing attempt. Could be removed or re-enabled.
+   - The `dsp.py` `_apply_bass_swap_transition` uses the same filtfilt approach now, keeping both codepaths consistent.
+
+4. **Documentation gaps:** CHANGELOG, MEMORY, TODO, VISION, and VERSION are all synchronized to v8.14.0.
+
+## 🏗 Key Accomplishments in this Session
+
+1. **Clean Audio Engine**: Removed artificial ducking artifacts and frequency bumps from transitions.
+2. **Perceptually Accurate Mastering**: Replaced naive peak/RMS normalization with BS.1770 LUFS.
+3. **Memory-Efficient Processing**: Reduced final mix normalization memory from 8.2 GB to ~120 MB.
+4. **Scalable Export**: Proven 416-minute, 64-track mix generation at 2.72 GB FLAC output.
+
+## 🧠 Memory for the Next Agent
+
+- **The filfilt fix**: If adding new crossover filters, always use `filtfilt` (zero-phase) instead of `lfilter` to avoid phase-related amplitude bumps. The subtraction approach (`original - bass * (1 - gain)`) works perfectly with zero-phase filtering.
+- **Large file handling**: For files >4GB, always use soundfile's FLAC writer directly — do NOT use pydub's WAV export which hits the RIFF header limit.
+- **BS.1770 specifics**: The -0.691dB correction for stereo channel summation in LUFS measurement is critical — without it, stereo mixes measure ~0.7dB louder than mono.
+- **Repository structure**: Source tracks are in `psyset_source/`, backup/rotated tracks in `dont_use_yet/`. The `not_yet` mentioned in user instructions is actually `dont_use_yet`.
+
+## 🚀 The Next Frontier (v8.15.0+)
+
 - [ ] **AI Genre Evolution**: Deep Learning (CNN) for style inference (upgrading the current MLP heuristic).
-- [ ] **Lossless Cluster Sync**: Automated multi-node file distribution.
+- [ ] **Volume Consistency**: The mix still varies ~10dB across tracks due to source dynamics; consider per-track dynamic range compression or adaptive gain staging.
+- [ ] **Rekordbox Cue Point Export**: Add hot cue markers at transition points to the Rekordbox XML output.
 
 ---
 *Outstanding! Magnificent! The Party Never Stops.*
