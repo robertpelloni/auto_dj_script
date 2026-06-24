@@ -2,20 +2,20 @@
 <DJ_PLAYLISTS Version="1.0.0">
   <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
   <COLLECTION Entries="5">
-    <TRACK TrackID="1" Name="Mad Tribe - Meet the Ding-a-Lings.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="505" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Mad Tribe - Meet the Ding-a-Lings.flac" AverageBpm="149.11186583313295" Tonality="D# Major (5B)">
+    <TRACK TrackID="1" Name="1200 Micrograms - 2007 - Magic Numbers - 2 - NumberStruck.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="364" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2007 - Magic Numbers - 2 - NumberStruck.flac" AverageBpm="145.22961166976893" Tonality="C# Minor (12A)">
       <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
     </TRACK>
-    <TRACK TrackID="2" Name="Space Tribe - 2020 - Travels Thru Time - 13 - Sex, Drugs and Rock'n Roll.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="444" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Space Tribe - 2020 - Travels Thru Time - 13 - Sex, Drugs and Rock'n Roll.flac" AverageBpm="144.69920095387243" Tonality="D# Minor (2A)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="451.68" Num="0" />
+    <TRACK TrackID="2" Name="1200 Micrograms - 2003 - Heroes of the Imagination - 8 - WWW.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="483" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2003 - Heroes of the Imagination - 8 - WWW.flac" AverageBpm="144.999241594649" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="284.308" Num="0" />
     </TRACK>
-    <TRACK TrackID="3" Name="1200 Micrograms - 2016 - Ritualism - 2 - We Want to Be Free.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="387" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2016 - Ritualism - 2 - We Want to Be Free.flac" AverageBpm="144.73077505851862" Tonality="F Major (7B)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="850.369" Num="0" />
+    <TRACK TrackID="3" Name="1200 Micrograms - 2007 - Magic Numbers - 4 - God of Rock.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="398" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2007 - Magic Numbers - 4 - God of Rock.flac" AverageBpm="144.9999817080309" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="740.423" Num="0" />
     </TRACK>
-    <TRACK TrackID="4" Name="1200 Micrograms - 2003 - Heroes of the Imagination - 7 - DNA.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="484" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2003 - Heroes of the Imagination - 7 - DNA.flac" AverageBpm="148.80884966545858" Tonality="C# Minor (12A)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="1211.948" Num="0" />
+    <TRACK TrackID="4" Name="1200 Micrograms - 2006 - 1200 Micrograms Remixes - 5 - Greece (Save The Robot Mix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="450" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2006 - 1200 Micrograms Remixes - 5 - Greece (Save The Robot Mix).flac" AverageBpm="144.8377216706434" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1104.192" Num="0" />
     </TRACK>
-    <TRACK TrackID="5" Name="Space Tribe - 2020 - Travels Thru Time - 14 - Psycho Logistics.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="438" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Space Tribe - 2020 - Travels Thru Time - 14 - Psycho Logistics.flac" AverageBpm="147.2174498514116" Tonality="G Major (9B)">
-      <POSITION_MARK Name="Transition Start" Type="0" Start="1655.27" Num="0" />
+    <TRACK TrackID="5" Name="1200 Micrograms - 2007 - Magic Numbers - 3 - Let’s Get This Party Started.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="396" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2007 - Magic Numbers - 3 - Let’s Get This Party Started.flac" AverageBpm="147.33959095496402" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1509.044" Num="0" />
     </TRACK>
   </COLLECTION>
   <PLAYLISTS>

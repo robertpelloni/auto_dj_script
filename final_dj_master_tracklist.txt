@@ -1,7 +1,7 @@
-Auto DJ v8.13.0 Master Tracklist
+Auto DJ v8.14.0 Master Tracklist
 ========================================
-[00:00:00] Mad Tribe - Meet the Ding-a-Lings.flac (D# Major (5B)) [Progressive]
-[00:07:31] Space Tribe - 2020 - Travels Thru Time - 13 - Sex, Drugs and Rock'n Roll.flac (D# Minor (2A)) [Progressive]
-[00:14:10] 1200 Micrograms - 2016 - Ritualism - 2 - We Want to Be Free.flac (F Major (7B)) [Progressive]
-[00:20:11] 1200 Micrograms - 2003 - Heroes of the Imagination - 7 - DNA.flac (C# Minor (12A)) [Full-On]
-[00:27:35] Space Tribe - 2020 - Travels Thru Time - 14 - Psycho Logistics.flac (G Major (9B)) [Full-On]
+[00:00:00] 1200 Micrograms - 2007 - Magic Numbers - 2 - NumberStruck.flac (C# Minor (12A)) [Progressive]
+[00:04:44] 1200 Micrograms - 2003 - Heroes of the Imagination - 8 - WWW.flac (F Major (7B)) [Progressive]
+[00:12:20] 1200 Micrograms - 2007 - Magic Numbers - 4 - God of Rock.flac (D# Minor (2A)) [Progressive]
+[00:18:24] 1200 Micrograms - 2006 - 1200 Micrograms Remixes - 5 - Greece (Save The Robot Mix).flac (D# Minor (2A)) [Progressive]
+[00:25:09] 1200 Micrograms - 2007 - Magic Numbers - 3 - Let’s Get This Party Started.flac (A# Minor (3A)) [Full-On]
