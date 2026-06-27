@@ -1,4 +1,4 @@
-# 🌌 Auto DJ Script: The Ultimate Vision (8.14.0)
+# 🌌 Auto DJ Script: The Ultimate Vision (8.15.0)
 
 ## The Core Vision
 

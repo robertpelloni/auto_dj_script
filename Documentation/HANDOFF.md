@@ -1,12 +1,12 @@
-# 🤝 Auto DJ Script: Transition & Handoff Brief (8.14.0)
+# 🤝 Auto DJ Script: Transition & Handoff Brief (8.15.0)
 
 ## 🎖 Current Status: "The Stable & Clean Mix Era"
 
-The project has reached milestone v8.14.0. This session resolved three critical audio artifacts that had persisted across multiple prior versions, producing professional-grade clean mixes at scale (up to 416 minutes / 64 tracks).
+The project has reached milestone v8.15.0. This session was a repository synchronization, documentation refresh, and version bump cycle. All prior fixes (zero-phase crossover, LUFS normalization, bass ducking removal, large file export) remain stable and verified.
 
 ## 🔎 Project Audit
 
-1. **Completed features (v8.14.0):**
+1. **Completed features (v8.15.0):**
    - **Bass Ducking Removed**: The beat-synced bass ducking system (`_detect_kick_peaks_in_overlap`, `_make_duck_curve`) was deleted because it fired on false kick peaks in ambient intros and breakdowns, creating audible 25ms volume dips every beat. Bass swap curves already handle kick handoff during transitions.
    - **K-Weighted LUFS Normalization**: Replaced simple RMS normalization with ITU-R BS.1770 K-weighted loudness measurement. Added `_measure_loudness_chunked()` in `autodj/dsp.py` to process audio in 120-second chunks with filter state carryover, preventing 8+ GB OOM errors on 416-minute mixes. Fixed stereo channel summing to use the BS.1770 power sum with -0.691dB correction.
    - **Zero-Phase Crossover Fix**: Replaced `lfilter` with `filtfilt` in the bass swap transitions. The `lfilter` group delay (~1.7ms) caused a +2.1dB frequency boost around 150-200Hz during transitions, producing "crosstalk ducking" artifacts. Max L/R channel imbalance during transitions reduced from **7.0 dB to 1.0 dB**.
@@ -22,14 +22,14 @@ The project has reached milestone v8.14.0. This session resolved three critical 
    - The `transition_render_worker` function in `core.py` (line 966) is defined but never called — it's dead code from a parallel processing attempt. Could be removed or re-enabled.
    - The `dsp.py` `_apply_bass_swap_transition` uses the same filtfilt approach now, keeping both codepaths consistent.
 
-4. **Documentation gaps:** CHANGELOG, MEMORY, TODO, VISION, and VERSION are all synchronized to v8.14.0.
+4. **Documentation gaps:** CHANGELOG, MEMORY, TODO, VISION, and VERSION are all synchronized to v8.15.0.
 
 ## 🏗 Key Accomplishments in this Session
 
-1. **Clean Audio Engine**: Removed artificial ducking artifacts and frequency bumps from transitions.
-2. **Perceptually Accurate Mastering**: Replaced naive peak/RMS normalization with BS.1770 LUFS.
-3. **Memory-Efficient Processing**: Reduced final mix normalization memory from 8.2 GB to ~120 MB.
-4. **Scalable Export**: Proven 416-minute, 64-track mix generation at 2.72 GB FLAC output.
+1. **Repository Synchronization**: Performed full fetch, branch audit, and push.
+2. **Version Bump**: 8.14.0 → 8.15.0 across all project files.
+3. **Documentation Refresh**: Synced MEMORY, HANDOFF, ROADMAP, TODO, VISION, CHANGELOG.
+4. **Clean Audit**: No submodules, no feature branches, no upstream parent to reconcile.
 
 ## 🧠 Memory for the Next Agent
 

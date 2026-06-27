@@ -1,5 +1,11 @@
 # Changelog
 
+## [8.15.0] - 2025-06-23
+### Changed
+- **Repository synchronization**: Version bump 8.14.0 → 8.15.0.
+- **Documentation sync**: Updated MEMORY, HANDOFF, ROADMAP, TODO, VISION to v8.15.0.
+
+
 ## [8.14.0] - 2025-06-23
 ### Fixed
 - **Bass Ducking Removal**: Eliminated beat-synced ducking that fired on false kick peaks in ambient intros/breakdowns.
