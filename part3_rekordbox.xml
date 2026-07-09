@@ -1,0 +1,28 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="4">
+    <TRACK TrackID="1" Name="Ajja - 2012 - Tulpa - 4 - Surge.flac" Artist="Auto DJ" Genre="Ambient" Kind="FLAC File" Size="0" TotalTime="346" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2012 - Tulpa - 4 - Surge.flac" AverageBpm="103.359375" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="Ajja - 2012 - Tulpa - 9 - Widdershins.flac" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="457" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2012 - Tulpa - 9 - Widdershins.flac" AverageBpm="132.51201923076923" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="316.027" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 9 - Alien Jam.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="652" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 9 - Alien Jam.flac" AverageBpm="132.51201923076923" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="732.914" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 5 - Around the Bend.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="513" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 5 - Around the Bend.flac" AverageBpm="132.51201923076923" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1349.898" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="4">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="19">
+    <TRACK TrackID="1" Name="Mekkanikka; Ajja - 2025 - Ultrasonic - 3 - Electrically Driven.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="392" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Mekkanikka; Ajja - 2025 - Ultrasonic - 3 - Electrically Driven.flac" AverageBpm="143.5546875" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="Mekkanikka; Ajja - 2021 - Mekkanikka Mixtape #1 - 2 - Futurism.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="406" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Mekkanikka; Ajja - 2021 - Mekkanikka Mixtape #1 - 2 - Futurism.flac" AverageBpm="151.99908088235296" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="366.747" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="Ajja - 2019 - World of Images - 3 - Surge (Volcano on Mars remix).flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="416" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2019 - World of Images - 3 - Surge (Volcano on Mars remix).flac" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="745.497" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="Mekkanikka; Ajja - 2025 - Ultrasonic - 4 - Chemical Process.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="437" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Mekkanikka; Ajja - 2025 - Ultrasonic - 4 - Chemical Process.flac" AverageBpm="143.5546875" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1128.7" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="479" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac" AverageBpm="147.65625" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1540.236" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="Avalon - 2006 - Stand - 1 - The Other Side.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="229" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Avalon - 2006 - Stand - 1 - The Other Side.flac" AverageBpm="156.60511363636363" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1985.958" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 8 - Cactus Shack.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="325" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 8 - Cactus Shack.flac" AverageBpm="151.99908088235296" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2186.698" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="Ajja - 2012 - Tulpa - 5 - iFriend.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="486" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2012 - Tulpa - 5 - iFriend.flac" AverageBpm="151.99908088235296" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2476.287" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 1 - Into the Deep.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="458" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 1 - Into the Deep.flac" AverageBpm="151.99908088235296" Tonality="E Minor (9A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2931.373" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="Killerwatts - 2015 - Blow Your Mind_ The Remixes - 10 - Fly Thru the Universe (Ajja rmx).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="441" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Killerwatts - 2015 - Blow Your Mind_ The Remixes - 10 - Fly Thru the Universe (Ajja rmx).flac" AverageBpm="139.6748310810811" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3358.309" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="Alpha Portal; Ajja - 2020 - The Other Side (Volcano on Mars remix) - 1 - The Other Side (Volcano on Mars remix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="453" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Alpha Portal; Ajja - 2020 - The Other Side (Volcano on Mars remix) - 1 - The Other Side (Volcano on Mars remix).flac" AverageBpm="143.5546875" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3768.406" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="Cosmosis - 1997 - Howling at the Moon E.P. - 1 - Howling at the Moon.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="523" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Cosmosis - 1997 - Howling at the Moon E.P. - 1 - Howling at the Moon.flac" AverageBpm="117.45383522727272" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4186.59" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="Ajja - 2021 - Oddular - 5 - Disco Bunny.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="456" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2021 - Oddular - 5 - Disco Bunny.flac" AverageBpm="135.99917763157896" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4679.305" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="Ajja - Dawn Dragons (Original Mix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="460" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - Dawn Dragons (Original Mix).flac" AverageBpm="139.6748310810811" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5110.052" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="GMS; Dickster; Ajja - 2021 - Adverse Cambers - 7 - Gothic as a Brick.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="463" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\GMS; Dickster; Ajja - 2021 - Adverse Cambers - 7 - Gothic as a Brick.flac" AverageBpm="135.99917763157896" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5538.297" Num="0" />
+    </TRACK>
+    <TRACK TrackID="16" Name="Ajja - 2020 - Chillsome - 9 - Mescaline Mantra.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="166" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2020 - Chillsome - 9 - Mescaline Mantra.flac" AverageBpm="151.99908088235296" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5973.786" Num="0" />
+    </TRACK>
+    <TRACK TrackID="17" Name="Ajja - 2020 - Chillsome - 3 - Good Morning Albert.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="188" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2020 - Chillsome - 3 - Good Morning Albert.flac" AverageBpm="135.99917763157896" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6104.96" Num="0" />
+    </TRACK>
+    <TRACK TrackID="18" Name="Ajja - 2018 - Tampered Diversity - 1 - Bebopper (GMS remix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="383" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2018 - Tampered Diversity - 1 - Bebopper (GMS remix).flac" AverageBpm="139.6748310810811" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6267.457" Num="0" />
+    </TRACK>
+    <TRACK TrackID="19" Name="Ajja - 2021 - Oddular - 6 - Not What.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="494" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2021 - Oddular - 6 - Not What.flac" AverageBpm="147.65625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6623.496" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="19">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+        <TRACK Key="16" />
+        <TRACK Key="17" />
+        <TRACK Key="18" />
+        <TRACK Key="19" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
