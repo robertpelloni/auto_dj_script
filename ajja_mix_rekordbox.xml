@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="25">
+    <TRACK TrackID="1" Name="08 - Ajja - Aria 51.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="426" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Ajja - Aria 51.mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="10 - Tripswitch - Shamanic Tea (Ajja remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="401" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\10 - Tripswitch - Shamanic Tea (Ajja remix).mp3" AverageBpm="147.65625" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="393.132" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="05 - Ajja - Spitfire.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="405" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Ajja - Spitfire.mp3" AverageBpm="141.60397427767157" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="768.14" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="09 - Ajja - Widdershins.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="439" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Ajja - Widdershins.mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1147.568" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="04 - Ajja - Goa Head Ted.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="465" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Ajja - Goa Head Ted.mp3" AverageBpm="143.5546875" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1552.563" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="09 - Ajja - Ninja Wobble.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="510" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Ajja - Ninja Wobble.mp3" AverageBpm="143.5546875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1991.274" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="07 - Ajja - Original Spin.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="495" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Ajja - Original Spin.mp3" AverageBpm="147.65625" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2472.158" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="07 - Ajja - We Are All Aliens.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="436" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Ajja - We Are All Aliens.mp3" AverageBpm="143.5546875" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2934.472" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="03 - Ajja - Good Morning Albert.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="203" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Ajja - Good Morning Albert.mp3" AverageBpm="143.5546875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3338.945" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="03 - Ajja - Wibblefish.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="463" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Ajja - Wibblefish.mp3" AverageBpm="143.5546875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3506.998" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="02 - Ajja - Mescaline Mélodica.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="127" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Ajja - Mescaline Mélodica.mp3" AverageBpm="143.55468750000003" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3934.229" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="09 - Ajja &amp; Cosmosis - Alien Jam.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="609" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Ajja &amp; Cosmosis - Alien Jam.mp3" AverageBpm="143.5546875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4025.932" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="08 - Ajja - Trancilvania.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="629" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Ajja - Trancilvania.mp3" AverageBpm="143.5546875" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4599.796" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="08 - Ajja - Bayaya.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="430" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Ajja - Bayaya.mp3" AverageBpm="147.90104183530863" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5193.263" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="03 - Ajja - Bazinga.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="486" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Ajja - Bazinga.mp3" AverageBpm="142.1112584830003" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5588.78" Num="0" />
+    </TRACK>
+    <TRACK TrackID="16" Name="09 - Ajja - Mescaline Mantra.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="160" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Ajja - Mescaline Mantra.mp3" AverageBpm="143.5546875" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6045.136" Num="0" />
+    </TRACK>
+    <TRACK TrackID="17" Name="10 - Ajja - Three Dots.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="485" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\10 - Ajja - Three Dots.mp3" AverageBpm="147.65625" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6177.981" Num="0" />
+    </TRACK>
+    <TRACK TrackID="18" Name="01 - Ajja - Context High.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="438" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Ajja - Context High.mp3" AverageBpm="143.5546875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6637.645" Num="0" />
+    </TRACK>
+    <TRACK TrackID="19" Name="05 - Ajja - Disco Bunny.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="491" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Ajja - Disco Bunny.mp3" AverageBpm="143.55468750000003" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7040.199" Num="0" />
+    </TRACK>
+    <TRACK TrackID="20" Name="01 - Ajja - Juicy Shrooms (Alienatic remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="457" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Ajja - Juicy Shrooms (Alienatic remix).mp3" AverageBpm="143.55468750000003" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7495.8" Num="0" />
+    </TRACK>
+    <TRACK TrackID="21" Name="01 - Ajja &amp; Arcon - Maze of Mirrors.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="495" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Ajja &amp; Arcon - Maze of Mirrors.mp3" AverageBpm="147.67998500693182" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7927.551" Num="0" />
+    </TRACK>
+    <TRACK TrackID="22" Name="03 - Ajja - Juicy Shrooms.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="409" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Ajja - Juicy Shrooms.mp3" AverageBpm="143.5546875" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8393.209" Num="0" />
+    </TRACK>
+    <TRACK TrackID="23" Name="01 - Ajja &amp; Menog - First Ride.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="572" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Ajja &amp; Menog - First Ride.mp3" AverageBpm="143.5546875" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8766.688" Num="0" />
+    </TRACK>
+    <TRACK TrackID="24" Name="04 - Ajja - Surge.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="415" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Ajja - Surge.mp3" AverageBpm="143.5546875" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="9303.744" Num="0" />
+    </TRACK>
+    <TRACK TrackID="25" Name="02 - Ajja - Forest Cure.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="471" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Ajja - Forest Cure.mp3" AverageBpm="143.55468749999997" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="9692.548" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="25">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+        <TRACK Key="16" />
+        <TRACK Key="17" />
+        <TRACK Key="18" />
+        <TRACK Key="19" />
+        <TRACK Key="20" />
+        <TRACK Key="21" />
+        <TRACK Key="22" />
+        <TRACK Key="23" />
+        <TRACK Key="24" />
+        <TRACK Key="25" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="04 - Avalon - Only One.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="165" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Avalon - Only One.mp3" AverageBpm="123.046875" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="09 - Avalon - Glitter and Glory.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="237" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Avalon - Glitter and Glory.mp3" AverageBpm="178.20581896551724" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="133.98" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Avalon - Called.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="248" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Avalon - Called.mp3" AverageBpm="151.99908088235296" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="336.056" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="01 - Avalon &amp; Faders - Afterlife.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="662" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Avalon &amp; Faders - Afterlife.mp3" AverageBpm="178.20581896551724" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="550.331" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="03 - Avalon &amp; GMS - Machines.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="308" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Avalon &amp; GMS - Machines.mp3" AverageBpm="107.666015625" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1176.912" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="01 - Avalon &amp; GMS - The Underground.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="344" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Avalon &amp; GMS - The Underground.mp3" AverageBpm="105.46875" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1449.324" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="03 - Avalon - Closer.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="232" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Avalon - Closer.mp3" AverageBpm="166.70866935483872" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1758.671" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="02 - Avalon &amp; GMS - Horizen.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="455" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Avalon &amp; GMS - Horizen.mp3" AverageBpm="156.60511363636363" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1959.368" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="07 - Avalon - The Move.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="80" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Avalon - The Move.mp3" AverageBpm="166.70866935483872" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2381.492" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="08 - Avalon - Lanterns.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="142" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Avalon - Lanterns.mp3" AverageBpm="109.95678191489363" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2425.355" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="05 - Avalon - If Not for Jesus.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="170" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Avalon - If Not for Jesus.mp3" AverageBpm="109.95678191489363" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2533.483" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="06 - Avalon - Great Is the Lord Our God.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="242" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Avalon - Great Is the Lord Our God.mp3" AverageBpm="166.70866935483872" Tonality="B Major (1B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2673.164" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="07 - Avalon - Sacred Ground.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="279" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Avalon - Sacred Ground.mp3" AverageBpm="166.70866935483872" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2886.093" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="02 - Avalon - Keeper of My Heart.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="197" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Avalon - Keeper of My Heart.mp3" AverageBpm="143.5546875" Tonality="B Major (1B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3132.279" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="01 - Avalon + Mad Tribe - World of Tomorrow.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="399" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Avalon + Mad Tribe - World of Tomorrow.mp3" AverageBpm="132.51201923076923" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3303.154" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

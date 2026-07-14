@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="01 - Tristan &amp; ManMadeMan - I Am Alien.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="545" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; ManMadeMan - I Am Alien.mp3" AverageBpm="178.20581896551724" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="01 - Tristan &amp; ManMadeMan - Reincarnation.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="308" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; ManMadeMan - Reincarnation.mp3" AverageBpm="120.18531976744185" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="518.441" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Tristan &amp; Magik - Triptamine.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="308" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Magik - Triptamine.mp3" AverageBpm="109.95678191489363" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="800.173" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="03 - Tristan - Dreamtime.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="538" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Tristan - Dreamtime.mp3" AverageBpm="184.5703125" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1080.459" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="01 - Tristan - Fetish.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="595" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan - Fetish.mp3" AverageBpm="166.70866935483872" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1591.897" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="04 - Tristan - Reptile Mind.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="577" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Tristan - Reptile Mind.mp3" AverageBpm="156.60511363636363" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2156.489" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="02 - Tristan &amp; Outsiders - 2000 Light Years.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="444" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Tristan &amp; Outsiders - 2000 Light Years.mp3" AverageBpm="151.99908088235296" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2703.135" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="01 - Tristan &amp; Mandala - All Living Things.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="516" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Mandala - All Living Things.mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3114.056" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="01 - Tristan &amp; Aardvarkk - Dawn of Perception.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="401" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Aardvarkk - Dawn of Perception.mp3" AverageBpm="147.65625" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3596.683" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="02 - Tristan - Valve.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="410" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Tristan - Valve.mp3" AverageBpm="156.60511363636363" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3961.991" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="02 - Tristan &amp; Aardvarkk - Probability Space.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="418" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Tristan &amp; Aardvarkk - Probability Space.mp3" AverageBpm="126.04801829268293" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4340.568" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="01 - Tristan &amp; Outsiders - Force of Nature.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="457" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Outsiders - Force of Nature.mp3" AverageBpm="147.65625" Tonality="E Major (12B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4725.361" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Tristan &amp; Raja Ram - Turn On!.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="313" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Raja Ram - Turn On!.mp3" AverageBpm="147.65625" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5147.37" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="01 - Tristan &amp; Mandala - Metaphoracle.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="423" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Tristan &amp; Mandala - Metaphoracle.mp3" AverageBpm="166.70866935483872" Tonality="E Minor (9A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5427.078" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="02 - Tristan &amp; Mandala - Changustan.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="409" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Tristan &amp; Mandala - Changustan.mp3" AverageBpm="184.5703125" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5812.432" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

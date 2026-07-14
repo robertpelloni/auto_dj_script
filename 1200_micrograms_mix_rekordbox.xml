@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="25">
+    <TRACK TrackID="1" Name="03 - 1200 Micrograms - Mescaline.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="314" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - 1200 Micrograms - Mescaline.mp3" AverageBpm="117.45383522727272" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="05 - 1200 Micrograms - Greece (Save the Robot remix).mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="551" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - 1200 Micrograms - Greece (Save the Robot remix).mp3" AverageBpm="178.20581896551724" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="279.599" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - 1200 Micrograms - High Paradise (1200 Micrograms remix).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="434" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - 1200 Micrograms - High Paradise (1200 Micrograms remix).mp3" AverageBpm="147.65625" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="802.478" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="07 - 1200 Micrograms - India (Xerox &amp; Illumination Mix).mp3" Artist="Auto DJ" Genre="Ambient" Kind="FLAC File" Size="0" TotalTime="367" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - 1200 Micrograms - India (Xerox &amp; Illumination Mix).mp3" AverageBpm="114.84374999999999" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1202.066" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="04 - 1200 Micrograms - LSD.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="431" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - 1200 Micrograms - LSD.mp3" AverageBpm="132.51201923076923" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1535.031" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="06 - 1200 Micrograms - Language Of The Future (Hujaboy Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="445" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - 1200 Micrograms - Language Of The Future (Hujaboy Remix).mp3" AverageBpm="156.60511363636363" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1935.475" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="06 - 1200 Micrograms - Salvia Divinorum.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="459" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - 1200 Micrograms - Salvia Divinorum.mp3" AverageBpm="161.4990234375" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2350.935" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="08 - 1200 Micrograms - Egypt (Eat Static Mix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="418" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - 1200 Micrograms - Egypt (Eat Static Mix).mp3" AverageBpm="120.18531976744185" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2778.215" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="02 - 1200 Micrograms - Mescaline (Astrix Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="357" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - 1200 Micrograms - Mescaline (Astrix Remix).mp3" AverageBpm="120.18531976744185" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3169.389" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="06 - 1200 Micrograms - Ecstasy.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="223" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - 1200 Micrograms - Ecstasy.mp3" AverageBpm="161.4990234375" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3492.488" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="05 - 1200 Micrograms - Greece (Save The Robot Mix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="434" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - 1200 Micrograms - Greece (Save The Robot Mix).mp3" AverageBpm="139.6748310810811" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3681.7" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="09 - 1200 Micrograms - Ecstacy (Deedrah remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="413" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - 1200 Micrograms - Ecstacy (Deedrah remix).mp3" AverageBpm="139.6748310810811" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4078.018" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="03 - Hujaboy - Mass TIPnosis.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="315" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Hujaboy - Mass TIPnosis.mp3" AverageBpm="107.666015625" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4464.733" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="09 - 1200 Micrograms - Ecstasy (Deedrah Mix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="49" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - 1200 Micrograms - Ecstasy (Deedrah Mix).mp3" AverageBpm="114.84374999999999" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4743.66" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="07 - 1200 Micrograms - India (Xerox &amp; Illumination remix).mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="549" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - 1200 Micrograms - India (Xerox &amp; Illumination remix).mp3" AverageBpm="172.265625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4759.537" Num="0" />
+    </TRACK>
+    <TRACK TrackID="16" Name="02 - Hujaboy - A.I. Psycology.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="412" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Hujaboy - A.I. Psycology.mp3" AverageBpm="166.70866935483872" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5272.618" Num="0" />
+    </TRACK>
+    <TRACK TrackID="17" Name="01 - 1200 Micrograms - It Starts With A Whisper (Hujaboy Remix).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="496" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - 1200 Micrograms - It Starts With A Whisper (Hujaboy Remix).mp3" AverageBpm="156.60511363636363" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5656.981" Num="0" />
+    </TRACK>
+    <TRACK TrackID="18" Name="03 - 1200 Micrograms - E = MC2 (Shanti Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="432" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - 1200 Micrograms - E = MC2 (Shanti Remix).mp3" AverageBpm="143.5546875" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6120.193" Num="0" />
+    </TRACK>
+    <TRACK TrackID="19" Name="01 - 1200 Micrograms - High Paradise (1200 Microgrames Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="346" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - 1200 Micrograms - High Paradise (1200 Microgrames Remix).mp3" AverageBpm="117.45383522727272" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6526.171" Num="0" />
+    </TRACK>
+    <TRACK TrackID="20" Name="03 - 1200 Micrograms - E=MC² (Shanti remix).mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="555" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - 1200 Micrograms - E=MC² (Shanti remix).mp3" AverageBpm="184.5703125" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6837.597" Num="0" />
+    </TRACK>
+    <TRACK TrackID="21" Name="03 - 1200 Micrograms - LSD.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="551" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - 1200 Micrograms - LSD.mp3" AverageBpm="178.20581896551724" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7357.397" Num="0" />
+    </TRACK>
+    <TRACK TrackID="22" Name="04 - 1200 Micrograms - Magic Mushrooms.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="346" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - 1200 Micrograms - Magic Mushrooms.mp3" AverageBpm="126.04801829268293" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7874.451" Num="0" />
+    </TRACK>
+    <TRACK TrackID="23" Name="04 - Hujaboy - Imaginary Time.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="350" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Hujaboy - Imaginary Time.mp3" AverageBpm="105.46875" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8183.008" Num="0" />
+    </TRACK>
+    <TRACK TrackID="24" Name="04 - 1200 Micrograms - Hashish (Atomic Pulse Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="476" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - 1200 Micrograms - Hashish (Atomic Pulse Remix).mp3" AverageBpm="132.51201923076923" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8503.08" Num="0" />
+    </TRACK>
+    <TRACK TrackID="25" Name="08 - 1200 Micrograms - Egypt (Eat Static remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="418" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - 1200 Micrograms - Egypt (Eat Static remix).mp3" AverageBpm="120.18531976744185" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8947.489" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="25">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+        <TRACK Key="16" />
+        <TRACK Key="17" />
+        <TRACK Key="18" />
+        <TRACK Key="19" />
+        <TRACK Key="20" />
+        <TRACK Key="21" />
+        <TRACK Key="22" />
+        <TRACK Key="23" />
+        <TRACK Key="24" />
+        <TRACK Key="25" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

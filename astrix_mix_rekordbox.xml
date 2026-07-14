@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="03 - Astrix &amp; Captain Hook - Bungee Jump (Perfect Stranger remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="347" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Astrix &amp; Captain Hook - Bungee Jump (Perfect Stranger remix).mp3" AverageBpm="143.5546875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="01 - Astrix &amp; John ‘00’ Fleming - 3rd Time Lucky (Ritmo remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="457" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; John ‘00’ Fleming - 3rd Time Lucky (Ritmo remix).mp3" AverageBpm="139.6748310810811" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="319.583" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Astrix &amp; Domestic - Massive Activity (H2O remaster).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="574" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Domestic - Massive Activity (H2O remaster).mp3" AverageBpm="166.70866935483872" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="746.935" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="04 - Astrix &amp; Captain Hook - Bungee Jump (Suntree remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="419" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Astrix &amp; Captain Hook - Bungee Jump (Suntree remix).mp3" AverageBpm="135.99917763157896" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1285.849" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="01 - Astrix &amp; Captain Hook - Bungee Jump (XV Kilist remix).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="569" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Captain Hook - Bungee Jump (XV Kilist remix).mp3" AverageBpm="156.60511363636363" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1678.879" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="02 - Captain Hook &amp; Astrix - Bungee Jump (Lish remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="457" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Captain Hook &amp; Astrix - Bungee Jump (Lish remix).mp3" AverageBpm="117.45383522727272" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2221.654" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="05 - Captain Hook &amp; Astrix - Bungee Jump (Out Now remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="304" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Captain Hook &amp; Astrix - Bungee Jump (Out Now remix).mp3" AverageBpm="112.34714673913045" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2643.003" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="01 - Astrix &amp; Blastoyz - Life System (Blastoyz remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="314" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Blastoyz - Life System (Blastoyz remix).mp3" AverageBpm="105.46875" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2921.111" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="01 - Astrix &amp; Captain Hook - Bungee Jump (Protonica remix).mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="627" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Captain Hook - Bungee Jump (Protonica remix).mp3" AverageBpm="184.5703125" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3201.26" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="01 - Astrix &amp; Rising Dust - Universo.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="676" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Rising Dust - Universo.mp3" AverageBpm="161.4990234375" Tonality="E Minor (9A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3793.988" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="01 - Astrix &amp; Freedom Fighters - Burning Stones.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="465" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Freedom Fighters - Burning Stones.mp3" AverageBpm="139.6748310810811" Tonality="D Minor (7A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4441.82" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="01 - Astrix &amp; Delirious - Day Dream.mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="422" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Delirious - Day Dream.mp3" AverageBpm="139.6748310810811" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4880.206" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Astrix &amp; Quantum - Yes to All.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="352" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Quantum - Yes to All.mp3" AverageBpm="109.95678191489363" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5274.616" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="01 - Astrix &amp; Simon Patterson - Shadows.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="355" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Simon Patterson - Shadows.mp3" AverageBpm="107.666015625" Tonality="B Minor (10A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5601.134" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="01 - Astrix &amp; Delirious - Tel Aviv.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="385" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Astrix &amp; Delirious - Tel Aviv.mp3" AverageBpm="120.18531976744185" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5926.652" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

@@ -1,0 +1,44 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="8">
+    <TRACK TrackID="1" Name="02 - CPU vs. Bliss vs. Painkiller vs. Massive - Bring It Back.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="445" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - CPU vs. Bliss vs. Painkiller vs. Massive - Bring It Back.mp3" AverageBpm="143.55468750000003" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="09 - Mekkanikka - Isolation Tank.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="506" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Mekkanikka - Isolation Tank.mp3" AverageBpm="145.68861603670106" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="409.394" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="05 - Mekkanikka vs. Vibraddict - Ookikabuki.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="407" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Mekkanikka vs. Vibraddict - Ookikabuki.mp3" AverageBpm="145.8712644430095" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="885.812" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="06 - Mekkanikka vs. Vibraddict - California Dreaming.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="405" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Mekkanikka vs. Vibraddict - California Dreaming.mp3" AverageBpm="146.4326760579538" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1267.69" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="10 - Mekkanikka - Sour Diesel.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="437" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\10 - Mekkanikka - Sour Diesel.mp3" AverageBpm="145.21191627851223" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1635.029" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="07 - Chromatone vs. Beyond - Tuna Tech.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="452" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Chromatone vs. Beyond - Tuna Tech.mp3" AverageBpm="143.55468750000003" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2046.14" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="08 - Mekkanikka - Turn to Dust (Field mix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="503" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Mekkanikka - Turn to Dust (Field mix).mp3" AverageBpm="143.55468750000003" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2469.155" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="07 - Mekkanikka &amp; Ajja - Scientific Inception.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="451" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Mekkanikka &amp; Ajja - Scientific Inception.mp3" AverageBpm="143.55468750000003" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2936.951" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="8">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

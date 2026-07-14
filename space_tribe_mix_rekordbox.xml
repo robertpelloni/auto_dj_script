@@ -1,0 +1,112 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="25">
+    <TRACK TrackID="1" Name="05 - Space Tribe - Loopy Loo.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="362" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Space Tribe - Loopy Loo.mp3" AverageBpm="109.95678191489363" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="01 - Space Tribe &amp; Stryker - Klunk Klik.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="315" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Stryker - Klunk Klik.mp3" AverageBpm="112.34714673913045" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="326.452" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="02 - Space Tribe &amp; Mad Maxx - Mysteries of the World.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="378" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Mad Maxx - Mysteries of the World.mp3" AverageBpm="112.34714673913045" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="610.964" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="06 - Space Tribe - Turn Off Your Mind...Relax...Float Downstream.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="359" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Space Tribe - Turn Off Your Mind...Relax...Float Downstream.mp3" AverageBpm="112.34714673913045" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="958.121" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="01 - Space Tribe &amp; Dickster - Turn on the World.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="490" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Dickster - Turn on the World.mp3" AverageBpm="166.70866935483872" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1290.041" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="01 - Space Tribe - A Pinch of Psychedelic.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="504" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe - A Pinch of Psychedelic.mp3" AverageBpm="161.4990234375" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1749.024" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="08 - Space Tribe - Telepathic Contact.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="436" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Space Tribe - Telepathic Contact.mp3" AverageBpm="147.65625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2218.696" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="07 - Space Tribe - Genetically Modified Human.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="546" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Space Tribe - Genetically Modified Human.mp3" AverageBpm="151.99908088235296" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2621.391" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="01 - Space Tribe &amp; Mad Maxx - Mind Is God.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="659" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Mad Maxx - Mind Is God.mp3" AverageBpm="184.5703125" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3131.479" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="02 - Space Tribe &amp; Stryker - UnReality.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="543" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Stryker - UnReality.mp3" AverageBpm="172.265625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3758.095" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="04 - Space Tribe - The First Trip.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="623" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Space Tribe - The First Trip.mp3" AverageBpm="184.5703125" Tonality="B Minor (10A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4266.921" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="02 - Space Tribe &amp; Stryker - Remote Control.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="508" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Stryker - Remote Control.mp3" AverageBpm="156.60511363636363" Tonality="E Minor (9A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4862.511" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Space Tribe &amp; Faders - Energy, Frequency &amp; Vibration.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="408" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Faders - Energy, Frequency &amp; Vibration.mp3" AverageBpm="156.60511363636363" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5338.474" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="02 - Space Tribe &amp; Dickster - Sky Never Ends.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="491" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Dickster - Sky Never Ends.mp3" AverageBpm="156.60511363636363" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5720.694" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="01 - Space Tribe &amp; Volcano - Homo Sapiens Extraterrestrials.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="526" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Volcano - Homo Sapiens Extraterrestrials.mp3" AverageBpm="178.20581896551724" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6177.919" Num="0" />
+    </TRACK>
+    <TRACK TrackID="16" Name="02 - Space Tribe &amp; Laughing Buddha - Euphoria.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="541" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Laughing Buddha - Euphoria.mp3" AverageBpm="166.70866935483872" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6669.186" Num="0" />
+    </TRACK>
+    <TRACK TrackID="17" Name="01 - Space Tribe &amp; Volcano - Time for a Revolution.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="426" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Volcano - Time for a Revolution.mp3" AverageBpm="147.65625" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7183.671" Num="0" />
+    </TRACK>
+    <TRACK TrackID="18" Name="01 - Space Tribe - Out There in the Universe.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="588" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe - Out There in the Universe.mp3" AverageBpm="161.4990234375" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7576.295" Num="0" />
+    </TRACK>
+    <TRACK TrackID="19" Name="03 - Space Tribe - 2000 O.D..mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="433" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Space Tribe - 2000 O.D..mp3" AverageBpm="132.51201923076923" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8130.359" Num="0" />
+    </TRACK>
+    <TRACK TrackID="20" Name="01 - Space Tribe &amp; Stryker - Sex, Drugs &amp; Rock 'N Roll.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="406" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Stryker - Sex, Drugs &amp; Rock 'N Roll.mp3" AverageBpm="132.51201923076923" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8537.989" Num="0" />
+    </TRACK>
+    <TRACK TrackID="21" Name="02 - Space Tribe - So Deep.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="631" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe - So Deep.mp3" AverageBpm="172.265625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="8914.904" Num="0" />
+    </TRACK>
+    <TRACK TrackID="22" Name="01 - Space Tribe &amp; Laughing Buddha - Brave New World.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="547" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Laughing Buddha - Brave New World.mp3" AverageBpm="184.5703125" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="9510.364" Num="0" />
+    </TRACK>
+    <TRACK TrackID="23" Name="02 - Space Tribe &amp; Dickster - Blasting Plasma Cells.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="562" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Space Tribe &amp; Dickster - Blasting Plasma Cells.mp3" AverageBpm="172.265625" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="10027.507" Num="0" />
+    </TRACK>
+    <TRACK TrackID="24" Name="01 - Space Tribe &amp; Laughing Buddha - No Limits.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="536" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Laughing Buddha - No Limits.mp3" AverageBpm="151.99908088235296" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="10564.016" Num="0" />
+    </TRACK>
+    <TRACK TrackID="25" Name="01 - Space Tribe &amp; Dickster - Alien Sex Fiend.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="661" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Space Tribe &amp; Dickster - Alien Sex Fiend.mp3" AverageBpm="184.5703125" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="11064.307" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="25">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+        <TRACK Key="16" />
+        <TRACK Key="17" />
+        <TRACK Key="18" />
+        <TRACK Key="19" />
+        <TRACK Key="20" />
+        <TRACK Key="21" />
+        <TRACK Key="22" />
+        <TRACK Key="23" />
+        <TRACK Key="24" />
+        <TRACK Key="25" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

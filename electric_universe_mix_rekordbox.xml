@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="08 - Electric Universe - The Space Dimension.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="359" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Electric Universe - The Space Dimension.mp3" AverageBpm="117.45383522727272" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="04 - Electric Universe - Meteor.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="407" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Electric Universe - Meteor.mp3" AverageBpm="143.5546875" Tonality="G# Minor (1A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="326.293" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Electric Universe &amp; Chico - Mercury.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="441" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe &amp; Chico - Mercury.mp3" AverageBpm="132.51201923076923" Tonality="B Major (1B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="707.314" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="01 - Electric Universe &amp; Hujaboy - Arambolian Nights.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="357" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe &amp; Hujaboy - Arambolian Nights.mp3" AverageBpm="117.45383522727272" Tonality="E Minor (9A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1121.687" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="06 - Electric Universe - The Tribal Session.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="285" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Electric Universe - The Tribal Session.mp3" AverageBpm="126.04801829268293" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1445.145" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="01 - Electric Universe &amp; Sitarsonic - Dub Stanza.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="511" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe &amp; Sitarsonic - Dub Stanza.mp3" AverageBpm="151.99908088235296" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1699.115" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="09 - Electric Universe - Lovescience.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="477" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Electric Universe - Lovescience.mp3" AverageBpm="126.04801829268293" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2175.341" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="03 - Electric Universe - Renania.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="390" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Electric Universe - Renania.mp3" AverageBpm="172.265625" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2624.496" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="05 - Electric Universe - Rock da House.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="336" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Electric Universe - Rock da House.mp3" AverageBpm="156.60511363636363" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2979.68" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="10 - Electric Universe - Journey Into Outer Space.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="425" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\10 - Electric Universe - Journey Into Outer Space.mp3" AverageBpm="166.70866935483872" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3289.423" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="01 - Electric Universe &amp; Greg Hilight - Om Namah Shivaya.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="419" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe &amp; Greg Hilight - Om Namah Shivaya.mp3" AverageBpm="109.95678191489363" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3688.196" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="02 - Electric Universe - Compressor.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="350" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Electric Universe - Compressor.mp3" AverageBpm="114.84374999999999" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4076.059" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="07 - Electric Universe - Magnetic Field.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="430" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Electric Universe - Magnetic Field.mp3" AverageBpm="123.046875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4399.863" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="01 - Electric Universe - Fly.mp3" Artist="Auto DJ" Genre="Ambient" Kind="FLAC File" Size="0" TotalTime="312" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe - Fly.mp3" AverageBpm="103.359375" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4794.984" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="01 - Electric Universe &amp; Faders - Calling for Peace.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="454" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Electric Universe &amp; Faders - Calling for Peace.mp3" AverageBpm="123.046875" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5074.157" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

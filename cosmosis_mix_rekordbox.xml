@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="06 - Cosmosis - Find Your Own Divinity.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="444" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Cosmosis - Find Your Own Divinity.mp3" AverageBpm="135.99917763157896" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="08 - Cosmosis &amp; Quantica - Interstellar Siesta.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="594" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Cosmosis &amp; Quantica - Interstellar Siesta.mp3" AverageBpm="161.4990234375" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="410.577" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="07 - Cosmosis @ Quantica - Dubstation.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="184" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Cosmosis @ Quantica - Dubstation.mp3" AverageBpm="123.046875" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="971.326" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="05 - Cosmosis &amp; Quantica - Dissolution.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="270" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Cosmosis &amp; Quantica - Dissolution.mp3" AverageBpm="114.84374999999999" Tonality="D Minor (7A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1122.101" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="04 - Cosmosis &amp; Quantica - Other Worlds.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="449" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Cosmosis &amp; Quantica - Other Worlds.mp3" AverageBpm="147.65625" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1363.05" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="05 - Cosmosis - Just Say No.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="501" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Cosmosis - Just Say No.mp3" AverageBpm="156.60511363636363" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1778.071" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="03 - Cosmosis - Moonshine.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="515" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Cosmosis - Moonshine.mp3" AverageBpm="139.6748310810811" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2245.62" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="10 - COSMOSIS - Zero G.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="547" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\10 - COSMOSIS - Zero G.mp3" AverageBpm="172.265625" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2725.266" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="01 - Cosmosis - Key to the Innerverse.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="555" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Cosmosis - Key to the Innerverse.mp3" AverageBpm="178.20581896551724" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3246.027" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="02 - Cosmosis &amp; Quantica - The Enchanted Forest.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="564" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Cosmosis &amp; Quantica - The Enchanted Forest.mp3" AverageBpm="172.265625" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3768.067" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="03 - Cosmosis, Quantica &amp; Sonic Species, Quantica &amp; Sonic Species - Dubadelic.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="302" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Cosmosis, Quantica &amp; Sonic Species, Quantica &amp; Sonic Species - Dubadelic.mp3" AverageBpm="112.34714673913045" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4296.37" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="04 - Cosmosis - Intergalactic Fluoro Funkster.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="470" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Cosmosis - Intergalactic Fluoro Funkster.mp3" AverageBpm="147.65625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4570.598" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Cosmosis &amp; Quantica - Journey To Gondor.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="371" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Cosmosis &amp; Quantica - Journey To Gondor.mp3" AverageBpm="117.45383522727272" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5008.677" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="06 - Cosmosis, Quantica &amp; Sonic Species, Quantica &amp; Sonic Station - The Sweet Side of Darkness.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="95" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Cosmosis, Quantica &amp; Sonic Species, Quantica &amp; Sonic Station - The Sweet Side of Darkness.mp3" AverageBpm="117.45383522727272" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5353.431" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="02 - Cosmosis - Gift of the Gods.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="452" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Cosmosis - Gift of the Gods.mp3" AverageBpm="139.6748310810811" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5418.731" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

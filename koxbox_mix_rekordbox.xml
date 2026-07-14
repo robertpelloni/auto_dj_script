@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="02 - Koxbox &amp; Tron &amp; Rishi - Saddle Up.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="357" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Koxbox &amp; Tron &amp; Rishi - Saddle Up.mp3" AverageBpm="117.45383522727272" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="04 - Koxbox - A Major Problem in Australia (Saafi Brothers remix).mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="449" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Koxbox - A Major Problem in Australia (Saafi Brothers remix).mp3" AverageBpm="143.5546875" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="322.05" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="05 - Koxbox - A Major Problem in Australia (Logic Bomb remix).mp3" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="496" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Koxbox - A Major Problem in Australia (Logic Bomb remix).mp3" AverageBpm="139.6748310810811" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="745.43" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="02 - Koxbox - Acid Vol.3 (Sandman Electro Remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="246" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Koxbox - Acid Vol.3 (Sandman Electro Remix).mp3" AverageBpm="105.46875" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1206.647" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="02 - Koxbox - Birdy.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="543" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Koxbox - Birdy.mp3" AverageBpm="165.44117647058823" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1418.005" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="01 - Koxbox - D.M. Turner.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="413" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Koxbox - D.M. Turner.mp3" AverageBpm="135.99917763157896" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1925.413" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="03 - Koxbox - A Major Problem in Australia (Miro remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="370" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Koxbox - A Major Problem in Australia (Miro remix).mp3" AverageBpm="117.45383522727272" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2304.219" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="06 - Koxbox - 6 Cells (The Pixeldodgers remix).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="447" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Koxbox - 6 Cells (The Pixeldodgers remix).mp3" AverageBpm="166.70866935483872" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2645.07" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="03 - Koxbox - Acid Vol.3 (2022 Remaster).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="410" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Koxbox - Acid Vol.3 (2022 Remaster).mp3" AverageBpm="123.046875" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3060.601" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="02 - Koxbox - A Major Problem in Australia (Massimo Vivona remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="464" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Koxbox - A Major Problem in Australia (Massimo Vivona remix).mp3" AverageBpm="123.046875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3438.576" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="07 - Koxbox - A Major Problem in Australia (extended version).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="451" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Koxbox - A Major Problem in Australia (extended version).mp3" AverageBpm="129.19921875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3872.883" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="01 - Koxbox - A Major Problem in Australia (short version).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="197" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Koxbox - A Major Problem in Australia (short version).mp3" AverageBpm="120.18531976744185" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4294.794" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Koxbox &amp; Tron &amp; Rishi - The Harmonica Strikes Back.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="474" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Koxbox &amp; Tron &amp; Rishi - The Harmonica Strikes Back.mp3" AverageBpm="161.4990234375" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4458.407" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="01 - Koxbox - Acid Vol.3.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="433" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Koxbox - Acid Vol.3.mp3" AverageBpm="130.8139534883721" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4900.209" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="01 - Koxbox - Acid Vol.3 (Sandman &amp; Out Of Orbit Remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="354" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Koxbox - Acid Vol.3 (Sandman &amp; Out Of Orbit Remix).mp3" AverageBpm="112.34714673913045" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5303.647" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

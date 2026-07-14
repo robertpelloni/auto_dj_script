@@ -1,0 +1,64 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="13">
+    <TRACK TrackID="1" Name="06 - Astral Projection - Let There Be Light (Outsiders remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="509" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Astral Projection - Let There Be Light (Outsiders remix).mp3" AverageBpm="143.55468750000003" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="07 - Lucas vs Laughing Buddha - Revel With the Devil.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="464" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Lucas vs Laughing Buddha - Revel With the Devil.mp3" AverageBpm="145.0957867020975" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="476.087" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Burn in Noise &amp; Altruism - Shamanic.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="437" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Burn in Noise &amp; Altruism - Shamanic.mp3" AverageBpm="143.55468750000003" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="912.863" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="08 - Symbolic - Insidious (Electric Universe remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="474" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Symbolic - Insidious (Electric Universe remix).mp3" AverageBpm="143.55468750000003" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1323.147" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="07 - Outside The Universe - Electric Memories.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="383" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Outside The Universe - Electric Memories.mp3" AverageBpm="143.55468750000003" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1764.399" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="05 - Volcano On Mars &amp; Outsiders - Mojigao.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="480" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Volcano On Mars &amp; Outsiders - Mojigao.mp3" AverageBpm="147.65625" Tonality="C# Minor (12A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2111.502" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="08 - Outsiders - My Mind.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="387" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Outsiders - My Mind.mp3" AverageBpm="143.55468750000003" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2557.71" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="01 - Outsiders &amp; Animato - Elastic Sunrise.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="501" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Outsiders &amp; Animato - Elastic Sunrise.mp3" AverageBpm="143.55468750000003" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2918.728" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="03 - Outsiders - Psychedelic.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="421" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Outsiders - Psychedelic.mp3" AverageBpm="147.22134179196422" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3390.81" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="09 - Tristan &amp; Outsiders - Nuclear Reality.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="412" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Tristan &amp; Outsiders - Nuclear Reality.mp3" AverageBpm="147.65625" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3786.323" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="09 - Outsiders vs. Raja Ram - Secret of the Magic Garden.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="475" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Outsiders vs. Raja Ram - Secret of the Magic Garden.mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4163.518" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="03 - Outsiders &amp; Raja Ram - Secret of the Magic Garden (Noface remix).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="527" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Outsiders &amp; Raja Ram - Secret of the Magic Garden (Noface remix).mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4609.409" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="04 - Outside The Universe - Alternate Minds.mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="409" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Outside The Universe - Alternate Minds.mp3" AverageBpm="147.65625" Tonality="F# Minor (11A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5108.231" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="13">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

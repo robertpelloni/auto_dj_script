@@ -1,0 +1,72 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="15">
+    <TRACK TrackID="1" Name="06 - Mad Tribe - LSD Party (Kicking In).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="464" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\06 - Mad Tribe - LSD Party (Kicking In).mp3" AverageBpm="132.51201923076923" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="01 - Mad Tribe - Extremists.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="442" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe - Extremists.mp3" AverageBpm="120.18531976744185" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="430.869" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="01 - Mad Tribe - Amazing Tales From Outer Space.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="603" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe - Amazing Tales From Outer Space.mp3" AverageBpm="178.20581896551724" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="839.03" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="02 - Mad Tribe &amp; Raja Ram - Instant Enlightenment.mp3" Artist="Auto DJ" Genre="Hi-Tech" Kind="FLAC File" Size="0" TotalTime="680" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Mad Tribe &amp; Raja Ram - Instant Enlightenment.mp3" AverageBpm="172.265625" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1407.767" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="08 - Mad Tribe - Joint O'Clock.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="505" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\08 - Mad Tribe - Joint O'Clock.mp3" AverageBpm="161.4990234375" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2062.768" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="09 - Mad Tribe - Party Planners (With Electric Universe).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="539" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\09 - Mad Tribe - Party Planners (With Electric Universe).mp3" AverageBpm="161.4990234375" Tonality="A Minor (8A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2541.74" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="02 - Mad Tribe - Mad Robots.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="387" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\02 - Mad Tribe - Mad Robots.mp3" AverageBpm="117.45383522727272" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3047.52" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="01 - Mad Tribe - Alien Hoax (GMS remix).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="364" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe - Alien Hoax (GMS remix).mp3" AverageBpm="129.19921875" Tonality="A# Minor (3A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3409.095" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="07 - Mad Tribe - LSD Party (Meltdown).mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="411" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\07 - Mad Tribe - LSD Party (Meltdown).mp3" AverageBpm="123.046875" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3743.322" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="01 - Mad Tribe - Alien Sex Slave.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="327" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe - Alien Sex Slave.mp3" AverageBpm="123.046875" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4126.788" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="01 - Mad Tribe &amp; Alpha Portal - Sky High.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="439" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe &amp; Alpha Portal - Sky High.mp3" AverageBpm="135.99917763157896" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4418.403" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="05 - Mad Tribe - Electric Kool A(c)id.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="397" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\05 - Mad Tribe - Electric Kool A(c)id.mp3" AverageBpm="126.04801829268293" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4825.658" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="01 - Mad Tribe &amp; Raja Ram - Bigger Bang.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="434" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\01 - Mad Tribe &amp; Raja Ram - Bigger Bang.mp3" AverageBpm="105.46875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5186.751" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="04 - Mad Tribe - Drop The Bomb.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="382" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\04 - Mad Tribe - Drop The Bomb.mp3" AverageBpm="114.84374999999999" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5592.448" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="03 - Mad Tribe - Out Of This World.mp3" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="398" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\03 - Mad Tribe - Out Of This World.mp3" AverageBpm="112.34714673913045" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5941.506" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="15">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
