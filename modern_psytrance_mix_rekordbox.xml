@@ -1,0 +1,88 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="19">
+    <TRACK TrackID="1" Name="Astrix - 2011 - Reunion - 2 - Reunion (Jerome Isma-Ae remix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="411" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Astrix - 2011 - Reunion - 2 - Reunion (Jerome Isma-Ae remix).flac" AverageBpm="129.19921875" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="Burn in Noise; Brainiac - 2015 - Goa Session by Sonic Species - 12 - The Healer.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="418" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Burn in Noise; Brainiac - 2015 - Goa Session by Sonic Species - 12 - The Healer.flac" AverageBpm="137.42007989234278" Tonality="B Minor (10A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="385.346" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="Electric Universe - 2016 - Goa Session - 8 - Spacetime.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="417" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Electric Universe - 2016 - Goa Session - 8 - Spacetime.flac" AverageBpm="142.3725993931593" Tonality="D Major (10B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="777.762" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="Ajja - 2012 - Tulpa - 10 - Three Dots.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="482" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2012 - Tulpa - 10 - Three Dots.flac" AverageBpm="147.65625" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1168.274" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="Electric Universe - 2013 - Intergalactic Conversation - 3 - The Prayer (Outsiders Remix) (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="539" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Electric Universe - 2013 - Intergalactic Conversation - 3 - The Prayer (Outsiders Remix) (1).flac" AverageBpm="143.55468750000003" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1622.882" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="Faders; Lyctum - 2016 - Blueprints of Creation - 1 - Blueprints of Creation.flac" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="307" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Faders; Lyctum - 2016 - Blueprints of Creation - 1 - Blueprints of Creation.flac" AverageBpm="92.28515625" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2130.859" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="Faders; Wilder - 2018 - Phoenix - 1 - Pheonix.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="502" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Faders; Wilder - 2018 - Phoenix - 1 - Pheonix.flac" AverageBpm="143.5546875" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2404.939" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="Ajja - 2012 - Tulpa - 1 - Bebopper.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="435" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2012 - Tulpa - 1 - Bebopper.flac" AverageBpm="139.234817346413" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2875.589" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="Deedrah - 2018 - Arwen's Dream (Tech Tune Remix) - 1 - Arwen's Dream (Tech Tune Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="583" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Deedrah - 2018 - Arwen's Dream (Tech Tune Remix) - 1 - Arwen's Dream (Tech Tune Remix).mp3" AverageBpm="135.99917763157896" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3276.027" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="Cosmosis - 2017 - Different Levels - 01 - Different Levels.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="447" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Cosmosis - 2017 - Different Levels - 01 - Different Levels.flac" AverageBpm="143.5546875" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3832.113" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="1200 Micrograms - 2010 - Gramology - 1 - Africa (1).flac" Artist="Auto DJ" Genre="Minimal" Kind="FLAC File" Size="0" TotalTime="483" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2010 - Gramology - 1 - Africa (1).flac" AverageBpm="143.5546875" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4248.336" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="Deedrah - 2013 - Reloaded - 1 - Reload (Easy Riders Remix).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="535" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Deedrah - 2013 - Reloaded - 1 - Reload (Easy Riders Remix).mp3" AverageBpm="135.99917763157896" Tonality="G# Major (4B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4695.157" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="GMS; Ajja; Pixel - 2019 - GMS and Amigos II - 1 - What Makes a Man (1).mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="459" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\GMS; Ajja; Pixel - 2019 - GMS and Amigos II - 1 - What Makes a Man (1).mp3" AverageBpm="143.5546875" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5204.228" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="Astrix - 2011 - Reunion - 1 - Reunion.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="384" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Astrix - 2011 - Reunion - 1 - Reunion.flac" AverageBpm="129.19921875" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5637.946" Num="0" />
+    </TRACK>
+    <TRACK TrackID="15" Name="GMS; Ajja; Pixel - 2019 - GMS and Amigos II - 1 - What Makes a Man.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="459" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\GMS; Ajja; Pixel - 2019 - GMS and Amigos II - 1 - What Makes a Man.mp3" AverageBpm="143.5546875" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5996.081" Num="0" />
+    </TRACK>
+    <TRACK TrackID="16" Name="Growling Mad Scientists - 2015 - Juice EP - 1 - Juice (1200 Micrograms Remix) (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="455" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Growling Mad Scientists - 2015 - Juice EP - 1 - Juice (1200 Micrograms Remix) (1).flac" AverageBpm="143.5546875" Tonality="F Minor (4A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6425.756" Num="0" />
+    </TRACK>
+    <TRACK TrackID="17" Name="Avalon; Sinerider - 2014 - Crossing Fx - 2 - Timewarp (Outsiders remix) (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="468" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Avalon; Sinerider - 2014 - Crossing Fx - 2 - Timewarp (Outsiders remix) (1).flac" AverageBpm="143.5546875" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="6853.427" Num="0" />
+    </TRACK>
+    <TRACK TrackID="18" Name="Avalon; Sinerider - 2014 - Crossing Fx - 2 - Timewarp (Outsiders remix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="468" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Avalon; Sinerider - 2014 - Crossing Fx - 2 - Timewarp (Outsiders remix).flac" AverageBpm="143.5546875" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7293.974" Num="0" />
+    </TRACK>
+    <TRACK TrackID="19" Name="Burn In Noise - 2017 - Psy Fi - Book Of Changes - 13 - Truffle Shuffle (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="456" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Burn In Noise - 2017 - Psy Fi - Book Of Changes - 13 - Truffle Shuffle (1).flac" AverageBpm="143.5546875" Tonality="G Major (9B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="7729.461" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="19">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+        <TRACK Key="15" />
+        <TRACK Key="16" />
+        <TRACK Key="17" />
+        <TRACK Key="18" />
+        <TRACK Key="19" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>

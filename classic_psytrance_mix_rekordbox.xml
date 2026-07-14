@@ -1,0 +1,68 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<DJ_PLAYLISTS Version="1.0.0">
+  <PRODUCT Name="AutoDJ" Version="7.3.0" Company="robertpelloni" />
+  <COLLECTION Entries="14">
+    <TRACK TrackID="1" Name="Avalon - 2000 - Joy_ A Christmas Collection - 1 - Joy (To the World).mp3" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="279" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Avalon - 2000 - Joy_ A Christmas Collection - 1 - Joy (To the World).mp3" AverageBpm="150.139575249854" Tonality="C Major (8B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="0.0" Num="0" />
+    </TRACK>
+    <TRACK TrackID="2" Name="Ajja - 2007 - Psychogenica - 10 - Spikedelic.flac" Artist="Auto DJ" Genre="Full-On" Kind="FLAC File" Size="0" TotalTime="447" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2007 - Psychogenica - 10 - Spikedelic.flac" AverageBpm="150.80365260593757" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="249.665" Num="0" />
+    </TRACK>
+    <TRACK TrackID="3" Name="Ajja - 2007 - Psychogenica - 1 - Tripmunch.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="434" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Ajja - 2007 - Psychogenica - 1 - Tripmunch.flac" AverageBpm="140.97754941256935" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="661.315" Num="0" />
+    </TRACK>
+    <TRACK TrackID="4" Name="1200 Micrograms - 1999 - 1200 Mics  The Warp - 00 - 1200 Mics (1).MP3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="532" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 1999 - 1200 Mics  The Warp - 00 - 1200 Mics (1).MP3" AverageBpm="143.5546875" Tonality="D# Major (5B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1059.006" Num="0" />
+    </TRACK>
+    <TRACK TrackID="5" Name="Alien Project - 2001 - Midnight Sun - 4 - DNA (remix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="521" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Alien Project - 2001 - Midnight Sun - 4 - DNA (remix).flac" AverageBpm="143.55468750000003" Tonality="A# Major (6B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="1558.257" Num="0" />
+    </TRACK>
+    <TRACK TrackID="6" Name="1200 Micrograms - 1999 - 1200 Mics  The Warp - 00 - 1200 Mics.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="331" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 1999 - 1200 Mics  The Warp - 00 - 1200 Mics.mp3" AverageBpm="138.21193268987872" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2045.684" Num="0" />
+    </TRACK>
+    <TRACK TrackID="7" Name="Avalon - 2000 - Joy_ A Christmas Collection - 10 - We Are the Reason.mp3" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="263" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Avalon - 2000 - Joy_ A Christmas Collection - 10 - We Are the Reason.mp3" AverageBpm="129.19921875" Tonality="F Major (7B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2343.431" Num="0" />
+    </TRACK>
+    <TRACK TrackID="8" Name="Astrix - 2003 - Nu-Clear Visions of Israel - 2 - Disco Valley (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="480" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Astrix - 2003 - Nu-Clear Visions of Israel - 2 - Disco Valley (1).flac" AverageBpm="143.5546875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="2573.622" Num="0" />
+    </TRACK>
+    <TRACK TrackID="9" Name="Alien Project - 2002 - Aztechno Dream - 1 - Crystal Skulls (dance mix) (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="493" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Alien Project - 2002 - Aztechno Dream - 1 - Crystal Skulls (dance mix) (1).flac" AverageBpm="138.78792859868173" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3017.997" Num="0" />
+    </TRACK>
+    <TRACK TrackID="10" Name="Astrix - 2003 - Nu-Clear Visions of Israel - 2 - Disco Valley.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="480" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Astrix - 2003 - Nu-Clear Visions of Israel - 2 - Disco Valley.flac" AverageBpm="143.5546875" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3478.213" Num="0" />
+    </TRACK>
+    <TRACK TrackID="11" Name="Alien Project - 2002 - Aztechno Dream - 1 - Crystal Skulls (dance mix).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="493" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Alien Project - 2002 - Aztechno Dream - 1 - Crystal Skulls (dance mix).flac" AverageBpm="138.78792859868173" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="3922.588" Num="0" />
+    </TRACK>
+    <TRACK TrackID="12" Name="1200 Micrograms - 2001 - 1200 Micrograms - 3 - LSD (1).flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="432" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\1200 Micrograms - 2001 - 1200 Micrograms - 3 - LSD (1).flac" AverageBpm="138.99359526509974" Tonality="D# Minor (2A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4381.851" Num="0" />
+    </TRACK>
+    <TRACK TrackID="13" Name="Astrix - 2004 - Artcore - 1 - Poison.flac" Artist="Auto DJ" Genre="Progressive" Kind="FLAC File" Size="0" TotalTime="454" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Astrix - 2004 - Artcore - 1 - Poison.flac" AverageBpm="145.86721318894394" Tonality="A Major (11B)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="4786.06" Num="0" />
+    </TRACK>
+    <TRACK TrackID="14" Name="Cosmosis - 1995 - Cannabanoid EP - 1 - Cannabanoid.flac" Artist="Auto DJ" Genre="Downtempo" Kind="FLAC File" Size="0" TotalTime="302" Location="file://localhostC:\Users\hyper\workspace\auto_dj_script\psyset_source\Cosmosis - 1995 - Cannabanoid EP - 1 - Cannabanoid.flac" AverageBpm="81.10627896683444" Tonality="B Minor (10A)">
+      <POSITION_MARK Name="Transition Start" Type="0" Start="5207.006" Num="0" />
+    </TRACK>
+  </COLLECTION>
+  <PLAYLISTS>
+    <NODE Name="ROOT" Type="0">
+      <NODE Name="Auto DJ Master Set" Type="1" KeyType="0" Entries="14">
+        <TRACK Key="1" />
+        <TRACK Key="2" />
+        <TRACK Key="3" />
+        <TRACK Key="4" />
+        <TRACK Key="5" />
+        <TRACK Key="6" />
+        <TRACK Key="7" />
+        <TRACK Key="8" />
+        <TRACK Key="9" />
+        <TRACK Key="10" />
+        <TRACK Key="11" />
+        <TRACK Key="12" />
+        <TRACK Key="13" />
+        <TRACK Key="14" />
+      </NODE>
+    </NODE>
+  </PLAYLISTS>
+</DJ_PLAYLISTS>
