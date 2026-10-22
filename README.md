@@ -1,80 +1,62 @@
-🛠️ ALPHA SOFTWARE UNDER CONSTRUCTION — Use at your own risk. Backwards compatibility not guaranteed.
+# Auto DJ (autodj)
 
-```text
-╔══════════════════════════════════════════════════════════════════════════════╗
-║                                                                              ║
-║                     ██╗   ██╗███╗   ██╗██████╗ ███████╗██████╗              ║
-║                     ██║   ██║████╗  ██║██╔══██╗██╔════╝██╔══██╗             ║
-║                     ██║   ██║██╔██╗ ██║██║  ██║█████╗  ██████╔╝             ║
-║                     ██║   ██║██║╚██╗██║██║  ██║██╔══╝  ██╔══██╗             ║
-║                     ╚██████╔╝██║ ╚████║██████╔╝███████╗██║  ██║             ║
-║                      ╚═════╝ ╚═╝  ╚═══╝╚═════╝ ╚══════╝╚═╝  ╚═╝             ║
-║                                                                              ║
-║                     ██████╗ ██████╗ ███╗   ██╗███████╗████████╗██████╗      ║
-║                    ██╔════╝██╔═══██╗████╗  ██║██╔════╝╚══██╔══╝██╔══██╗     ║
-║                    ██║     ██║   ██║██╔██╗ ██║███████╗   ██║   ██████╔╝     ║
-║                    ██║     ██║   ██║██║╚██╗██║╚════██║   ██║   ██╔══██╗     ║
-║                    ╚██████╗╚██████╔╝██║ ╚████║███████║   ██║   ██║  ██║     ║
-║                     ╚═════╝ ╚═════╝ ╚═╝  ╚═══╝╚══════╝   ╚═╝   ╚═╝  ╚═╝     ║
-║                                                                              ║
-║                     █████╗ ██╗     ██████╗ ██╗  ██╗ █████╗                  ║
-║                    ██╔══██╗██║     ██╔══██╗██║  ██║██╔══██╗                 ║
-║                    ███████║██║     ██████╔╝███████║███████║                 ║
-║                    ██╔══██║██║     ██╔═══╝ ██╔══██║██╔══██║                 ║
-║                    ██║  ██║███████╗██║     ██║  ██║██║  ██║                 ║
-║                    ╚═╝  ╚═╝╚══════╝╚═╝     ╚═╝  ╚═╝╚═╝  ╚═╝                 ║
-║                                                                              ║
-║                    ╔══════════════════════════════════════╗                  ║
-║                    ║     ⚠️  ALPHA SOFTWARE  ⚠️           ║                  ║
-║                    ║  EXPECT BREAKING CHANGES & BUGS     ║                  ║
-║                    ║  NOT READY FOR PRODUCTION USE       ║                  ║
-║                    ╚══════════════════════════════════════╝                  ║
-║                                                                              ║
-╚══════════════════════════════════════════════════════════════════════════════╝
-```
+A Python package that assembles DJ mixes automatically: analyze tracks
+(BPM/key/energy with librosa), sequence them for harmonic and energy flow,
+render transitions with DSP (frequency-split/bass-swap style crossfades,
+pitch/tempo adjustment), normalize loudness (pyloudnorm), and export —
+including Rekordbox XML playlists. A FastAPI web dashboard (`autodj/gui.py`)
+wraps it.
 
----
-# 🌌 Auto DJ 8.11.0: The Autonomous Audiophile Engine
+**Version: 8.15.0** (`pyproject.toml` / `VERSION.md`). The README this
+replaces advertised 8.11.0 and wore static badges claiming "tests passing"
+and an MIT license — there is no LICENSE file in the repo and the badges
+were not connected to any CI. Its feature copy ("world-class", "studio-
+grade, harmonically perfect", "zero human intervention") was marketing,
+not measurement.
 
-[![Version](https://img.shields.io/badge/version-8.11.0-blueviolet)](./VERSION.md)
-[![License](https://img.shields.io/badge/license-MIT-green)](./LICENSE)
-[![Tests](https://img.shields.io/badge/tests-passing-success)](./tests)
+## The package
 
-**Auto DJ** is a world-class, fully autonomous audio mixing platform designed to transform raw music collections into studio-grade, harmonically perfect, and energetically optimized DJ sets with zero human intervention.
+- `autodj/core.py` (~40 KB) — mix assembly engine
+- `autodj/analysis.py` (~28 KB) — track analysis (librosa)
+- `autodj/dsp.py`, `autodj/np_signal.py` — transition DSP
+- `autodj/plugins.py` — plugin system incl. the Rekordbox exporter
+  (`tests/test_rekordbox_plugin.py`)
+- `autodj/gui.py` + `templates/` — FastAPI dashboard
+- `autodj/cli.py`, `autodj/cluster.py`, `autodj/scheduling.py`,
+  `autodj/midi.py`, `autodj/monitoring.py`, `autodj/models.py`
+- `tests/` — seven small pytest files (analysis, DSP, integration, MIDI,
+  Rekordbox, feature tests)
+- Root scripts: `make_artist_mixes.py`, `run_artist_mix.py`,
+  `run_filtered_mix.py`, `convert_to_mp3.py`, driven by `config.py`;
+  `auto_dj.py` is a thin wrapper over the package. `Dockerfile` +
+  `docker-compose.yml` included. Docs in `Documentation/`.
 
-## ✨ Key Features
+Dependencies (`requirements.txt`): librosa, numpy, scipy, pydub,
+soundfile, pyloudnorm, fastapi, uvicorn, jinja2. FFmpeg is required by
+pydub.
 
-- **🌍 Global Intelligence**: Simulated Annealing algorithm solves the set-sequencing optimization problem for perfect harmonic and energy flow.
-- **⚡ High-Performance**: Parallel processing pipeline for metadata analysis and audio time-stretching (multi-core optimized).
-- **🎹 Harmonic Perfection**: Automatic high-fidelity pitch shifting (+/- 2 semitones) for transparent key matching.
-- **🧠 Structural Awareness**: Smart phrase detection anchors transitions to natural musical boundaries (drops/breakdowns).
-- **💎 Professional Mastering**: BS.1770-4 LUFS -1 integrated normalization ensuring consistent sonic transparency.
-- **🌊 Advanced DSP**: 10th-order Butterworth frequency-split transitions (Bass-Swap, Echo-Out, HPF-Sweep).
-- **🖥️ Interactive Dashboard**: FastAPI web interface with real-time waveform visualization via Wavesurfer.js.
+## The root directory is also the output folder
 
-## 🚀 Quick Start
+Most of the repo root is *generated output from real runs*: per-artist
+Rekordbox XML + tracklist pairs (Ajja, Astrix, Avalon, Cosmosis, 1200
+Micrograms, Space Tribe, Tristan, Koxbox, Mad Tribe, GMS family, Electric
+Universe, Mekkanikka, Outsiders, classic/modern psytrance sets, a
+`final_dj_master_*` set), dashboard screenshots — including error
+screenshots (`v8_11_error.png`, `v8_13_version_error.png`) — and GUI logs.
+So the tool demonstrably ran and produced mixes; it also demonstrably
+threw errors that were screenshotted and committed alongside the wins.
 
-### 1. Installation
-Ensure you have Python 3.8+ and FFmpeg installed.
+## Usage
+
 ```bash
 pip install -r requirements.txt
+python3 auto_dj.py --gui                                   # dashboard
+python3 auto_dj.py --input ./my_music --reorder --bpm 140  # CLI mixdown
+python3 make_artist_mixes.py                               # batch artist mixes
 ```
 
-### 2. Launch the Web Dashboard
-```bash
-python3 auto_dj.py --gui
-```
+## Status
 
-### 3. Command Line Mixdown
-```bash
-python3 auto_dj.py --input ./my_music --reorder --bpm 140 --end-bpm 150
-```
-
-## 📚 Documentation
-- **[User Manual](./Documentation/MANUAL.md)**: High-quality guide for end-users.
-- **[Technical Design](./Documentation/DESIGN.md)**: Mathematical and algorithmic foundations.
-- **[Architecture Overview](./Documentation/PROJECT_DETAILS.md)**: Deep dive into the modular package structure.
-- **[Omni-Directive](./Documentation/OMNI_DIRECTIVE.md)**: Operational framework for autonomous agents.
-
----
-*Magnificent! Extraordinary! Insanely Great! The Party Never Stops.*
+Personal tool, developed in bursts through July 2026 (last commit is an
+automated working-tree checkpoint). Functional core with tests; packaging
+and repo hygiene (outputs in git, no license file) are the rough edges.
