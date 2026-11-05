@@ -2,13 +2,18 @@
 Pure NumPy Signal Processing Utilities (v9.1.0).
 Replacement for scipy.signal with Stateful Filtering support.
 """
+
+from typing import Any, cast
+
 import numpy as np
+
 
 class StatefulIIR:
     """
     Implements a stateful Direct Form I IIR filter.
     Preserves state (z) between calls for smooth block-based filtering.
     """
+
     def __init__(self, b, a, num_channels=2):
         self.b = b
         self.a = a
@@ -26,24 +31,26 @@ class StatefulIIR:
         """
         if chunk.ndim == 1:
             chunk = chunk.reshape(1, -1)
-        
+
         out = np.zeros_like(chunk)
         num_samples = chunk.shape[1]
-        
+
         for n in range(num_samples):
             for ch in range(self.num_channels):
                 # y[n] = b[0]*x[n] + b[1]*x[n-1]... - a[1]*y[n-1]...
                 acc = self.b[0] * chunk[ch, n]
-                
+
                 # Feedback/Forward from state
                 for i in range(1, self.order + 1):
-                    x_prev = self.x_z[i-1, ch] if i <= self.order else 0
-                    y_prev = self.y_z[i-1, ch] if i <= self.order else 0
-                    if i < len(self.b): acc += self.b[i] * x_prev
-                    if i < len(self.a): acc -= self.a[i] * y_prev
-                
+                    x_prev = self.x_z[i - 1, ch]
+                    y_prev = self.y_z[i - 1, ch]
+                    if i < len(self.b):
+                        acc += self.b[i] * x_prev
+                    if i < len(self.a):
+                        acc -= self.a[i] * y_prev
+
                 out[ch, n] = acc
-                
+
                 # Update state (shift)
                 if self.order > 0:
                     self.x_z = np.roll(self.x_z, 1, axis=0)
@@ -52,28 +59,38 @@ class StatefulIIR:
                     self.y_z[0, ch] = acc
         return out
 
-def get_butter_coeffs(cutoff, sr, btype='lowpass'):
-    """Calculates IIR filter coefficients. Uses scipy for 4th-order when available."""
+
+def get_butter_coeffs(cutoff, sr, btype="lowpass") -> tuple[Any, Any]:
+    """Calculates IIR filter coefficients. Uses scipy for 4th-order when available.
+
+    scipy's butter() is overloaded on ``output`` and its stubs resolve to a union
+    that may be a three-element (sos) tuple or None. The result is cast to a
+    plain (b, a) pair so callers can unpack it without ambiguity.
+    """
     try:
         from scipy.signal import butter
-        b, a = butter(4, cutoff / (0.5 * sr), btype=btype)
-        return b, a
+
+        coeffs = cast(
+            "tuple[Any, Any]", butter(4, cutoff / (0.5 * sr), btype=btype, output="ba")
+        )
+        return coeffs[0], coeffs[1]
     except ImportError:
         # Fallback: 1st-order coefficients
         nyquist = 0.5 * sr
         f = cutoff / nyquist
-        if btype == 'lowpass':
+        if btype == "lowpass":
             alpha = f / (f + 1)
             return np.array([alpha, alpha]), np.array([1.0, alpha - 1.0])
-        else:
-            alpha = 1.0 / (f + 1)
-            return np.array([alpha, -alpha]), np.array([1.0, alpha - 1.0])
+        alpha = 1.0 / (f + 1)
+        return np.array([alpha, -alpha]), np.array([1.0, alpha - 1.0])
+
 
 def apply_iir_filter(data, b, a):
     """One-shot filter using scipy's compiled C implementation for speed.
     Falls back to StatefulIIR if scipy is unavailable."""
     try:
         from scipy.signal import lfilter
+
         if data.ndim == 2:
             out = np.zeros_like(data)
             for ch in range(data.shape[0]):
@@ -85,6 +102,7 @@ def apply_iir_filter(data, b, a):
         f = StatefulIIR(b, a, num_channels=num_ch)
         return f.process(data)
 
+
 def fast_correlate(o_k, i_k):
     """FFT-based cross-correlation. O(n log n) instead of O(n^2)."""
     n = len(o_k) + len(i_k) - 1
@@ -92,7 +110,7 @@ def fast_correlate(o_k, i_k):
     fft_size = 1
     while fft_size < n:
         fft_size *= 2
-    O = np.fft.rfft(o_k, n=fft_size)
-    I = np.fft.rfft(i_k, n=fft_size)
-    corr = np.fft.irfft(O * np.conj(I), n=fft_size)
+    o_spec = np.fft.rfft(o_k, n=fft_size)
+    i_spec = np.fft.rfft(i_k, n=fft_size)
+    corr = np.fft.irfft(o_spec * np.conj(i_spec), n=fft_size)
     return corr[:n]

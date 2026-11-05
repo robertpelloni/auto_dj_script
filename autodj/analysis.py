@@ -9,8 +9,44 @@ Key improvements:
 - analyze_geometry: walks beats from center outward to find first/last beats
 """
 
+import math
+from typing import Any, cast
+
 import numpy as np
-from .np_signal import get_butter_coeffs, apply_iir_filter, fast_correlate
+
+from .np_signal import apply_iir_filter, fast_correlate, get_butter_coeffs
+
+
+def _int(value, default=0):
+    """int() guarded against None/inf/nan.
+
+    These conversions are all derived from audio parameters (sample rate, BPM)
+    and cannot realistically fail, but a single bad frame should never abort a
+    whole mix render, so they degrade to a default instead.
+    """
+    try:
+        return int(value)
+    except (TypeError, ValueError, OverflowError):
+        return default
+
+
+def _float(value, default=0.0):
+    """float() guarded against None/inf/nan."""
+    try:
+        result = float(value)
+    except (TypeError, ValueError, OverflowError):
+        return default
+    return result if math.isfinite(result) else default
+
+
+def _butter_coeffs(cutoff, sr, btype="lowpass"):
+    """get_butter_coeffs() with a pinned 2-tuple return type.
+
+    scipy's butter() is typed with an overload that may return three values
+    (the sos form), which makes the helper's inferred return type a union that
+    callers cannot unpack. Narrowing it here keeps the call sites clean.
+    """
+    return cast("tuple[Any, Any]", get_butter_coeffs(cutoff, sr, btype=btype))
 
 
 def get_musical_key(y, sr):
@@ -46,12 +82,12 @@ def get_musical_key(y, sr):
                 :num_frames
             ]
             spectra = np.abs(np.fft.rfft(frames * window, axis=1))
-            for j, c_bin in zip(valid_bin_indices, chroma_bins):
+            for j, c_bin in zip(valid_bin_indices, chroma_bins, strict=True):
                 chroma[c_bin] += np.sum(spectra[:, j])
         except Exception:
             frame = y_short[:n_fft] * window if len(y_short) >= n_fft else y_short
             spec = np.abs(np.fft.rfft(frame, n=n_fft))
-            for j, c_bin in zip(valid_bin_indices, chroma_bins):
+            for j, c_bin in zip(valid_bin_indices, chroma_bins, strict=True):
                 if j < len(spec):
                     chroma[c_bin] += spec[j]
 
@@ -120,12 +156,64 @@ def is_harmonically_compatible(key1, key2):
     c1, c2 = get_camelot_key(key1), get_camelot_key(key2)
     if "Unknown" in (c1, c2):
         return True
-    n1, m1, n2, m2 = int(c1[:-1]), c1[-1], int(c2[:-1]), c2[-1]
+    n1, m1, n2, m2 = _int(c1[:-1]), c1[-1], _int(c2[:-1]), c2[-1]
     if n1 == n2:
         return True
-    if m1 == m2 and (abs(n1 - n2) in (1, 11)):
-        return True
-    return False
+    return bool(m1 == m2 and abs(n1 - n2) in (1, 11))
+
+
+def _kick_interval_bpm(audio, sr, lo=40.0, hi=120.0):
+    """Tempo from the spacing of actual kick transients.
+
+    Autocorrelation of a 4/4 track peaks more strongly at the two-beat period
+    than at the one-beat period, which is the classic source of octave errors.
+    Measuring the interval between kick onsets sidesteps that: in kick-driven
+    electronic music the kick lands on every beat, so the spacing IS the beat
+    period.
+
+    Returns (bpm, relative_iqr, consistency), or (None, None, 0.0) if the low
+    band has no usable kick grid.
+
+    relative_iqr : inter-quartile range of the intervals / median interval.
+                   Near zero means a machine-regular kick.
+    consistency  : fraction of intervals within 20% of the median.
+    """
+    try:
+        from scipy.signal import butter, find_peaks, lfilter, sosfilt
+
+        nyq = float(sr) / 2.0
+        if nyq <= 0:
+            return None, None, 0.0
+
+        sos = butter(4, [lo / nyq, min(hi / nyq, 0.99)], btype="band", output="sos")
+        x = np.asarray(sosfilt(sos, audio), dtype=np.float64)
+
+        env = np.abs(x)
+        w = max(1, int(sr * 0.005))
+        env = np.asarray(lfilter(np.ones(w) / w, [1.0], env), dtype=np.float64)
+        peak = float(np.max(env))
+        if peak <= 0:
+            return None, None, 0.0
+        env = env / peak
+        env = np.clip(env - float(np.percentile(env, 20)), 0.0, None)
+
+        min_dist = max(1, int(sr * 0.24))  # implies a 250 BPM ceiling
+        prom = float(np.percentile(env, 75)) * 0.35
+        peaks, _ = find_peaks(env, distance=min_dist, prominence=prom)
+        if len(peaks) < 16:
+            return None, None, 0.0
+
+        ioi = np.diff(peaks) / sr
+        med = float(np.median(ioi))
+        if med <= 0:
+            return None, None, 0.0
+
+        q1, q3 = np.percentile(ioi, [25, 75])
+        rel_iqr = float(q3 - q1) / med
+        consistency = float(np.mean(np.abs(ioi - med) <= 0.2 * med))
+        return 60.0 / med, rel_iqr, consistency
+    except Exception:
+        return None, None, 0.0
 
 
 def get_native_bpm(y, sr):
@@ -157,8 +245,8 @@ def get_native_bpm(y, sr):
 
     # ── Multi-band spectral flux onset detection ──
     # Use overlapping STFT windows tuned for EDM transients
-    n_fft = int(sr * 0.046)  # ~46ms window — captures kick attack
-    n_fft = 2 ** int(np.ceil(np.log2(n_fft)))  # power of 2
+    n_fft = _int(sr * 0.046)  # ~46ms window — captures kick attack
+    n_fft = 2 ** _int(np.ceil(np.log2(n_fft)))  # power of 2
     hop = n_fft // 2
 
     # Compute STFT manually to avoid scipy soft-dependency issues
@@ -229,8 +317,8 @@ def get_native_bpm(y, sr):
 
         # Search 60-220 BPM
         hop_effective = hop * scale_hop
-        min_lag = max(1, int(60 * sr / (hop_effective * 220)))
-        max_lag = min(int(60 * sr / (hop_effective * 60)), len(acf) - 2)
+        min_lag = max(1, _int(60 * sr / (hop_effective * 220)))
+        max_lag = min(_int(60 * sr / (hop_effective * 60)), len(acf) - 2)
 
         if max_lag <= min_lag + 2:
             continue
@@ -258,17 +346,17 @@ def get_native_bpm(y, sr):
 
     if not bpm_candidates:
         # Fallback: simple ACF on the kick envelope
-        b, a_coeff = get_butter_coeffs(150.0, sr, btype="lowpass")
+        b, a_coeff = _butter_coeffs(150.0, sr, btype="lowpass")
         y_kick = np.abs(apply_iir_filter(y_mono[: sr * 60], b, a_coeff))
         y_ds = y_kick[::hop]
         corr = fast_correlate(y_ds, y_ds)
         corr = corr[len(corr) // 2 :]
         if len(corr) > 2 and corr[0] > 0:
             corr = corr / corr[0]
-            min_lag = max(1, int(60 * sr / (hop * 200)))
-            max_lag = min(int(60 * sr / (hop * 80)), len(corr) - 2)
+            min_lag = max(1, _int(60 * sr / (hop * 200)))
+            max_lag = min(_int(60 * sr / (hop * 80)), len(corr) - 2)
             if max_lag > min_lag:
-                best_lag = int(np.argmax(corr[min_lag : max_lag + 1])) + min_lag
+                best_lag = _int(np.argmax(corr[min_lag : max_lag + 1])) + min_lag
                 bpm_candidates.append((60.0 * sr / (hop * best_lag), 0.3))
 
         if not bpm_candidates:
@@ -362,13 +450,39 @@ def get_native_bpm(y, sr):
             except Exception:
                 pass
 
+    # ── Kick-interval verification ──
+    # The multi-band ACF above is biased toward the two-beat peak on 4/4
+    # material, which is what produces octave errors (a 145 BPM psytrance track
+    # coming back as 190, or as 99). The spacing between kick transients is the
+    # most direct tempo evidence available, so prefer it when the kick grid is
+    # tight, and otherwise when it disagrees strongly but sits in the usual
+    # electronic dance band with good internal consistency.
+    try:
+        kick_bpm, kick_rel_iqr, kick_consistency = _kick_interval_bpm(audio, sr)
+    except Exception:
+        kick_bpm, kick_rel_iqr, kick_consistency = None, None, 0.0
+
+    if (
+        kick_bpm
+        and 60.0 < kick_bpm < 220.0
+        and (
+            (kick_rel_iqr is not None and kick_rel_iqr < 0.05)
+            or (
+                abs(best_bpm - kick_bpm) / kick_bpm > 0.15
+                and 130.0 <= kick_bpm <= 160.0
+                and kick_consistency >= 0.5
+            )
+        )
+    ):
+        best_bpm = kick_bpm
+
     # Final clamp
     if best_bpm < 80:
         best_bpm *= 2
     elif best_bpm > 200:
         best_bpm /= 2
 
-    return float(best_bpm), y, sr
+    return _float(best_bpm), y, sr
 
 
 def _compute_onset_env(audio, sr, n_fft, hop):
@@ -398,7 +512,7 @@ def get_energy_profile(y, sr):
 def detect_phrases(y, sr):
     """Detects structural boundaries using energy novelty."""
     y_mono = np.mean(y, axis=0) if y.ndim == 2 else y
-    hop = int(sr * 2)
+    hop = _int(sr * 2)
     energy = [np.mean(np.abs(y_mono[i : i + hop])) for i in range(0, len(y_mono), hop)]
     diff = np.abs(np.diff(energy))
     threshold = np.mean(diff) * 2
@@ -450,17 +564,16 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
         # perceptual "beat" (the kick peak) rather than the onset,
         # eliminating galloping caused by different onset-to-peak delays.
         try:
-            from scipy.signal import (
-                butter as _butter,
-                lfilter as _lfilter,
-                find_peaks as _fp,
-            )
+            from scipy.signal import butter, find_peaks, lfilter
 
-            _b, _a = _butter(2, 80.0 / (0.5 * sr), btype="low")
-            _kick_env = np.abs(_lfilter(_b, _a, y_mono))
+            _b, _a = cast(
+                "tuple[Any, Any]",
+                butter(2, 80.0 / (0.5 * sr), btype="low", output="ba"),
+            )
+            _kick_env = np.abs(lfilter(_b, _a, y_mono))
             _kick_env = _kick_env / (np.max(_kick_env) + 1e-10)
-            _min_dist = int(0.6 * 60 / target_bpm * sr)
-            _kick_peaks, _ = _fp(_kick_env, height=0.2, distance=_min_dist)
+            _min_dist = _int(0.6 * 60 / target_bpm * sr)
+            _kick_peaks, _ = find_peaks(_kick_env, height=0.2, distance=_min_dist)
             _kick_peak_ms = (_kick_peaks * 1000.0 / sr).astype(int)
 
             if len(_kick_peak_ms) > 10:
@@ -527,31 +640,35 @@ def analyze_geometry(segment, sr, target_bpm, beats_per_bar, transition_bars):
         pass
 
     # Fallback: original kick envelope method
-    b, a = get_butter_coeffs(150.0, sr, btype="lowpass")
+    b, a = _butter_coeffs(150.0, sr, btype="lowpass")
     y_kick = np.abs(apply_iir_filter(y_mono, b, a))
 
-    search_start = int(sr * 10)
+    search_start = _int(sr * 10)
     window_s = y_kick[:search_start]
     first_kick_sample = np.argmax(window_s) if len(window_s) > 0 else 0
-    first_beat_ms = int(first_kick_sample * 1000 / sr)
+    first_beat_ms = _int(first_kick_sample * 1000 / sr)
 
-    search_end = int(sr * 20)
+    search_end = _int(sr * 20)
     window_e = y_kick[-search_end:] if len(y_kick) > search_end else y_kick
     last_kick_rel = np.argmax(window_e) if len(window_e) > 0 else 0
     last_kick_sample = len(y_kick) - (len(window_e) - last_kick_rel)
-    last_beat_ms = int(last_kick_sample * 1000 / sr)
+    last_beat_ms = _int(last_kick_sample * 1000 / sr)
 
     beat_times_ms = np.arange(
         first_beat_ms, len(y_mono) * 1000 / sr, ms_per_beat
     ).astype(int)
-    return beat_times_ms, int(ms_per_transition), int(first_beat_ms), int(last_beat_ms)
+    return (
+        beat_times_ms,
+        _int(ms_per_transition),
+        _int(first_beat_ms),
+        _int(last_beat_ms),
+    )
 
 
 def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar):
     """Analyzes phrase structure to determine optimal transition length."""
     outro_ph = detect_phrases(outro_y, sr)
     intro_ph = detect_phrases(intro_y, sr)
-    ms_per_bar = (60000.0 / target_bpm) * beats_per_bar
     if len(outro_ph) > 5 or len(intro_ph) > 5:
         return 8
     elif len(outro_ph) < 2 and len(intro_ph) < 2:
@@ -563,8 +680,8 @@ def calculate_dynamic_transition(outro_y, intro_y, sr, target_bpm, beats_per_bar
 def identify_loopable_phrase(y, sr, bpm, beats_per_bar=4):
     """Finds a high-energy bar for looping (tail extension)."""
     ms_per_beat = 60000.0 / bpm
-    samples_per_bar = int(sr * (ms_per_beat * beats_per_bar / 1000.0))
-    window = y[:, -int(sr * 30) :] if y.ndim == 2 else y[-int(sr * 30) :]
+    samples_per_bar = _int(sr * (ms_per_beat * beats_per_bar / 1000.0))
+    window = y[:, -_int(sr * 30) :] if y.ndim == 2 else y[-_int(sr * 30) :]
     step = samples_per_bar
     max_e, best_chunk = 0, None
     for i in range(
@@ -593,7 +710,8 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     3. Try different offsets and count how many peaks align within 10ms
     4. Return the offset with the most aligned peaks
     """
-    from scipy.signal import butter, lfilter, find_peaks as sp_find_peaks
+    from scipy.signal import butter, lfilter
+    from scipy.signal import find_peaks as sp_find_peaks
 
     o_m = np.mean(outro_y, axis=0) if outro_y.ndim == 2 else outro_y
     i_m = np.mean(intro_y, axis=0) if intro_y.ndim == 2 else intro_y
@@ -601,9 +719,12 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     # Use a very low cutoff (60Hz) to isolate just the kick drum
     # This avoids confusion from basslines and mid-range content
     try:
-        b, a = butter(2, 60.0 / (0.5 * sr), btype="low")
+        b, a = cast(
+            "tuple[Any, Any]",
+            butter(2, 60.0 / (0.5 * sr), btype="low", output="ba"),
+        )
     except Exception:
-        b, a = get_butter_coeffs(80.0, sr, btype="lowpass")
+        b, a = _butter_coeffs(80.0, sr, btype="lowpass")
     o_kick = np.abs(lfilter(b, a, o_m))
     i_kick = np.abs(lfilter(b, a, i_m))
 
@@ -616,18 +737,18 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     i_kick = i_kick / i_max
 
     # Find kick peaks in both tracks
-    min_dist = int(0.7 * 60 / bpm * sr)  # 70% of a beat period
+    min_dist = _int(0.7 * 60 / bpm * sr)  # 70% of a beat period
     o_peaks, _ = sp_find_peaks(o_kick, height=0.15, distance=min_dist)
     i_peaks, _ = sp_find_peaks(i_kick, height=0.15, distance=min_dist)
 
     if len(o_peaks) < 4 or len(i_peaks) < 4:
         # Fallback: use cross-correlation if not enough peaks
-        win = min(len(o_kick), len(i_kick), int(sr * (60 / bpm) * 8))
+        win = min(len(o_kick), len(i_kick), _int(sr * (60 / bpm) * 8))
         if win < 100:
             return 0
         corr = fast_correlate(o_kick[:win], i_kick[:win])
         center = win - 1
-        search = int(sr * (60 / bpm) * 1.0)
+        search = _int(sr * (60 / bpm) * 1.0)
         start = max(0, center - search)
         end = min(len(corr), center + search)
         slice_c = corr[start:end]
@@ -640,7 +761,7 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
             return 0
         if abs(lag) > search * 0.9:
             return 0
-        return int(lag * 1000 / sr)
+        return _int(lag * 1000 / sr)
 
     # Use only the middle portion of peaks (most reliable)
     # Skip first/last 10% (filter settling, breakdowns)
@@ -655,14 +776,14 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     # Search for the offset that aligns the most peaks
     ms_per_beat = 60.0 / bpm * 1000
     max_offset_ms = ms_per_beat  # search +/-1 beat
-    tolerance = int(0.010 * sr)  # 10ms tolerance for "aligned"
+    tolerance = _int(0.010 * sr)  # 10ms tolerance for "aligned"
 
     best_offset = 0
     best_count = 0
 
     # Coarse search: 5ms steps
     for offset_ms in np.arange(-max_offset_ms, max_offset_ms, 5.0):
-        offset_samples = int(offset_ms * sr / 1000)
+        offset_samples = _int(offset_ms * sr / 1000)
         shifted = i_peaks + offset_samples
         count = 0
         for sp in shifted:
@@ -674,7 +795,7 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
 
     # Fine search: 1ms steps around the best
     for offset_ms in np.arange(best_offset - 10, best_offset + 10, 1.0):
-        offset_samples = int(offset_ms * sr / 1000)
+        offset_samples = _int(offset_ms * sr / 1000)
         shifted = i_peaks + offset_samples
         count = 0
         for sp in shifted:
@@ -689,7 +810,7 @@ def find_sync_offset(outro_y, intro_y, sr, bpm):
     if best_count < min_aligned:
         return 0
 
-    return int(best_offset)
+    return _int(best_offset)
 
 
 def get_genre_archetype(y, sr, bpm=None):
