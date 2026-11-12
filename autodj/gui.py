@@ -1,4 +1,4 @@
-""" Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (8.11.0). """
+""" Web-based GUI for the Auto DJ Script using FastAPI and WebSockets (8.16.0). """
 
 from fastapi import FastAPI, Request, Form, BackgroundTasks, WebSocket, WebSocketDisconnect
 from fastapi.templating import Jinja2Templates

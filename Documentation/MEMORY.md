@@ -1,4 +1,4 @@
-# 🧠 Project Memory & Technical Observations (8.15.0)
+# 🧠 Project Memory & Technical Observations (8.16.0)
 
 ## Design Preferences
 
@@ -12,6 +12,20 @@
 2. **Phase Vocoder Artifacts**: While Phase Vocoders are superior to interpolation, warping beyond 10% can introduce robotic artifacts. The engine should prioritize set-wide tempo adjustments to minimize per-track warp ratios.
 3. **SA Cooling Schedule**: The current cooling rate in \`core.py\` is optimized for ~20 track sets. Larger sets (50+) may require a logarithmic cooling schedule.
 4. **LUFS vs Peak**: Moving from Peak-normalization to -14.0 LUFS integrated loudness has fixed the "level jumping" issue observed in v2.x.
+
+## Session Insights (v8.16.0)
+
+### Pure-NumPy Spectral Flux & Kick-IOI BPM Detection
+
+- **NumPy 2.5 / `numba` Compatibility**: `librosa.onset` triggers a broken lazy `numba` import on Python 3.14 + NumPy 2.5. `autodj/analysis.py` now computes 4-band spectral flux + multi-scale autocorrelation purely in NumPy/SciPy.
+- **Two-Beat ACF Octave Trap**: Even multi-band ACF can lock onto two-beat or half-beat lags on psytrance tracks (producing ~99 BPM or ~190 BPM for 145 BPM tracks). `_kick_interval_bpm()` measures median inter-onset intervals in the `40–120 Hz` kick band and overrides ACF whenever interquartile jitter is `<= 20 ms`.
+- **Soundfile Channel Axis**: `soundfile.read(..., always_2d=False)` returns `(N_samples, 2)` for stereo files (`axis=1` averages channels), whereas `pydub_to_ndarray` uses `(2, N_samples)`. Always check shape or average along the smaller 2-channel axis.
+
+### Equal-Power Crossfades & Dual Bass Transition Modes
+
+- **Fader Exponents Removed**: Asymmetric `x**0.8` / `x**1.2` exponents inside `cos`/`sin` crossfades caused a `-1.1 dB` power dip at `x = 0.5`. Standard `cos(pi*x/2)` and `sin(pi*x/2)` restore flat `cos^2 + sin^2 = 1.0` power summation.
+- **Dual Bass Curves (`--bass-transition [swap|fade]`)**: `swap` holds outgoing bass for 40% then swaps over 40% of the overlap; `fade` crossfades low-end across 100% of the overlap for tracks whose outro/intro kicks have very different timbres.
+- **Plugin Registration Scope**: `@PluginRegistry.register_tool` classes (such as `SmartReplenishTool`) must live at module top level so registration runs on import.
 
 ## Session Insights (v8.14.0)
 

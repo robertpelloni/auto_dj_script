@@ -72,8 +72,11 @@ if len(selected) < 2:
     sys.exit(1)
 
 # Clear and copy
+os.makedirs(SRCDIR, exist_ok=True)
+os.makedirs(OUTDIR, exist_ok=True)
 for f in glob.glob(f"{SRCDIR}/*"):
-    os.remove(f)
+    if os.path.isfile(f):
+        os.remove(f)
 for f, b in selected:
     shutil.copy2(f, os.path.join(SRCDIR, os.path.basename(f)))
 
@@ -82,7 +85,7 @@ from autodj.core import compile_master_set
 import config
 
 safe_name = artist.lower().replace(" ", "_")
-output_file = f"./{safe_name}_mix.flac"
+output_file = os.path.join(OUTDIR, f"{safe_name}_mix.flac")
 
 
 class Args:
@@ -95,6 +98,7 @@ class Args:
     highpass = config.HIGHPASS_CUTOFF
     transition_bars = config.TRANSITION_BARS
     beats_per_bar = config.BEATS_PER_BAR
+    bass_transition = getattr(config, "BASS_TRANSITION_STYLE", "swap")
     dry_run = False
     reorder = False
     archetype = "auto"

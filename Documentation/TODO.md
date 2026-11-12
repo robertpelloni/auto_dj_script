@@ -1,23 +1,25 @@
-# 📝 Immediate Tasks (8.15.0)
+# 📝 Immediate Tasks (8.16.0)
 
 ## 🚀 Features (Immediate Implementation)
 
+- [ ] **Web Dashboard Bass-Transition Selector**:
+  - [ ] Expose `--bass-transition [swap|fade]` as a live dropdown in `templates/index.html` and `autodj/gui.py`.
+- [ ] **Per-Track Adaptive Gain Staging**:
+  - [ ] Normalize per-track integrated loudness prior to overlap rendering to narrow the ~10 dB inter-track dynamic spread across multi-era compilations.
+- [ ] **Rekordbox Hot-Cue Transition Export**:
+  - [ ] Emit `POSITION_MARK` cue points at transition start, bass swap/fade midpoint, and outro end in `_rekordbox.xml`.
 - [ ] **AI Genre Evolution**:
-  - [ ] Transition from heuristic to CNN-based style classification in `models.py`.
-  - [ ] Train weights on curated library of 1000+ tracks.
-- [ ] **Mobile Companion App**:
-  - [ ] Flutter-based status dashboard.
-  - [ ] Firebase Cloud Messaging integration for mix completion notifications.
+  - [ ] Transition from spectral-centroid heuristic to CNN-based style classification in `autodj/models.py`.
 
 ## 🛠 Improvements & Refactoring
 
-- [ ] **DSP Performance**: Benchmark and optimize 10th-order Butterworth implementation.
-- [ ] **Distributed SA**: Implement multi-node Simulated Annealing (True Quantum).
+- [ ] **Parallel Transition Worker**: Wire `transition_render_worker` in `autodj/core.py` into `ClusterNode` or remove unused path once benchmarked.
+- [ ] **SciPy NumPy 2.5 Deprecation Guard**: Monitor `scipy.signal.sosfilt` / `filtfilt` updates for NumPy 2.5 shape assignment deprecation warnings.
 
 ## 📚 Documentation
 
 - [ ] Create `Documentation/SCHEDULING_SPEC.md` for advanced event orchestration.
-- [ ] Update `MANUAL.md` with Preference Bias instructions.
+- [ ] Update `MANUAL.md` with Preference Bias and `--bass-transition` examples.
 
 ---
 *Keep on goin'! Don't stop the party!*

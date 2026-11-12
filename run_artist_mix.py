@@ -1,5 +1,6 @@
 """Run a mix for a single artist at specified BPM."""
 
+import os
 import sys
 import time
 
@@ -9,7 +10,8 @@ import config
 
 artist = sys.argv[1]
 target_bpm = int(sys.argv[2])
-output_file = f"./{artist.lower().replace(' ', '_')}_mix.flac"
+os.makedirs("artist_mixes", exist_ok=True)
+output_file = os.path.join("artist_mixes", f"{artist.lower().replace(' ', '_')}_mix.flac")
 
 
 class Args:
@@ -22,6 +24,7 @@ class Args:
     highpass = config.HIGHPASS_CUTOFF
     transition_bars = config.TRANSITION_BARS
     beats_per_bar = config.BEATS_PER_BAR
+    bass_transition = getattr(config, "BASS_TRANSITION_STYLE", "swap")
     dry_run = False
     reorder = False
     archetype = "auto"

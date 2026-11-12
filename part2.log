@@ -1,0 +1,102 @@
+[*] Analyzing 19 tracks (Sequential)...
+  [1/19] Mekkanikka; Ajja - 2025 - Ultrasonic - 2 - Ultrasonic.flac: BPM=172.3, Key=F# Minor, Genre=Hi-Tech
+  [2/19] Carbon Based Lifeforms - 2016 - MOS 6581 Remixes - 2 - MOS 6581 (Ajja remix).flac: BPM=172.3, Key=D# Minor, Genre=Hi-Tech
+  [3/19] Burn In Noise & Ajja; Ajja - 2023 - Image of Yourself (Noface remix) - 1 - Image of Yourself (Noface remix).flac: BPM=172.3, Key=A# Major, Genre=Hi-Tech
+  [4/19] Ajja - 2020 - Chillsome - 1 - Full Moon Koh Pha Ngan.flac: BPM=166.7, Key=A# Major, Genre=Full-On
+  [5/19] Tripswitch - 2021 - Oddular - 10 - Shamanic Tea (Ajja remix).flac: BPM=172.3, Key=C# Minor, Genre=Hi-Tech
+  [6/19] Ajja - 2007 - Psychogenica - 4 - Funklestiltskin.flac: BPM=156.6, Key=D# Major, Genre=Progressive
+  [7/19] Ajja; Arcon - 2018 - Maze of Mirrors - 1 - Maze of Mirrors.flac: BPM=161.5, Key=D# Minor, Genre=Full-On
+  [8/19] Ajja - 2021 - Oddular - 7 - Original Spin.flac: BPM=184.6, Key=D# Major, Genre=Hi-Tech
+  [9/19] Ajja - 2021 - Oddular - 4 - Goa Head Ted.flac: BPM=178.2, Key=G# Major, Genre=Hi-Tech
+  [10/19] Ajja - 2017 - Spira Mirabilis - 2 - Bubble Drum.flac: BPM=156.6, Key=C Major, Genre=Progressive
+  [11/19] Ajja - 2017 - Spira Mirabilis - 5 - Ripples in Blue.flac: BPM=166.7, Key=A# Major, Genre=Progressive
+  [12/19] Ajja - 2017 - Spira Mirabilis - 4 - Extraordinarium.flac: BPM=166.7, Key=D# Minor, Genre=Progressive
+  [13/19] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 2 - Aquamarine.flac: BPM=161.5, Key=G# Minor, Genre=Progressive
+  [14/19] Ajja - 2007 - Psychogenica - 5 - Spitfire.flac: BPM=161.5, Key=F# Minor, Genre=Progressive
+  [15/19] Ajja; Menog - 2024 - First Ride - 1 - First Ride.flac: BPM=172.3, Key=D Major, Genre=Hi-Tech
+  [16/19] Flooting Grooves; Ajja - 2016 - Psy Fi - Holographic Universe - 4 - Flanger Management.flac: BPM=178.2, Key=G# Minor, Genre=Hi-Tech
+  [17/19] Ajja - 2007 - Psychogenica - 7 - We Are All Aliens.flac: BPM=166.7, Key=D# Major, Genre=Progressive
+  [18/19] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 6 - Open Horizon.flac: BPM=166.7, Key=F Major, Genre=Progressive
+  [19/19] Ajja - 2007 - Psychogenica - 6 - Lingus Khan.flac: BPM=156.6, Key=A# Major, Genre=Full-On
+  [LOAD] Ajja - 2020 - Chillsome - 1 - Full Moon Koh Pha Ngan.flac - SoundFile OK
+  [RB] rate=1.0077 (166.7 -> 168.0)
+  [LOAD] Ajja - 2017 - Spira Mirabilis - 4 - Extraordinarium.flac - SoundFile OK
+  [RB] rate=1.0077 (166.7 -> 168.0)
+  [LOAD] Ajja - 2007 - Psychogenica - 4 - Funklestiltskin.flac - SoundFile OK
+  [RB] rate=1.0728 (156.6 -> 168.0)
+  [LOAD] Ajja - 2007 - Psychogenica - 7 - We Are All Aliens.flac - SoundFile OK
+  [RB] rate=1.0077 (166.7 -> 168.0)
+  [LOAD] Ajja - 2007 - Psychogenica - 6 - Lingus Khan.flac - SoundFile OK
+  [RB] rate=1.0728 (156.6 -> 168.0)
+  [LOAD] Ajja - 2017 - Spira Mirabilis - 5 - Ripples in Blue.flac - SoundFile OK
+  [RB] rate=1.0077 (166.7 -> 168.0)
+  [LOAD] Carbon Based Lifeforms - 2016 - MOS 6581 Remixes - 2 - MOS 6581 (Ajja remix).flac - SoundFile OK
+  [RB] rate=0.9752 (172.3 -> 168.0)
+  [LOAD] Ajja; Arcon - 2018 - Maze of Mirrors - 1 - Maze of Mirrors.flac - SoundFile OK
+  [RB] rate=1.0403 (161.5 -> 168.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 2 - Aquamarine.flac - SoundFile OK
+  [RB] rate=1.0403 (161.5 -> 168.0)
+  [LOAD] Flooting Grooves; Ajja - 2016 - Psy Fi - Holographic Universe - 4 - Flanger Management.flac - SoundFile OK
+  [RB] rate=0.9427 (178.2 -> 168.0)
+  [LOAD] Mekkanikka; Ajja - 2025 - Ultrasonic - 2 - Ultrasonic.flac - SoundFile OK
+  [RB] rate=0.9752 (172.3 -> 168.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 6 - Open Horizon.flac - SoundFile OK
+  [RB] rate=1.0077 (166.7 -> 168.0)
+  [LOAD] Tripswitch - 2021 - Oddular - 10 - Shamanic Tea (Ajja remix).flac - SoundFile OK
+  [RB] rate=0.9752 (172.3 -> 168.0)
+  [LOAD] Burn In Noise & Ajja; Ajja - 2023 - Image of Yourself (Noface remix) - 1 - Image of Yourself (Noface remix).flac - SoundFile OK
+  [RB] rate=0.9752 (172.3 -> 168.0)
+  [LOAD] Ajja - 2021 - Oddular - 4 - Goa Head Ted.flac - SoundFile OK
+  [RB] rate=0.9427 (178.2 -> 168.0)
+  [LOAD] Ajja - 2021 - Oddular - 7 - Original Spin.flac - SoundFile OK
+  [RB] rate=0.9102 (184.6 -> 168.0)
+  [LOAD] Ajja - 2017 - Spira Mirabilis - 2 - Bubble Drum.flac - SoundFile OK
+  [RB] rate=1.0728 (156.6 -> 168.0)
+  [LOAD] Ajja - 2007 - Psychogenica - 5 - Spitfire.flac - SoundFile OK
+  [RB] rate=1.0403 (161.5 -> 168.0)
+  [LOAD] Ajja; Menog - 2024 - First Ride - 1 - First Ride.flac - SoundFile OK
+  [RB] rate=0.9752 (172.3 -> 168.0)
+ [SYNC] Nudge: 0ms
+ [PREFADE] 49ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=34 in=71 offsets=3 nudge=20ms
+ [SYNC] Nudge: 20ms
+ [PREFADE] 48ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=62 in=71 offsets=27 nudge=-2ms
+ [SYNC] Nudge: -2ms
+ [PREFADE] 18ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=67 in=55 offsets=28 nudge=17ms
+ [SYNC] Nudge: 17ms
+ [KICK-SYNC] peaks: out=30 in=97 offsets=13 nudge=25ms
+ [SYNC] Nudge: 25ms
+ [KICK-SYNC] peaks: out=85 in=56 offsets=27 nudge=19ms
+ [SYNC] Nudge: 19ms
+ [PREFADE] 3ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [PREFADE] 56ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [SYNC] Nudge: 0ms
+ [PREFADE] 32ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=50 in=115 offsets=27 nudge=-4ms
+ [SYNC] Nudge: -4ms
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=52 in=57 offsets=4 nudge=103ms
+ [SYNC] Nudge: 103ms
+ [PREFADE] 4ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=60 in=40 offsets=24 nudge=-37ms
+ [SYNC] Nudge: -37ms
+ [PREFADE] 60ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=71 in=43 offsets=3 nudge=81ms
+ [SYNC] Nudge: 81ms
+ [SYNC] Nudge: 0ms
+ [PREFADE] 75ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=50 in=62 offsets=18 nudge=-3ms
+ [SYNC] Nudge: -3ms
+ [PREFADE] 128ms ambient intro under outgoing track
+[MASTERING] Normalizing final mix to target LUFS...
+[MASTERING] Final mix normalization complete.
+[*] Exporting 138.2 min mix to ./part2.flac...
+[*] Export complete!
+[*] Integration: Rekordbox XML exported to ./part2_rekordbox.xml
+Part 2 complete: 138.2 min in 693s

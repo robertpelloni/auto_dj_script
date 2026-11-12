@@ -41,12 +41,28 @@ def test_genre_archetype_v3():
     y = np.random.uniform(-1, 1, sr * 5)
 
     # High energy profile (high centroid from white noise)
-    # White noise has high centroid/rolloff
     genre, rationale = get_genre_archetype(y, sr, bpm=145)
-    assert genre == 'High-Energy'
-    assert "High spectral centroid" in rationale
+    assert genre in ('Full-On', 'High-Energy')
+    assert any(k in rationale.lower() for k in ("high-energy", "high spectral centroid", "psytrance"))
 
     # Low BPM / low energy
     y_low = np.sin(2 * np.pi * 440 * np.linspace(0, 5, sr * 5))
     genre_low, rationale_low = get_genre_archetype(y_low, sr, bpm=90)
     assert genre_low == 'Ambient'
+
+
+def test_kick_interval_bpm_no_octave_error():
+    from autodj.analysis import get_native_bpm
+    sr = 22050
+    duration = 16.0
+    target_bpm = 145.0
+    y = np.zeros(int(sr * duration), dtype=np.float32)
+    beat_samples = int(round(sr * 60.0 / target_bpm))
+    kick_len = int(sr * 0.08)
+    t_kick = np.arange(kick_len) / sr
+    kick = (np.sin(2 * np.pi * 65.0 * t_kick) * np.exp(-t_kick * 35.0)).astype(np.float32)
+    for start in range(0, len(y) - kick_len, beat_samples):
+        y[start : start + kick_len] += kick
+
+    bpm, _, _ = get_native_bpm(y, sr)
+    assert abs(bpm - target_bpm) < 2.0

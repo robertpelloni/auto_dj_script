@@ -1,5 +1,18 @@
 # Changelog
 
+## [8.16.0] - 2026-11-12
+### Added
+- **Pure-NumPy Multi-Band Spectral Flux BPM Detector (`autodj/analysis.py`)**: Replaced broken `librosa.onset`/`numba` path on NumPy 2.5 with a pure-NumPy 4-band spectral flux onset detector, multi-scale autocorrelation, and harmonic ratio validation.
+- **Jitter-Gated Kick-Interval (IOI) Octave Verification (`autodj/analysis.py`)**: Added `_kick_interval_bpm()` (`40–120 Hz` kick bandpass + peak prominence + interquartile jitter gate) to eliminate two-beat ACF octave doubling/halving on 4/4 psytrance tracks.
+- **Dual Bass Transition Styles (`--bass-transition [swap|fade]`)**: Added `BASS_TRANSITION_STYLE` in `config.py`, `--bass-transition` in `autodj/cli.py`, and full-overlap equal-power low-end crossfading (`fade`) alongside the classic DJ kick swap (`swap`) in `autodj/core.py`.
+- **Artist & Era Batch Compilation Suite**: Added and validated `make_artist_mixes.py`, `run_artist_mix.py`, `run_filtered_mix.py`, `mix_all_artists.sh`, and the Modern Ajja (>130 BPM) selection/render pipeline (`scan_ajja.py`, `select_ajja.py`, `final_select.py`, `verify_bpm.py`, `kick_count.py`, `tempo_diag.py`, `run_ajja_modern.py`), plus Windows `start.bat` and `build.bat` entrypoints and 16 Rekordbox XML / tracklist exports.
+
+### Fixed
+- **Mathematical Equal-Power Crossfade Curves (`autodj/core.py`)**: Removed asymmetric `0.8`/`1.2` fader exponents in `compile_master_set` and `_dj_crossfade` that caused a `-1.1 dB` mid-transition volume dip.
+- **Restored `SmartReplenishTool` & `SpectralBalancedMix` (`autodj/core.py`, `autodj/dsp.py`)**: Fixed accidental indentation of `SmartReplenishTool` inside `ms_to_timestamp()`, restored `calculate_spectral_clash()`, and re-registered `SpectralBalancedMix` (`spectral_balance`) with zero-phase `filtfilt` filtering.
+- **Batch Script Pathing & Stereo Axis Fixes**: Fixed stereo `(N, 2)` channel averaging (`axis=1`) in `make_artist_mixes.py`, prevented `$HOME` clobbering in `mix_all_artists.sh`, standardized `artist_mixes/` output paths, and configured `testpaths = ["tests"]` in `pyproject.toml` (all 15 pytest tests passing).
+- **Repository Synchronization & State Tracking**: Audited remotes/PRs (`origin/pr/1..5` verified merged, 0 submodules, standalone root repo) and updated `.gitignore` so `.pi/`, `.pi-lens/` sessions/worklogs, and local SQLite databases (`borg.db`, `metamcp.db`, `tormentnexus.db`) are tracked while caches and raw audio binaries remain ignored.
+
 ## [8.15.0] - 2025-06-23
 ### Changed
 - **Repository synchronization**: Version bump 8.14.0 → 8.15.0.

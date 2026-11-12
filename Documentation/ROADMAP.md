@@ -1,4 +1,4 @@
-# 🗺 Auto DJ Script: Evolutionary Roadmap (8.15.0)
+# 🗺 Auto DJ Script: Evolutionary Roadmap (8.16.0)
 
 ## 🌟 Version 1-4: The Foundation (COMPLETED)
 
@@ -54,6 +54,15 @@
   - [x] **Scoring Heuristic**: Harmonic/Genre/Energy weighted selection.
   - [x] **Bias Controls**: Real-time preference overrides in UI.
   - [x] **Scheduler History**: Persistent event tracking.
+- [x] **Zero-Phase Crossover & Chunked LUFS Mastering (v8.14–v8.15)**:
+  - [x] **Zero-Phase Bass Extraction**: `filtfilt` crossover eliminating group-delay bumps.
+  - [x] **Chunked BS.1770 Loudness**: 120-second stateful K-weighting windows for multi-hour sets.
+  - [x] **Streaming >4 GB FLAC Export**: Direct `soundfile` writer bypassing RIFF size limits.
+- [x] **Pure-NumPy Tempo Intelligence & Dual Bass Transitions (v8.16)**:
+  - [x] **Multi-Band Spectral Flux BPM Engine**: Pure-NumPy 4-band onset analysis immune to NumPy 2.5 `numba` breakage.
+  - [x] **Jitter-Gated Kick-IOI Verification**: Eliminates two-beat ACF octave doubling/halving on 4/4 psytrance.
+  - [x] **Dual Low-End Crossfades (`swap` / `fade`) & Equal-Power Curves**: Eliminates mid-transition volume dips and kick clashes.
+  - [x] **Batch Artist & Era Mix Compilation**: Multi-artist and BPM-filtered discography mix builders + Rekordbox XML export.
 - [ ] **AI Genre Evolution**: Deep Learning (CNN) for style inference.
 
 ---

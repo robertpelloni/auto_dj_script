@@ -59,7 +59,7 @@ for artist in ARTISTS:
         try:
             data, sr = sf.read(f, dtype="float32", always_2d=False)
             if data.ndim == 2:
-                mono = np.mean(data, axis=0)[: sr * 20]  # First 20 sec
+                mono = np.mean(data[: sr * 20], axis=1)  # First 20 sec, average stereo channels
             else:
                 mono = data[: sr * 20]
             # Simple onset detection
@@ -117,7 +117,9 @@ for artist in ARTISTS:
         shutil.copy2(f, os.path.join(SRC_DIR, os.path.basename(f)))
 
     # Run mix
-    output = f"final_{artist.lower().replace(' ', '_')}.flac"
+    os.makedirs("artist_mixes", exist_ok=True)
+    output = os.path.join("artist_mixes", f"{artist.lower().replace(' ', '_')}_mix.flac")
+    output_repr = repr(output)
 
     # Build run script
     code = f'''
@@ -128,7 +130,7 @@ import config
 
 class Args:
     input = config.INPUT_FOLDER
-    output = \'{output}\'
+    output = {output_repr}
     bpm = {target}
     end_bpm = None
     dbfs = config.TARGET_DBFS
@@ -136,6 +138,7 @@ class Args:
     highpass = config.HIGHPASS_CUTOFF
     transition_bars = config.TRANSITION_BARS
     beats_per_bar = config.BEATS_PER_BAR
+    bass_transition = getattr(config, "BASS_TRANSITION_STYLE", "swap")
     dry_run = False
     reorder = False
     archetype = "auto"
@@ -155,16 +158,20 @@ compile_master_set(Args(), status_obj=status)
 elapsed = time.time()-t0
 
 import soundfile as sf
-info = sf.info("{output}")
-print(f"\n{artist} complete: {{info.frames/info.samplerate/60:.1f}} min in {{elapsed:.0f}}s")
+info = sf.info({output_repr})
+print(f"\\n{artist} complete: {{info.frames/info.samplerate/60:.1f}} min in {{elapsed:.0f}}s")
 '''
 
-    with open("_run_artist.py", "w") as f:
+    with open("_run_artist.py", "w", encoding="utf-8") as f:
         f.write(code)
 
-    result = subprocess.run(
-        ["python", "-u", "_run_artist.py"], capture_output=True, text=True, timeout=1800
-    )
-    print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
-    if result.stderr:
-        print("STDERR:", result.stderr[-300:])
+    try:
+        result = subprocess.run(
+            [sys.executable, "-u", "_run_artist.py"], capture_output=True, text=True, timeout=1800
+        )
+        print(result.stdout[-500:] if len(result.stdout) > 500 else result.stdout)
+        if result.stderr:
+            print("STDERR:", result.stderr[-300:])
+    finally:
+        if os.path.exists("_run_artist.py"):
+            os.remove("_run_artist.py")

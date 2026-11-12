@@ -148,7 +148,7 @@ def get_camelot_key(key_str):
         "C# Minor": "12A",
         "E Major": "12B",
     }
-    return mapping.get(key_str, "6A")
+    return mapping.get(key_str, "Unknown")
 
 
 def is_harmonically_compatible(key1, key2):

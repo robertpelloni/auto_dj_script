@@ -1,4 +1,4 @@
-# 📖 Auto DJ Script: The Comprehensive User Manual (7.0.0)
+# 📖 Auto DJ Script: The Comprehensive User Manual (8.16.0)
 
 ## 1. Introduction
 The Auto DJ Script is a professional-grade, autonomous audio mixing engine designed for DJs, broadcasters, and audiophiles. It leverages state-of-the-art Music Information Retrieval (MIR) and Digital Signal Processing (DSP) to create seamless, harmonically perfect sets.
@@ -52,6 +52,7 @@ Sets are normalized to **-14.0 LUFS**, the global standard for streaming platfor
 | `--bpm` | `145.0` | Starting tempo. |
 | `--end-bpm` | Same as bpm | Ending tempo (linear ramp). |
 | `--reorder` | `False` | Enable global sequence optimization. |
+| `--bass-transition` | `swap` | Low-end transition style (`swap` for DJ kick swap, `fade` for gradual equal-power bass crossfade). |
 | `--dry-run` | `False` | Analysis-only mode (no rendering). |
 | `--gui` | `False` | Launch the Web Dashboard. |
 

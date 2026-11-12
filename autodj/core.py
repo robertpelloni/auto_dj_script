@@ -1,4 +1,4 @@
-"""Core Orchestration Engine | Auto DJ Script (8.11.0)
+"""Core Orchestration Engine | Auto DJ Script (8.16.0)
 ==================================================
 The core engine is responsible for tracklist optimization (Simulated Annealing),
 parallel audio preprocessing, and the final sample-accurate mix reconstruction.
@@ -275,45 +275,46 @@ def ms_to_timestamp(ms):
     h = int((ms / (1000 * 60 * 60)) % 24)
     return f"{h:02d}:{m:02d}:{s:02d}"
 
-    @PluginRegistry.register_tool
-    class SmartReplenishTool(ToolPlugin):
-        """Autonomous queue replenishment tool."""
 
-        name = "smart_replenish"
-        display_name = "Smart Replenish"
-        description = "Automatically adds new tracks to the queue based on harmonic compatibility."
+@PluginRegistry.register_tool
+class SmartReplenishTool(ToolPlugin):
+    """Autonomous queue replenishment tool."""
 
-        def on_track_start(self, track_meta, status_obj=None, **kwargs):
-            if not status_obj or not status_obj.get("live_params", {}).get(
-                "continuous_mode"
-            ):
+    name = "smart_replenish"
+    display_name = "Smart Replenish"
+    description = "Automatically adds new tracks to the queue based on harmonic compatibility."
+
+    def on_track_start(self, track_meta, status_obj=None, **kwargs):
+        if not status_obj or not status_obj.get("live_params", {}).get(
+            "continuous_mode"
+        ):
+            return
+        playlist = status_obj.get("playlist", [])
+        tracklist = status_obj.get("tracklist", [])
+        if len(playlist) < 3:
+            source_name = status_obj.get("active_source", "local_folder")
+            source_cls = PluginRegistry.get_sources().get(source_name)
+            if not source_cls:
                 return
-            playlist = status_obj.get("playlist", [])
-            tracklist = status_obj.get("tracklist", [])
-            if len(playlist) < 3:
-                source_name = status_obj.get("active_source", "local_folder")
-                source_cls = PluginRegistry.get_sources().get(source_name)
-                if not source_cls:
-                    return
-                source = source_cls()
-                all_tracks = source.get_tracks(folder=status_obj.get("input_folder"))
-                already_seen = set(t["file"] for t in tracklist) | set(playlist)
-                candidates = [
-                    t
-                    for t in all_tracks
-                    if os.path.basename(t) not in already_seen and t not in already_seen
-                ]
-                if not candidates:
-                    return
-                target = random.choice(candidates)
-                status_obj["playlist"].append(os.path.basename(target))
-                print(
-                    f"[*] Smart Replenish: Added {os.path.basename(target)} to queue."
-                )
+            source = source_cls()
+            all_tracks = source.get_tracks(folder=status_obj.get("input_folder"))
+            already_seen = set(t["file"] for t in tracklist) | set(playlist)
+            candidates = [
+                t
+                for t in all_tracks
+                if os.path.basename(t) not in already_seen and t not in already_seen
+            ]
+            if not candidates:
+                return
+            target = random.choice(candidates)
+            status_obj["playlist"].append(os.path.basename(target))
+            print(
+                f"[*] Smart Replenish: Added {os.path.basename(target)} to queue."
+            )
 
 
 def compile_master_set(args, status_obj=None):
-    """The High-Performance Mixing Pipeline (8.11.0)."""
+    """The High-Performance Mixing Pipeline (8.16.0)."""
     folder = args.input
 
     # Modular Source Discovery
@@ -686,22 +687,22 @@ def compile_master_set(args, status_obj=None):
             cf_x = np.linspace(0, 1, max(cf_len, 1))
             pf_x = np.linspace(0, 1, max(pf_samples, 1))
 
-            # Outgoing: full volume during pre-fade, then crossfade out
+            # Outgoing: full volume during pre-fade, then equal-power crossfade out
             out_curve = np.ones(total_samples)
-            out_curve[pf_samples:] = np.cos(np.pi * cf_x**0.8 / 2)
+            out_curve[pf_samples:] = np.cos(np.pi * cf_x / 2)
 
-            # Incoming: gentle ramp during pre-fade (0 -> 25%), then crossfade in (25% -> 100%)
+            # Incoming: gentle ramp during pre-fade (0 -> 25%), then equal-power crossfade in (25% -> 100%)
             in_curve = np.zeros(total_samples)
             prefade_vol = 0.25
-            in_curve[:pf_samples] = prefade_vol * (pf_x**0.7)  # gentle power ramp
+            in_curve[:pf_samples] = prefade_vol * pf_x
             # Crossfade portion: scale sin curve to go from prefade_vol to 1.0
-            cf_in_raw = np.sin(np.pi * cf_x**1.2 / 2)
+            cf_in_raw = np.sin(np.pi * cf_x / 2)
             in_curve[pf_samples:] = prefade_vol + (1.0 - prefade_vol) * cf_in_raw
         else:
-            # No pre-fade: standard crossfade curves over entire overlap
+            # No pre-fade: standard equal-power crossfade curves over entire overlap
             x = np.linspace(0, 1, total_samples)
-            out_curve = np.cos(np.pi * x**0.8 / 2)
-            in_curve = np.sin(np.pi * x**1.2 / 2)
+            out_curve = np.cos(np.pi * x / 2)
+            in_curve = np.sin(np.pi * x / 2)
 
         # Apply archetype (bass swap / EQ) to the crossfade portion only
         mode = getattr(args, "archetype", "auto")
@@ -751,33 +752,44 @@ def compile_master_set(args, status_obj=None):
         n_bass = _get_bass(n_intro_full)
 
         # Build bass gain curves aligned with the crossfade region
-        # During pre-fade: outgoing bass at 100%, incoming bass at 0%
-        # During crossfade: bass swap (outgoing fades out, incoming fades in)
+        # Supports both classic 'swap' (default) and gradual equal-power 'fade'
+        bass_style = getattr(
+            args,
+            "bass_transition",
+            getattr(config, "BASS_TRANSITION_STYLE", "swap"),
+        )
         pf_s = (
             min(int(pre_fade_ms * sr / 1000), total_samples) if pre_fade_ms > 0 else 0
         )
         cf_len = total_samples - pf_s
 
-        # Outgoing bass: full during pre-fade, then swap curve during crossfade
         m_bass_curve = np.ones(total_samples)
-        if cf_len > 0:
-            cf_x = np.linspace(0, 1, cf_len)
-            # Bass stays full for first 40% of crossfade, then fades out
-            m_cf_curve = np.ones(cf_len)
-            mask = cf_x > 0.4
-            m_cf_curve[mask] = 0.5 * (1 + np.cos(np.pi * (cf_x[mask] - 0.4) / 0.4))
-            m_cf_curve[cf_x > 0.8] = 0.02
-            m_bass_curve[pf_s:] = m_cf_curve
-
-        # Incoming bass: silent during pre-fade, then swap curve during crossfade
         n_bass_curve = np.zeros(total_samples)
         if cf_len > 0:
-            # Bass silent for first 30% of crossfade, then fades in
-            n_cf_curve = np.zeros(cf_len)
-            mask = cf_x > 0.3
-            n_cf_curve[mask] = 0.5 * (1 - np.cos(np.pi * (cf_x[mask] - 0.3) / 0.4))
-            n_cf_curve[cf_x > 0.7] = 1.0
-            n_bass_curve[pf_s:] = n_cf_curve
+            cf_x = np.linspace(0, 1, cf_len)
+            if bass_style == "fade":
+                # Gradual full-overlap equal-power bass crossfade (prevents abrupt kick clash)
+                m_bass_curve[pf_s:] = np.cos(np.pi * cf_x / 2)
+                n_bass_curve[pf_s:] = np.sin(np.pi * cf_x / 2)
+            else:
+                # Classic DJ bass swap:
+                # Outgoing bass stays full for first 40% of crossfade, then fades out
+                m_cf_curve = np.ones(cf_len)
+                mask_out = cf_x > 0.4
+                m_cf_curve[mask_out] = 0.5 * (
+                    1 + np.cos(np.pi * (cf_x[mask_out] - 0.4) / 0.4)
+                )
+                m_cf_curve[cf_x > 0.8] = 0.02
+                m_bass_curve[pf_s:] = m_cf_curve
+
+                # Incoming bass silent for first 30% of crossfade, then fades in
+                n_cf_curve = np.zeros(cf_len)
+                mask_in = cf_x > 0.3
+                n_cf_curve[mask_in] = 0.5 * (
+                    1 - np.cos(np.pi * (cf_x[mask_in] - 0.3) / 0.4)
+                )
+                n_cf_curve[cf_x > 0.7] = 1.0
+                n_bass_curve[pf_s:] = n_cf_curve
 
         # NOTE: Beat-synced bass ducking removed � it caused audible
         # volume dips on false peak detections (breakdowns, ambient intros)
@@ -949,15 +961,11 @@ def compile_master_set(args, status_obj=None):
         x = np.linspace(0, 1, n)
 
         if fade_type == "out":
-            # Outro: equal-power fade with slight hold
-            # cos(pi*x/2) is the standard equal-power fade-out
-            # The slight x^0.8 exponent keeps it louder a bit longer
-            curve = np.cos(np.pi * x**0.8 / 2)
+            # Outro: standard mathematical equal-power fade-out
+            curve = np.cos(np.pi * x / 2)
         else:
-            # Intro: equal-power fade-in
-            # sin(pi*x/2) is the standard equal-power fade-in
-            # The slight x^1.2 exponent makes it come in a touch gentler
-            curve = np.sin(np.pi * x**1.2 / 2)
+            # Intro: standard mathematical equal-power fade-in
+            curve = np.sin(np.pi * x / 2)
 
         if audio_array.ndim == 2:
             return audio_array * curve[np.newaxis, :]

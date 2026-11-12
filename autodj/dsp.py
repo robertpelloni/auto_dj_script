@@ -1,4 +1,4 @@
-"""Digital Signal Processing (DSP) Module | Auto DJ Script (v9.3.0 - Clean Transitions).
+"""Digital Signal Processing (DSP) Module | Auto DJ Script (8.16.0 - Clean Transitions).
 ==============================================================
 Professional DJ-style transitions that sound like a real DJ mixer.
 
@@ -208,7 +208,29 @@ def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=No
 
 
 def calculate_spectral_clash(outro_array, intro_array, sr):
-    return {"low": 1.0, "mid": 1.0, "high": 1.0}
+    """Analyzes frequency band overlap between two audio segments.
+
+    Returns a dictionary of energy ratios for Low, Mid, and High bands.
+    """
+    def _get_bands(arr):
+        low = apply_dsp_filter(arr, sr, "lowpass", 200.0)
+        mid_high = apply_dsp_filter(arr, sr, "highpass", 200.0)
+        mid = apply_dsp_filter(mid_high, sr, "lowpass", 3000.0)
+        high = apply_dsp_filter(arr, sr, "highpass", 3000.0)
+        return (
+            float(np.mean(np.abs(low))),
+            float(np.mean(np.abs(mid))),
+            float(np.mean(np.abs(high))),
+        )
+
+    o_l, o_m, o_h = _get_bands(outro_array)
+    i_l, i_m, i_h = _get_bands(intro_array)
+
+    return {
+        "low": (o_l + i_l) / max(o_l, i_l, 1e-6),
+        "mid": (o_m + i_m) / max(o_m, i_m, 1e-6),
+        "high": (o_h + i_h) / max(o_h, i_h, 1e-6),
+    }
 
 
 def _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs):
@@ -294,3 +316,46 @@ def apply_echo_out(outro, sr, **kwargs):
 
 def apply_hpf_sweep(outro, sr, **kwargs):
     return outro, None
+
+
+@ArchetypeRegistry.register
+class SpectralBalancedMix(TransitionArchetype):
+    """Adaptive Spectral Balancing archetype resolving band-specific clashes."""
+
+    name = "spectral_balance"
+    display_name = "Adaptive Spectral Balancing"
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        clashes = calculate_spectral_clash(outro_array, intro_array, sr)
+
+        f_m = np.copy(outro_array)
+        f_n = np.copy(intro_array)
+
+        if clashes["low"] > 1.5:
+            try:
+                from scipy.signal import butter, filtfilt
+
+                b_hp, a_hp = butter(4, 150.0 / (0.5 * sr), btype="high")
+                if f_m.ndim == 2:
+                    for ch in range(f_m.shape[0]):
+                        f_m[ch] = filtfilt(b_hp, a_hp, f_m[ch])
+                else:
+                    f_m = filtfilt(b_hp, a_hp, f_m)
+            except ImportError:
+                f_m = apply_dsp_filter(f_m, sr, "highpass", 150.0)
+
+        if clashes["high"] > 1.5:
+            try:
+                from scipy.signal import butter, filtfilt
+
+                b_lp, a_lp = butter(4, min(5000.0, 0.45 * sr) / (0.5 * sr), btype="low")
+                if f_m.ndim == 2:
+                    for ch in range(f_m.shape[0]):
+                        f_m[ch] = filtfilt(b_lp, a_lp, f_m[ch])
+                else:
+                    f_m = filtfilt(b_lp, a_lp, f_m)
+            except ImportError:
+                f_m = apply_dsp_filter(f_m, sr, "lowpass", 5000.0)
+
+        return f_m, f_n

@@ -1,9 +1,9 @@
 #!/bin/bash
 set -e
 
-HOME="$HOME/Music"
+MUSIC_DIR="${MUSIC_DIR:-$HOME/Music}"
 OUTDIR="$(pwd)/artist_mixes"
-mkdir -p "$OUTDIR"
+mkdir -p "$OUTDIR" psyset_source
 
 declare -A ARTIST_BPMS
 ARTIST_BPMS["1200 Micrograms"]=145
@@ -36,7 +36,7 @@ for artist in "${!ARTIST_BPMS[@]}"; do
 			((count++))
 			[ $count -ge 25 ] && break
 		fi
-	done < <(find "$HOME" -maxdepth 2 -path "$HOME/${artist}*" -type f | sort)
+	done < <(find "$MUSIC_DIR" -maxdepth 2 -path "$MUSIC_DIR/${artist}*" -type f | sort)
 
 	echo "Copied $count tracks"
 
@@ -46,7 +46,7 @@ for artist in "${!ARTIST_BPMS[@]}"; do
 	fi
 
 	SAFE_NAME=$(echo "$artist" | tr ' ' '_' | tr '[:upper:]' '[:lower:]')
-	OUTFILE="$OUTDIR/final_${SAFE_NAME}.flac"
+	OUTFILE="$OUTDIR/${SAFE_NAME}_mix.flac"
 
 	python -u -c "
 import sys, time
@@ -64,6 +64,7 @@ class Args:
     highpass = config.HIGHPASS_CUTOFF
     transition_bars = config.TRANSITION_BARS
     beats_per_bar = config.BEATS_PER_BAR
+    bass_transition = getattr(config, 'BASS_TRANSITION_STYLE', 'swap')
     dry_run = False
     reorder = False
     archetype = 'auto'

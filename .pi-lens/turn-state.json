@@ -1,0 +1,27 @@
+{
+  "files": {
+    "autodj/analysis.py": {
+      "modifiedRanges": [
+        {
+          "start": 1,
+          "end": 850
+        }
+      ],
+      "importsChanged": true,
+      "lastEdit": "2026-09-14T22:44:58.194Z"
+    },
+    "autodj/np_signal.py": {
+      "modifiedRanges": [
+        {
+          "start": 1,
+          "end": 116
+        }
+      ],
+      "importsChanged": true,
+      "lastEdit": "2026-09-14T22:45:29.923Z"
+    }
+  },
+  "turnCycles": 0,
+  "maxCycles": 3,
+  "lastUpdated": "2026-09-14T22:45:29.923Z"
+}

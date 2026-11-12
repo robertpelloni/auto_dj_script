@@ -1,0 +1,100 @@
+[*] Analyzing 19 tracks (Sequential)...
+  [1/19] Mekkanikka; Ajja - 2025 - Ultrasonic - 3 - Electrically Driven.flac: BPM=143.6, Key=D# Major, Genre=Progressive
+  [2/19] Killerwatts - 2015 - Blow Your Mind_ The Remixes - 10 - Fly Thru the Universe (Ajja rmx).flac: BPM=139.7, Key=G Major, Genre=Progressive
+  [3/19] Ajja - 2021 - Oddular - 5 - Disco Bunny.flac: BPM=136.0, Key=D# Minor, Genre=Progressive
+  [4/19] Mekkanikka; Ajja - 2021 - Mekkanikka Mixtape #1 - 2 - Futurism.flac: BPM=152.0, Key=F# Minor, Genre=Progressive
+  [5/19] Alpha Portal; Ajja - 2020 - The Other Side (Volcano on Mars remix) - 1 - The Other Side (Volcano on Mars remix).flac: BPM=143.6, Key=G# Minor, Genre=Progressive
+  [6/19] Avalon - 2006 - Stand - 1 - The Other Side.flac: BPM=156.6, Key=G# Major, Genre=Full-On
+  [7/19] Ajja - 2021 - Oddular - 6 - Not What.flac: BPM=147.7, Key=A# Major, Genre=Progressive
+  [8/19] Ajja - 2018 - Tampered Diversity - 1 - Bebopper (GMS remix).flac: BPM=139.7, Key=A# Major, Genre=Progressive
+  [9/19] Mekkanikka; Ajja - 2025 - Ultrasonic - 4 - Chemical Process.flac: BPM=143.6, Key=F Minor, Genre=Progressive
+  [10/19] Ajja - 2020 - Chillsome - 9 - Mescaline Mantra.flac: BPM=152.0, Key=F Major, Genre=Progressive
+  [11/19] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 8 - Cactus Shack.flac: BPM=152.0, Key=D# Major, Genre=Progressive
+  [12/19] Ajja - 2019 - World of Images - 3 - Surge (Volcano on Mars remix).flac: BPM=147.7, Key=F# Minor, Genre=Full-On
+  [13/19] Ajja - Dawn Dragons (Original Mix).flac: BPM=139.7, Key=D# Minor, Genre=Progressive
+  [14/19] Cosmosis - 1997 - Howling at the Moon E.P. - 1 - Howling at the Moon.flac: BPM=117.5, Key=A# Minor, Genre=Progressive
+  [15/19] Ajja - 2020 - Chillsome - 3 - Good Morning Albert.flac: BPM=136.0, Key=A# Major, Genre=Progressive
+  [16/19] Ajja - 2012 - Tulpa - 5 - iFriend.flac: BPM=152.0, Key=G Major, Genre=Progressive
+  [17/19] GMS; Dickster; Ajja - 2021 - Adverse Cambers - 7 - Gothic as a Brick.flac: BPM=136.0, Key=D# Minor, Genre=Progressive
+  [18/19] Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac: BPM=147.7, Key=G Major, Genre=Full-On
+  [19/19] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 1 - Into the Deep.flac: BPM=152.0, Key=E Minor, Genre=Progressive
+  [LOAD] Ajja - 2020 - Chillsome - 9 - Mescaline Mantra.flac - SoundFile OK
+  [RB] rate=0.9737 (152.0 -> 148.0)
+  [LOAD] Avalon - 2006 - Stand - 1 - The Other Side.flac - SoundFile OK
+  [RB] rate=0.9451 (156.6 -> 148.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 8 - Cactus Shack.flac - SoundFile OK
+  [RB] rate=0.9737 (152.0 -> 148.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 1 - Into the Deep.flac - SoundFile OK
+  [RB] rate=0.9737 (152.0 -> 148.0)
+  [LOAD] Killerwatts - 2015 - Blow Your Mind_ The Remixes - 10 - Fly Thru the Universe (Ajja rmx).flac - SoundFile OK
+  [RB] rate=1.0596 (139.7 -> 148.0)
+  [LOAD] Alpha Portal; Ajja - 2020 - The Other Side (Volcano on Mars remix) - 1 - The Other Side (Volcano on Mars remix).flac - SoundFile OK
+  [RB] rate=1.0310 (143.6 -> 148.0)
+  [LOAD] Ajja - 2019 - World of Images - 3 - Surge (Volcano on Mars remix).flac - SoundFile OK
+  [RB] rate=1.0023 (147.7 -> 148.0)
+  [LOAD] Ajja - 2012 - Tulpa - 5 - iFriend.flac - SoundFile OK
+  [RB] rate=0.9737 (152.0 -> 148.0)
+  [LOAD] Mekkanikka; Ajja - 2025 - Ultrasonic - 4 - Chemical Process.flac - SoundFile OK
+  [RB] rate=1.0310 (143.6 -> 148.0)
+  [LOAD] Ajja - Dawn Dragons (Original Mix).flac - SoundFile OK
+  [RB] rate=1.0596 (139.7 -> 148.0)
+  [LOAD] GMS; Dickster; Ajja - 2021 - Adverse Cambers - 7 - Gothic as a Brick.flac - SoundFile OK
+  [RB] rate=1.0882 (136.0 -> 148.0)
+  [LOAD] Mekkanikka; Ajja - 2025 - Ultrasonic - 3 - Electrically Driven.flac - SoundFile OK
+  [RB] rate=1.0310 (143.6 -> 148.0)
+  [LOAD] Mekkanikka; Ajja - 2021 - Mekkanikka Mixtape #1 - 2 - Futurism.flac - SoundFile OK
+  [RB] rate=0.9737 (152.0 -> 148.0)
+  [LOAD] Ajja - 2023 - Trance for Nations 14 - 9 - Zen Ninja.flac - SoundFile OK
+  [RB] rate=1.0023 (147.7 -> 148.0)
+  [LOAD] Ajja - 2021 - Oddular - 5 - Disco Bunny.flac - SoundFile OK
+  [RB] rate=1.0882 (136.0 -> 148.0)
+  [LOAD] Cosmosis - 1997 - Howling at the Moon E.P. - 1 - Howling at the Moon.flac - SoundFile OK
+  [RB] rate=1.2601 (117.5 -> 148.0)
+  [LOAD] Ajja - 2020 - Chillsome - 3 - Good Morning Albert.flac - SoundFile OK
+  [RB] rate=1.0882 (136.0 -> 148.0)
+  [LOAD] Ajja - 2018 - Tampered Diversity - 1 - Bebopper (GMS remix).flac - SoundFile OK
+  [RB] rate=1.0596 (139.7 -> 148.0)
+  [LOAD] Ajja - 2021 - Oddular - 6 - Not What.flac - SoundFile OK
+  [RB] rate=1.0023 (147.7 -> 148.0)
+ [KICK-SYNC] peaks: out=47 in=84 offsets=29 nudge=2ms
+ [SYNC] Nudge: 2ms
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=46 in=26 offsets=4 nudge=1ms
+ [SYNC] Nudge: 1ms
+ [PREFADE] 68ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=57 in=58 offsets=26 nudge=28ms
+ [SYNC] Nudge: 28ms
+ [KICK-SYNC] peaks: out=60 in=58 offsets=26 nudge=-40ms
+ [SYNC] Nudge: -40ms
+ [KICK-SYNC] peaks: out=75 in=76 offsets=28 nudge=-50ms
+ [SYNC] Nudge: -50ms
+ [SYNC] Nudge: 0ms
+ [PREFADE] 49ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=33 in=83 offsets=26 nudge=-18ms
+ [SYNC] Nudge: -18ms
+ [KICK-SYNC] peaks: out=58 in=107 offsets=27 nudge=-22ms
+ [SYNC] Nudge: -22ms
+ [KICK-SYNC] peaks: out=52 in=17 offsets=9 nudge=-63ms
+ [SYNC] Nudge: -63ms
+ [PREFADE] 181ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=54 in=38 offsets=14 nudge=-16ms
+ [SYNC] Nudge: -16ms
+ [PREFADE] 183ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=20 in=75 offsets=19 nudge=-15ms
+ [SYNC] Nudge: -15ms
+ [PREFADE] 173ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=70 in=99 offsets=27 nudge=8ms
+ [SYNC] Nudge: 8ms
+ [KICK-SYNC] peaks: out=47 in=43 offsets=26 nudge=37ms
+ [SYNC] Nudge: 37ms
+ [SYNC] Nudge: -360ms
+ [PREFADE] 530ms ambient intro under outgoing track
+[MASTERING] Normalizing final mix to target LUFS...
+[MASTERING] Final mix normalization complete.
+[*] Exporting 118.6 min mix to ./part1.flac...
+[*] Export complete!
+[*] Integration: Rekordbox XML exported to ./part1_rekordbox.xml
+Part 1 complete: 118.6 min in 652s

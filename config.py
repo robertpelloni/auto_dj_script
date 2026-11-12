@@ -21,6 +21,7 @@ HIGHPASS_CUTOFF = 150.0  # Frequency for incoming track bass-strip
 # Transition Logic
 TRANSITION_BARS = 16
 BEATS_PER_BAR = 4
+BASS_TRANSITION_STYLE = "swap"  # "swap" (DJ kick swap) or "fade" (gradual low-end crossfade)
 PHRASE_ANCHOR_TOLERANCE_MS = 2000 # 2 seconds tolerance for smart phrase detection
 
 # Optimization Parameters

@@ -1,0 +1,1470 @@
+{
+ "all": [
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Videos - Ajja 2026 (Modern Psytrance of Today) @DimensionFestivalNZ.m4a",
+   "bpm": null,
+   "dur": null,
+   "sr": null,
+   "secs": 0.001107931137084961,
+   "err": "LibsndfileError: Error opening 'C:\\\\Users\\\\hyper\\\\Music\\\\00 - Videos - Ajja 2026 (Modern Psytrance of Today) @DimensionFestivalNZ.m4a': Format not recognised."
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja  - @ Ozora Festival 2019 ( Full setHD ).mp3",
+   "bpm": 143.55468749999997,
+   "dur": 5451.13977324263,
+   "sr": 44100,
+   "secs": 1.6256592273712158,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja & Mekkanikka - Psytrance 2025].f251.mp3",
+   "bpm": 140.625,
+   "dur": 3256.7611875,
+   "sr": 48000,
+   "secs": 1.6593756675720215,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Ajja @ Mundo de Oz Festival 2018.mp3",
+   "bpm": 143.5546875,
+   "dur": 7230.322358276644,
+   "sr": 44100,
+   "secs": 1.6666767597198486,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - AJJA's full set at Psy-Fi 2018.mp3",
+   "bpm": 143.5546875,
+   "dur": 7212.628752834467,
+   "sr": 44100,
+   "secs": 1.7874352931976318,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\01 - Ajja & Cosmosis - Into the Deep.mp3",
+   "bpm": 131.98372615258003,
+   "dur": 446.85333333333335,
+   "sr": 44100,
+   "secs": 1.7236487865447998,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Live Set @  Ozora 2024.mp3",
+   "bpm": 147.65625,
+   "dur": 6632.68716553288,
+   "sr": 44100,
+   "secs": 1.7674839496612549,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Ajja full live set at Psy-Fi 2017..mp3",
+   "bpm": 143.55468749999997,
+   "dur": 5673.2386394557825,
+   "sr": 44100,
+   "secs": 1.8989365100860596,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\08 - Ajja - Trancilvania.mp3",
+   "bpm": 143.5546875,
+   "dur": 635.7289795918367,
+   "sr": 44100,
+   "secs": 1.895080804824829,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\05 - Ajja & Cosmosis - Around the Bend.mp3",
+   "bpm": 84.85287503079616,
+   "dur": 484.71993197278914,
+   "sr": 44100,
+   "secs": 1.8064055442810059,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Arcon - Maze of Mirrors\\01 - Ajja & Arcon - Maze of Mirrors.mp3",
+   "bpm": 147.67998500693182,
+   "dur": 486.760566893424,
+   "sr": 44100,
+   "secs": 1.9180917739868164,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Full set (Audio, HD).mp3",
+   "bpm": 143.55468749999997,
+   "dur": 6777.997641723356,
+   "sr": 44100,
+   "secs": 2.0090315341949463,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\02 - Ajja & Cosmosis - Aquamarine.mp3",
+   "bpm": 80.74951171875001,
+   "dur": 515.7197278911565,
+   "sr": 44100,
+   "secs": 1.9398777484893799,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\02 - Ajja - Mescaline M\u00e9lodica.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 128.62496598639456,
+   "sr": 44100,
+   "secs": 1.86324143409729,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\08 - Ajja & Cosmosis - Cactus Shack.mp3",
+   "bpm": 135.99917763157896,
+   "dur": 316.9866666666667,
+   "sr": 44100,
+   "secs": 1.979424238204956,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\09 - Ajja & Cosmosis - Alien Jam.mp3",
+   "bpm": 143.5546875,
+   "dur": 620.692380952381,
+   "sr": 44100,
+   "secs": 1.9474737644195557,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\06 - Ajja & Cosmosis - Open Horizon.mp3",
+   "bpm": 99.3840144230769,
+   "dur": 608.1866666666666,
+   "sr": 44100,
+   "secs": 2.013953447341919,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\03 - Ajja & Cosmosis - Rhodes to Nowhere.mp3",
+   "bpm": 99.38401442307692,
+   "dur": 641.2266666666667,
+   "sr": 44100,
+   "secs": 2.076486110687256,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\04 - Ajja & Cosmosis - Desert Dawn.mp3",
+   "bpm": 110.05018765248002,
+   "dur": 465.99904761904764,
+   "sr": 44100,
+   "secs": 2.091139078140259,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\04 - Ajja - Love for Tanina.mp3",
+   "bpm": 129.19921875,
+   "dur": 293.3749886621315,
+   "sr": 44100,
+   "secs": 1.9430923461914062,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\03 - Ajja - Good Morning Albert.mp3",
+   "bpm": 143.5546875,
+   "dur": 205.12496598639456,
+   "sr": 44100,
+   "secs": 2.0070011615753174,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Menog - First Ride\\01 - Ajja & Menog - First Ride.mp3",
+   "bpm": 143.5546875,
+   "dur": 579.0209977324263,
+   "sr": 44100,
+   "secs": 2.062608003616333,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\07 - Ajja & Cosmosis - Marimbad.mp3",
+   "bpm": 117.45383522727272,
+   "dur": 576.2226077097506,
+   "sr": 44100,
+   "secs": 2.1051971912384033,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\05 - Ajja - Cajun.mp3",
+   "bpm": 161.4990234375,
+   "dur": 349.25,
+   "sr": 44100,
+   "secs": 1.9765625,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\01 - Ajja - Context High.mp3",
+   "bpm": 143.5546875,
+   "dur": 443.3333333333333,
+   "sr": 44100,
+   "secs": 1.9147942066192627,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\06 - Ajja - Chillsome.mp3",
+   "bpm": 184.5703125,
+   "dur": 424.40199546485263,
+   "sr": 44100,
+   "secs": 1.9785284996032715,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\09 - Ajja - Mescaline Mantra.mp3",
+   "bpm": 143.5546875,
+   "dur": 161.91489795918366,
+   "sr": 44100,
+   "secs": 2.0138792991638184,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\01 - Ajja - Full Moon Koh Pha Ngan.mp3",
+   "bpm": 153.65914519383898,
+   "dur": 319.6249886621315,
+   "sr": 44100,
+   "secs": 2.1140081882476807,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\02 - Ajja - Forest Cure.mp3",
+   "bpm": 143.55468749999997,
+   "dur": 476.6666666666667,
+   "sr": 44100,
+   "secs": 1.9705817699432373,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\03 - Ajja - Wibblefish.mp3",
+   "bpm": 143.5546875,
+   "dur": 470.13698412698415,
+   "sr": 44100,
+   "secs": 2.040008068084717,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\07 - Ajja - The Chill Channel.mp3",
+   "bpm": 198.76802884615384,
+   "dur": 419.8499546485261,
+   "sr": 44100,
+   "secs": 2.0989701747894287,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Juicy Shrooms (Alienatic Remix)\\01 - Ajja - Juicy Shrooms (Alienatic remix).mp3",
+   "bpm": 143.55468750000003,
+   "dur": 463.4482993197279,
+   "sr": 44100,
+   "secs": 2.0827033519744873,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\04 - Ajja - Goa Head Ted.mp3",
+   "bpm": 143.5546875,
+   "dur": 471.7808163265306,
+   "sr": 44100,
+   "secs": 1.5951979160308838,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\06 - Ajja - Not What.mp3",
+   "bpm": 110.02332593753694,
+   "dur": 496.3265306122449,
+   "sr": 44100,
+   "secs": 1.651350736618042,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\05 - Ajja - Disco Bunny.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 498.2068934240363,
+   "sr": 44100,
+   "secs": 1.7834420204162598,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\08 - Ajja - Aria 51.mp3",
+   "bpm": 147.65625,
+   "dur": 420.0,
+   "sr": 44100,
+   "secs": 1.6547081470489502,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\09 - Ajja - Ninja Wobble.mp3",
+   "bpm": 143.5546875,
+   "dur": 516.1643764172336,
+   "sr": 44100,
+   "secs": 1.747218370437622,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\07 - Ajja - Original Spin.mp3",
+   "bpm": 147.65625,
+   "dur": 486.53061224489795,
+   "sr": 44100,
+   "secs": 1.8085980415344238,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\10 - Tripswitch - Shamanic Tea (Ajja remix).mp3",
+   "bpm": 147.65625,
+   "dur": 397.2972789115646,
+   "sr": 44100,
+   "secs": 1.7197437286376953,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\01 - Ajja - Tripmunch.mp3",
+   "bpm": 140.97871320441317,
+   "dur": 446.6533333333333,
+   "sr": 44100,
+   "secs": 1.7634613513946533,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\03 - Ajja - Juicy Shrooms.mp3",
+   "bpm": 143.5546875,
+   "dur": 413.3333333333333,
+   "sr": 44100,
+   "secs": 1.7358944416046143,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\04 - Ajja - Funklestiltskin.mp3",
+   "bpm": 137.50379731861443,
+   "dur": 386.3466666666667,
+   "sr": 44100,
+   "secs": 1.8707549571990967,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\02 - Ajja - Romance in Ab.mp3",
+   "bpm": 141.07948176795554,
+   "dur": 414.97333333333336,
+   "sr": 44100,
+   "secs": 1.9162771701812744,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\05 - Ajja - Spitfire.mp3",
+   "bpm": 141.60397427767157,
+   "dur": 415.32,
+   "sr": 44100,
+   "secs": 1.895232915878296,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\08 - Ajja - Archetype.mp3",
+   "bpm": 138.71581951753984,
+   "dur": 433.28,
+   "sr": 44100,
+   "secs": 1.8224153518676758,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\09 - Ajja - Solar.mp3",
+   "bpm": 117.45383522727273,
+   "dur": 404.25333333333333,
+   "sr": 44100,
+   "secs": 1.8382625579833984,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\06 - Ajja - Lingus Khan.mp3",
+   "bpm": 140.42685539277346,
+   "dur": 418.44,
+   "sr": 44100,
+   "secs": 1.8947913646697998,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\07 - Ajja - We Are All Aliens.mp3",
+   "bpm": 143.5546875,
+   "dur": 440.62666666666667,
+   "sr": 44100,
+   "secs": 1.897817611694336,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\11 - Ajja - Peripheral Visions.mp3",
+   "bpm": 137.0207781611759,
+   "dur": 440.26666666666665,
+   "sr": 44100,
+   "secs": 1.9008057117462158,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\10 - Ajja - Spikedelic.mp3",
+   "bpm": 150.80231741846998,
+   "dur": 430.6933333333333,
+   "sr": 44100,
+   "secs": 1.9187498092651367,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\06 - Ajja - Anima Mundi.mp3",
+   "bpm": 80.74951171875,
+   "dur": 415.91947845804987,
+   "sr": 44100,
+   "secs": 1.8483829498291016,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\04 - Ajja - Extraordinarium.mp3",
+   "bpm": 80.74951171875,
+   "dur": 373.45544217687075,
+   "sr": 44100,
+   "secs": 1.917954921722412,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\09 - Ajja - Stage Left.mp3",
+   "bpm": 151.99908088235293,
+   "dur": 295.4822222222222,
+   "sr": 44100,
+   "secs": 1.8426978588104248,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\05 - Ajja - Ripples in Blue.mp3",
+   "bpm": 139.6748310810811,
+   "dur": 480.45814058956915,
+   "sr": 44100,
+   "secs": 1.9351763725280762,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\02 - Ajja - Bubble Drum.mp3",
+   "bpm": 139.6748310810811,
+   "dur": 486.6567573696145,
+   "sr": 44100,
+   "secs": 1.9894216060638428,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\07 - Ajja - Entangled.mp3",
+   "bpm": 91.52443079523661,
+   "dur": 417.09668934240364,
+   "sr": 44100,
+   "secs": 1.931955099105835,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\01 - Ajja - Prolegomenon.mp3",
+   "bpm": 86.1328125,
+   "dur": 431.4899092970522,
+   "sr": 44100,
+   "secs": 2.0345988273620605,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\08 - Ajja - Spira Mirabilis.mp3",
+   "bpm": 99.38401442307692,
+   "dur": 534.72,
+   "sr": 44100,
+   "secs": 1.9283828735351562,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\01 - Ajja - Bebopper.mp3",
+   "bpm": 139.23877171748114,
+   "dur": 460.26666666666665,
+   "sr": 44100,
+   "secs": 1.9146807193756104,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\03 - Ajja - Arabian Lights.mp3",
+   "bpm": 157.45142423018086,
+   "dur": 485.1201360544218,
+   "sr": 44100,
+   "secs": 2.022540330886841,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\04 - Ajja - Surge.mp3",
+   "bpm": 143.5546875,
+   "dur": 422.84,
+   "sr": 44100,
+   "secs": 1.8734462261199951,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\03 - Ajja - Bazinga.mp3",
+   "bpm": 142.1112584830003,
+   "dur": 498.5733333333333,
+   "sr": 44100,
+   "secs": 1.9339773654937744,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\02 - Ajja - Rude Alert.mp3",
+   "bpm": 98.65486493518688,
+   "dur": 419.36,
+   "sr": 44100,
+   "secs": 1.959397554397583,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\05 - Ajja - iFriend.mp3",
+   "bpm": 138.948204275946,
+   "dur": 477.0133333333333,
+   "sr": 44100,
+   "secs": 1.5634067058563232,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\06 - Ajja - Sidewinder (Flying mix).mp3",
+   "bpm": 148.8201606479149,
+   "dur": 481.68,
+   "sr": 44100,
+   "secs": 1.6317851543426514,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\07 - Ajja - Ingrained.mp3",
+   "bpm": 150.99302579675683,
+   "dur": 442.3066666666667,
+   "sr": 44100,
+   "secs": 1.817253828048706,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\08 - Ajja - Bayaya.mp3",
+   "bpm": 147.90104183530863,
+   "dur": 425.4266666666667,
+   "sr": 44100,
+   "secs": 1.7914903163909912,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\10 - Ajja - Three Dots.mp3",
+   "bpm": 147.65625,
+   "dur": 480.56,
+   "sr": 44100,
+   "secs": 1.8200998306274414,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\09 - Ajja - Widdershins.mp3",
+   "bpm": 147.65625,
+   "dur": 435.2,
+   "sr": 44100,
+   "secs": 1.8799076080322266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - unknown album\\00 - Ajja - Dawn Dragons (Original Mix).mp3",
+   "bpm": 149.85633772950675,
+   "dur": 488.21920634920633,
+   "sr": 44100,
+   "secs": 1.8658168315887451,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Alpha Portal & Ajja - The Other Side (Volcano on Mars remix)\\01 - Alpha Portal & Ajja - The Other Side (Volcano on Mars remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 471.6084126984127,
+   "sr": 44100,
+   "secs": 1.820824146270752,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Alpha Portal & Ajja - The Other Side\\01 - Alpha Portal & Ajja - The Other Side.mp3",
+   "bpm": 143.5546875,
+   "dur": 471.6084126984127,
+   "sr": 44100,
+   "secs": 1.930387020111084,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Astrix - Psy Fi - Book Of Changes\\11 - Ajja - Rubadux (2017 remix).mp3",
+   "bpm": 142.35541788730546,
+   "dur": 435.3103628117914,
+   "sr": 44100,
+   "secs": 1.779069185256958,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Astrix - Psy Fi Book of Changes Compiled by Astrix\\10 - Ajja - Rubadux (2017 Remix).mp3",
+   "bpm": 142.35541788730546,
+   "dur": 435.3103628117914,
+   "sr": 44100,
+   "secs": 1.862027883529663,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Burn in Noise & Ajja - Image of Yourself (Noface remix)\\01 - Burn In Noise & Ajja & Ajja - Image of Yourself (Noface remix).mp3",
+   "bpm": 143.55468750000003,
+   "dur": 566.6666666666666,
+   "sr": 44100,
+   "secs": 1.8864328861236572,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\GMS & Dickster - Adverse Cambers\\07 - GMS, Dickster & Ajja - Gothic as a Brick.mp3",
+   "bpm": 143.5546875,
+   "dur": 506.3013605442177,
+   "sr": 44100,
+   "secs": 1.7794499397277832,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Burn in Noise - Beyond Known Space\\09 - Burn in Noise vs. Ajja - Image of Yourself.mp3",
+   "bpm": 143.5546875,
+   "dur": 505.84145124716554,
+   "sr": 44100,
+   "secs": 1.8492770195007324,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Carbon Based Lifeforms - MOS 6581 Remixes\\02 - Carbon Based Lifeforms - MOS 6581 (Ajja remix).mp3",
+   "bpm": 120.18531976744185,
+   "dur": 472.0,
+   "sr": 44100,
+   "secs": 1.8560619354248047,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Dickster - The Dickster Collection\\01 - Vogon 42 Feat. Ajja & Dickster - Keed Spills.mp3",
+   "bpm": 143.5546875,
+   "dur": 433.97260770975055,
+   "sr": 44100,
+   "secs": 1.8466880321502686,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Koxbox - The Scanner Remixes\\02 - Koxbox - We're Not Who We Think We Are (Ajja Remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 419.53814058956914,
+   "sr": 44100,
+   "secs": 1.8119864463806152,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\05 - Mekkanikka & Ajja - Shift Happens.mp3",
+   "bpm": 147.65625,
+   "dur": 407.9591836734694,
+   "sr": 44100,
+   "secs": 1.7939329147338867,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\01 - Mekkanikka & Ajja - Rewired.mp3",
+   "bpm": 143.5546875,
+   "dur": 561.0803854875284,
+   "sr": 44100,
+   "secs": 1.8473601341247559,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\04 - Mekkanikka & Ajja - Chemical Process.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.61632653061224,
+   "sr": 44100,
+   "secs": 1.8065433502197266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\09 - Mekkanikka & Ajja - Believe in Yourself.mp3",
+   "bpm": 189.89345345981073,
+   "dur": 530.4827437641724,
+   "sr": 44100,
+   "secs": 1.7807598114013672,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\GMS - Tampered Diversity\\01 - Ajja - Bebopper (GMS remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 406.6666666666667,
+   "sr": 44100,
+   "secs": 1.9809658527374268,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\02 - Mekkanikka & Ajja - Ultrasonic.mp3",
+   "bpm": 190.05955230568014,
+   "dur": 475.8620634920635,
+   "sr": 44100,
+   "secs": 1.914848804473877,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Killerwatts - Blow Your Mind The Remixes\\10 - Killerwatts - Fly Thru the Universe (Ajja rmx).mp3",
+   "bpm": 143.5546875,
+   "dur": 473.4246712018141,
+   "sr": 44100,
+   "secs": 2.056713819503784,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\08 - Mekkanikka & Ajja - Sonic Vision.mp3",
+   "bpm": 143.5546875,
+   "dur": 463.44827664399094,
+   "sr": 44100,
+   "secs": 1.9102706909179688,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\07 - Mekkanikka & Ajja - Scientific Inception.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 456.8275736961451,
+   "sr": 44100,
+   "secs": 1.9265117645263672,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\03 - Mekkanikka & Ajja - Electrically Driven.mp3",
+   "bpm": 143.5546875,
+   "dur": 405.5172335600907,
+   "sr": 44100,
+   "secs": 1.9884870052337646,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka - Atom Smasher\\04 - Mekkanikka & Ajja - Into the Nucleus.mp3",
+   "bpm": 143.55468749999997,
+   "dur": 414.24657596371884,
+   "sr": 44100,
+   "secs": 1.8764238357543945,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\06 - Mekkanikka & Ajja - Time Reactor.mp3",
+   "bpm": 143.5546875,
+   "dur": 480.8275736961451,
+   "sr": 44100,
+   "secs": 2.0019984245300293,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Outsiders - Music Is Our Mantra\\06 - Ajja & Outsiders - Divine Particles.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.3333333333333,
+   "sr": 44100,
+   "secs": 1.674633264541626,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka - Mekkanikka Mixtape #1\\02 - Mekkanikka & Ajja - Futurism.mp3",
+   "bpm": 143.5546875,
+   "dur": 397.2413832199546,
+   "sr": 44100,
+   "secs": 1.9265809059143066,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Outsiders & Ajja - Divine Particles\\01 - Outsiders & Ajja - Divine Particles.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.3333333333333,
+   "sr": 44100,
+   "secs": 1.930664300918579,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Tristan - Psy Fi - Holographic Universe\\04 - Flooting Grooves, Ajja - Flanger Management.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 445.0,
+   "sr": 44100,
+   "secs": 1.6351566314697266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Various Artists - Trance for Nations 14\\09 - Ajja - Zen Ninja.mp3",
+   "bpm": 143.5546875,
+   "dur": 488.0,
+   "sr": 44100,
+   "secs": 1.5021252632141113,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Undefined Behavior (Burn In Noise & Ajja) - Howling at the Moon\\01 - Undefined Behavior (Burn In Noise & Ajja) - Howling at the Moon.mp3",
+   "bpm": 99.06285604158366,
+   "dur": 359.17240362811793,
+   "sr": 44100,
+   "secs": 1.5445587635040283,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\auto_dj_script - unknown album\\00 - auto_dj_script - all ajja.mp3",
+   "bpm": 129.19921875,
+   "dur": 18100.974988662132,
+   "sr": 44100,
+   "secs": 1.4066085815429688,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\auto_dj_script - unknown album\\00 - auto_dj_script - final ajja mix.mp3",
+   "bpm": 150.33181155257495,
+   "dur": 17271.81095238095,
+   "sr": 44100,
+   "secs": 1.3866865634918213,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Volcano On Mars - World of Images\\03 - Ajja - Surge (Volcano on Mars remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 418.7586394557823,
+   "sr": 44100,
+   "secs": 1.5187973976135254,
+   "err": null
+  }
+ ],
+ "over130": [
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\01 - Ajja & Cosmosis - Into the Deep.mp3",
+   "bpm": 131.98372615258003,
+   "dur": 446.85333333333335,
+   "sr": 44100,
+   "secs": 1.7236487865447998,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\08 - Ajja & Cosmosis - Cactus Shack.mp3",
+   "bpm": 135.99917763157896,
+   "dur": 316.9866666666667,
+   "sr": 44100,
+   "secs": 1.979424238204956,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\11 - Ajja - Peripheral Visions.mp3",
+   "bpm": 137.0207781611759,
+   "dur": 440.26666666666665,
+   "sr": 44100,
+   "secs": 1.9008057117462158,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\04 - Ajja - Funklestiltskin.mp3",
+   "bpm": 137.50379731861443,
+   "dur": 386.3466666666667,
+   "sr": 44100,
+   "secs": 1.8707549571990967,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\08 - Ajja - Archetype.mp3",
+   "bpm": 138.71581951753984,
+   "dur": 433.28,
+   "sr": 44100,
+   "secs": 1.8224153518676758,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\05 - Ajja - iFriend.mp3",
+   "bpm": 138.948204275946,
+   "dur": 477.0133333333333,
+   "sr": 44100,
+   "secs": 1.5634067058563232,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\01 - Ajja - Bebopper.mp3",
+   "bpm": 139.23877171748114,
+   "dur": 460.26666666666665,
+   "sr": 44100,
+   "secs": 1.9146807193756104,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\05 - Ajja - Ripples in Blue.mp3",
+   "bpm": 139.6748310810811,
+   "dur": 480.45814058956915,
+   "sr": 44100,
+   "secs": 1.9351763725280762,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\02 - Ajja - Bubble Drum.mp3",
+   "bpm": 139.6748310810811,
+   "dur": 486.6567573696145,
+   "sr": 44100,
+   "secs": 1.9894216060638428,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\06 - Ajja - Lingus Khan.mp3",
+   "bpm": 140.42685539277346,
+   "dur": 418.44,
+   "sr": 44100,
+   "secs": 1.8947913646697998,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja & Mekkanikka - Psytrance 2025].f251.mp3",
+   "bpm": 140.625,
+   "dur": 3256.7611875,
+   "sr": 48000,
+   "secs": 1.6593756675720215,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\01 - Ajja - Tripmunch.mp3",
+   "bpm": 140.97871320441317,
+   "dur": 446.6533333333333,
+   "sr": 44100,
+   "secs": 1.7634613513946533,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\02 - Ajja - Romance in Ab.mp3",
+   "bpm": 141.07948176795554,
+   "dur": 414.97333333333336,
+   "sr": 44100,
+   "secs": 1.9162771701812744,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\05 - Ajja - Spitfire.mp3",
+   "bpm": 141.60397427767157,
+   "dur": 415.32,
+   "sr": 44100,
+   "secs": 1.895232915878296,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\03 - Ajja - Bazinga.mp3",
+   "bpm": 142.1112584830003,
+   "dur": 498.5733333333333,
+   "sr": 44100,
+   "secs": 1.9339773654937744,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Astrix - Psy Fi - Book Of Changes\\11 - Ajja - Rubadux (2017 remix).mp3",
+   "bpm": 142.35541788730546,
+   "dur": 435.3103628117914,
+   "sr": 44100,
+   "secs": 1.779069185256958,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Astrix - Psy Fi Book of Changes Compiled by Astrix\\10 - Ajja - Rubadux (2017 Remix).mp3",
+   "bpm": 142.35541788730546,
+   "dur": 435.3103628117914,
+   "sr": 44100,
+   "secs": 1.862027883529663,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja  - @ Ozora Festival 2019 ( Full setHD ).mp3",
+   "bpm": 143.55468749999997,
+   "dur": 5451.13977324263,
+   "sr": 44100,
+   "secs": 1.6256592273712158,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Ajja full live set at Psy-Fi 2017..mp3",
+   "bpm": 143.55468749999997,
+   "dur": 5673.2386394557825,
+   "sr": 44100,
+   "secs": 1.8989365100860596,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Full set (Audio, HD).mp3",
+   "bpm": 143.55468749999997,
+   "dur": 6777.997641723356,
+   "sr": 44100,
+   "secs": 2.0090315341949463,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\02 - Ajja - Forest Cure.mp3",
+   "bpm": 143.55468749999997,
+   "dur": 476.6666666666667,
+   "sr": 44100,
+   "secs": 1.9705817699432373,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka - Atom Smasher\\04 - Mekkanikka & Ajja - Into the Nucleus.mp3",
+   "bpm": 143.55468749999997,
+   "dur": 414.24657596371884,
+   "sr": 44100,
+   "secs": 1.8764238357543945,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Ajja @ Mundo de Oz Festival 2018.mp3",
+   "bpm": 143.5546875,
+   "dur": 7230.322358276644,
+   "sr": 44100,
+   "secs": 1.6666767597198486,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - AJJA's full set at Psy-Fi 2018.mp3",
+   "bpm": 143.5546875,
+   "dur": 7212.628752834467,
+   "sr": 44100,
+   "secs": 1.7874352931976318,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\08 - Ajja - Trancilvania.mp3",
+   "bpm": 143.5546875,
+   "dur": 635.7289795918367,
+   "sr": 44100,
+   "secs": 1.895080804824829,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Cosmosis - The Alien Jams Live at the HR Giger Museum\\09 - Ajja & Cosmosis - Alien Jam.mp3",
+   "bpm": 143.5546875,
+   "dur": 620.692380952381,
+   "sr": 44100,
+   "secs": 1.9474737644195557,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\03 - Ajja - Good Morning Albert.mp3",
+   "bpm": 143.5546875,
+   "dur": 205.12496598639456,
+   "sr": 44100,
+   "secs": 2.0070011615753174,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Menog - First Ride\\01 - Ajja & Menog - First Ride.mp3",
+   "bpm": 143.5546875,
+   "dur": 579.0209977324263,
+   "sr": 44100,
+   "secs": 2.062608003616333,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\01 - Ajja - Context High.mp3",
+   "bpm": 143.5546875,
+   "dur": 443.3333333333333,
+   "sr": 44100,
+   "secs": 1.9147942066192627,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\09 - Ajja - Mescaline Mantra.mp3",
+   "bpm": 143.5546875,
+   "dur": 161.91489795918366,
+   "sr": 44100,
+   "secs": 2.0138792991638184,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\03 - Ajja - Wibblefish.mp3",
+   "bpm": 143.5546875,
+   "dur": 470.13698412698415,
+   "sr": 44100,
+   "secs": 2.040008068084717,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\04 - Ajja - Goa Head Ted.mp3",
+   "bpm": 143.5546875,
+   "dur": 471.7808163265306,
+   "sr": 44100,
+   "secs": 1.5951979160308838,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\09 - Ajja - Ninja Wobble.mp3",
+   "bpm": 143.5546875,
+   "dur": 516.1643764172336,
+   "sr": 44100,
+   "secs": 1.747218370437622,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\03 - Ajja - Juicy Shrooms.mp3",
+   "bpm": 143.5546875,
+   "dur": 413.3333333333333,
+   "sr": 44100,
+   "secs": 1.7358944416046143,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\07 - Ajja - We Are All Aliens.mp3",
+   "bpm": 143.5546875,
+   "dur": 440.62666666666667,
+   "sr": 44100,
+   "secs": 1.897817611694336,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\04 - Ajja - Surge.mp3",
+   "bpm": 143.5546875,
+   "dur": 422.84,
+   "sr": 44100,
+   "secs": 1.8734462261199951,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Alpha Portal & Ajja - The Other Side (Volcano on Mars remix)\\01 - Alpha Portal & Ajja - The Other Side (Volcano on Mars remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 471.6084126984127,
+   "sr": 44100,
+   "secs": 1.820824146270752,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Alpha Portal & Ajja - The Other Side\\01 - Alpha Portal & Ajja - The Other Side.mp3",
+   "bpm": 143.5546875,
+   "dur": 471.6084126984127,
+   "sr": 44100,
+   "secs": 1.930387020111084,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\GMS & Dickster - Adverse Cambers\\07 - GMS, Dickster & Ajja - Gothic as a Brick.mp3",
+   "bpm": 143.5546875,
+   "dur": 506.3013605442177,
+   "sr": 44100,
+   "secs": 1.7794499397277832,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Burn in Noise - Beyond Known Space\\09 - Burn in Noise vs. Ajja - Image of Yourself.mp3",
+   "bpm": 143.5546875,
+   "dur": 505.84145124716554,
+   "sr": 44100,
+   "secs": 1.8492770195007324,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Dickster - The Dickster Collection\\01 - Vogon 42 Feat. Ajja & Dickster - Keed Spills.mp3",
+   "bpm": 143.5546875,
+   "dur": 433.97260770975055,
+   "sr": 44100,
+   "secs": 1.8466880321502686,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Koxbox - The Scanner Remixes\\02 - Koxbox - We're Not Who We Think We Are (Ajja Remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 419.53814058956914,
+   "sr": 44100,
+   "secs": 1.8119864463806152,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\01 - Mekkanikka & Ajja - Rewired.mp3",
+   "bpm": 143.5546875,
+   "dur": 561.0803854875284,
+   "sr": 44100,
+   "secs": 1.8473601341247559,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\04 - Mekkanikka & Ajja - Chemical Process.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.61632653061224,
+   "sr": 44100,
+   "secs": 1.8065433502197266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\GMS - Tampered Diversity\\01 - Ajja - Bebopper (GMS remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 406.6666666666667,
+   "sr": 44100,
+   "secs": 1.9809658527374268,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Killerwatts - Blow Your Mind The Remixes\\10 - Killerwatts - Fly Thru the Universe (Ajja rmx).mp3",
+   "bpm": 143.5546875,
+   "dur": 473.4246712018141,
+   "sr": 44100,
+   "secs": 2.056713819503784,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\08 - Mekkanikka & Ajja - Sonic Vision.mp3",
+   "bpm": 143.5546875,
+   "dur": 463.44827664399094,
+   "sr": 44100,
+   "secs": 1.9102706909179688,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\03 - Mekkanikka & Ajja - Electrically Driven.mp3",
+   "bpm": 143.5546875,
+   "dur": 405.5172335600907,
+   "sr": 44100,
+   "secs": 1.9884870052337646,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\06 - Mekkanikka & Ajja - Time Reactor.mp3",
+   "bpm": 143.5546875,
+   "dur": 480.8275736961451,
+   "sr": 44100,
+   "secs": 2.0019984245300293,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Outsiders - Music Is Our Mantra\\06 - Ajja & Outsiders - Divine Particles.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.3333333333333,
+   "sr": 44100,
+   "secs": 1.674633264541626,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka - Mekkanikka Mixtape #1\\02 - Mekkanikka & Ajja - Futurism.mp3",
+   "bpm": 143.5546875,
+   "dur": 397.2413832199546,
+   "sr": 44100,
+   "secs": 1.9265809059143066,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Outsiders & Ajja - Divine Particles\\01 - Outsiders & Ajja - Divine Particles.mp3",
+   "bpm": 143.5546875,
+   "dur": 453.3333333333333,
+   "sr": 44100,
+   "secs": 1.930664300918579,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Various Artists - Trance for Nations 14\\09 - Ajja - Zen Ninja.mp3",
+   "bpm": 143.5546875,
+   "dur": 488.0,
+   "sr": 44100,
+   "secs": 1.5021252632141113,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Volcano On Mars - World of Images\\03 - Ajja - Surge (Volcano on Mars remix).mp3",
+   "bpm": 143.5546875,
+   "dur": 418.7586394557823,
+   "sr": 44100,
+   "secs": 1.5187973976135254,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\02 - Ajja - Mescaline M\u00e9lodica.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 128.62496598639456,
+   "sr": 44100,
+   "secs": 1.86324143409729,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Juicy Shrooms (Alienatic Remix)\\01 - Ajja - Juicy Shrooms (Alienatic remix).mp3",
+   "bpm": 143.55468750000003,
+   "dur": 463.4482993197279,
+   "sr": 44100,
+   "secs": 2.0827033519744873,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\05 - Ajja - Disco Bunny.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 498.2068934240363,
+   "sr": 44100,
+   "secs": 1.7834420204162598,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Burn in Noise & Ajja - Image of Yourself (Noface remix)\\01 - Burn In Noise & Ajja & Ajja - Image of Yourself (Noface remix).mp3",
+   "bpm": 143.55468750000003,
+   "dur": 566.6666666666666,
+   "sr": 44100,
+   "secs": 1.8864328861236572,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\07 - Mekkanikka & Ajja - Scientific Inception.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 456.8275736961451,
+   "sr": 44100,
+   "secs": 1.9265117645263672,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Tristan - Psy Fi - Holographic Universe\\04 - Flooting Grooves, Ajja - Flanger Management.mp3",
+   "bpm": 143.55468750000003,
+   "dur": 445.0,
+   "sr": 44100,
+   "secs": 1.6351566314697266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\00 - Ajja - Live Set @  Ozora 2024.mp3",
+   "bpm": 147.65625,
+   "dur": 6632.68716553288,
+   "sr": 44100,
+   "secs": 1.7674839496612549,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\08 - Ajja - Aria 51.mp3",
+   "bpm": 147.65625,
+   "dur": 420.0,
+   "sr": 44100,
+   "secs": 1.6547081470489502,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\07 - Ajja - Original Spin.mp3",
+   "bpm": 147.65625,
+   "dur": 486.53061224489795,
+   "sr": 44100,
+   "secs": 1.8085980415344238,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Oddular\\10 - Tripswitch - Shamanic Tea (Ajja remix).mp3",
+   "bpm": 147.65625,
+   "dur": 397.2972789115646,
+   "sr": 44100,
+   "secs": 1.7197437286376953,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\10 - Ajja - Three Dots.mp3",
+   "bpm": 147.65625,
+   "dur": 480.56,
+   "sr": 44100,
+   "secs": 1.8200998306274414,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\09 - Ajja - Widdershins.mp3",
+   "bpm": 147.65625,
+   "dur": 435.2,
+   "sr": 44100,
+   "secs": 1.8799076080322266,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\05 - Mekkanikka & Ajja - Shift Happens.mp3",
+   "bpm": 147.65625,
+   "dur": 407.9591836734694,
+   "sr": 44100,
+   "secs": 1.7939329147338867,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja & Arcon - Maze of Mirrors\\01 - Ajja & Arcon - Maze of Mirrors.mp3",
+   "bpm": 147.67998500693182,
+   "dur": 486.760566893424,
+   "sr": 44100,
+   "secs": 1.9180917739868164,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\08 - Ajja - Bayaya.mp3",
+   "bpm": 147.90104183530863,
+   "dur": 425.4266666666667,
+   "sr": 44100,
+   "secs": 1.7914903163909912,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\06 - Ajja - Sidewinder (Flying mix).mp3",
+   "bpm": 148.8201606479149,
+   "dur": 481.68,
+   "sr": 44100,
+   "secs": 1.6317851543426514,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - unknown album\\00 - Ajja - Dawn Dragons (Original Mix).mp3",
+   "bpm": 149.85633772950675,
+   "dur": 488.21920634920633,
+   "sr": 44100,
+   "secs": 1.8658168315887451,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\auto_dj_script - unknown album\\00 - auto_dj_script - final ajja mix.mp3",
+   "bpm": 150.33181155257495,
+   "dur": 17271.81095238095,
+   "sr": 44100,
+   "secs": 1.3866865634918213,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Psychogenica\\10 - Ajja - Spikedelic.mp3",
+   "bpm": 150.80231741846998,
+   "dur": 430.6933333333333,
+   "sr": 44100,
+   "secs": 1.9187498092651367,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Tulpa\\07 - Ajja - Ingrained.mp3",
+   "bpm": 150.99302579675683,
+   "dur": 442.3066666666667,
+   "sr": 44100,
+   "secs": 1.817253828048706,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\09 - Ajja - Stage Left.mp3",
+   "bpm": 151.99908088235293,
+   "dur": 295.4822222222222,
+   "sr": 44100,
+   "secs": 1.8426978588104248,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\01 - Ajja - Full Moon Koh Pha Ngan.mp3",
+   "bpm": 153.65914519383898,
+   "dur": 319.6249886621315,
+   "sr": 44100,
+   "secs": 2.1140081882476807,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Spira Mirabilis\\03 - Ajja - Arabian Lights.mp3",
+   "bpm": 157.45142423018086,
+   "dur": 485.1201360544218,
+   "sr": 44100,
+   "secs": 2.022540330886841,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\05 - Ajja - Cajun.mp3",
+   "bpm": 161.4990234375,
+   "dur": 349.25,
+   "sr": 44100,
+   "secs": 1.9765625,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\06 - Ajja - Chillsome.mp3",
+   "bpm": 184.5703125,
+   "dur": 424.40199546485263,
+   "sr": 44100,
+   "secs": 1.9785284996032715,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\09 - Mekkanikka & Ajja - Believe in Yourself.mp3",
+   "bpm": 189.89345345981073,
+   "dur": 530.4827437641724,
+   "sr": 44100,
+   "secs": 1.7807598114013672,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Mekkanikka & Ajja - Ultrasonic\\02 - Mekkanikka & Ajja - Ultrasonic.mp3",
+   "bpm": 190.05955230568014,
+   "dur": 475.8620634920635,
+   "sr": 44100,
+   "secs": 1.914848804473877,
+   "err": null
+  },
+  {
+   "path": "C:\\Users\\hyper\\Music\\Ajja - Chillsome\\07 - Ajja - The Chill Channel.mp3",
+   "bpm": 198.76802884615384,
+   "dur": 419.8499546485261,
+   "sr": 44100,
+   "secs": 2.0989701747894287,
+   "err": null
+  }
+ ]
+}

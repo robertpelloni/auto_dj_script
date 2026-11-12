@@ -1,0 +1,168 @@
+=== Ajja @ 145 BPM (max 25 tracks) ===
+  Total tracks found: 62
+  Scanned 62 tracks with valid BPM
+  Selected 25 within 25% of 145 BPM:
+    02 - Ajja - Mescaline Mélodica.mp3                           143.6 (-1)
+    01 - Ajja - Juicy Shrooms (Alienatic remix).mp3              143.6 (-1)
+    05 - Ajja - Disco Bunny.mp3                                  143.6 (-1)
+    09 - Ajja & Cosmosis - Alien Jam.mp3                         143.6 (-1)
+    01 - Ajja & Menog - First Ride.mp3                           143.6 (-1)
+    03 - Ajja - Good Morning Albert.mp3                          143.6 (-1)
+    08 - Ajja - Trancilvania.mp3                                 143.6 (-1)
+    09 - Ajja - Mescaline Mantra.mp3                             143.6 (-1)
+    01 - Ajja - Context High.mp3                                 143.6 (-1)
+    03 - Ajja - Wibblefish.mp3                                   143.6 (-1)
+    04 - Ajja - Goa Head Ted.mp3                                 143.6 (-1)
+    09 - Ajja - Ninja Wobble.mp3                                 143.6 (-1)
+    03 - Ajja - Juicy Shrooms.mp3                                143.6 (-1)
+    07 - Ajja - We Are All Aliens.mp3                            143.6 (-1)
+    04 - Ajja - Surge.mp3                                        143.6 (-1)
+    02 - Ajja - Forest Cure.mp3                                  143.6 (-1)
+    07 - Ajja - Original Spin.mp3                                147.7 (+3)
+    08 - Ajja - Aria 51.mp3                                      147.7 (+3)
+    10 - Tripswitch - Shamanic Tea (Ajja remix).mp3              147.7 (+3)
+    09 - Ajja - Widdershins.mp3                                  147.7 (+3)
+    10 - Ajja - Three Dots.mp3                                   147.7 (+3)
+    01 - Ajja & Arcon - Maze of Mirrors.mp3                      147.7 (+3)
+    03 - Ajja - Bazinga.mp3                                      142.1 (-3)
+    08 - Ajja - Bayaya.mp3                                       147.9 (+3)
+    05 - Ajja - Spitfire.mp3                                     141.6 (-3)
+[*] Analyzing 25 tracks (Sequential)...
+  [1/25] 08 - Ajja - Aria 51.mp3: BPM=147.7, Key=F# Minor, Genre=Progressive
+  [2/25] 10 - Tripswitch - Shamanic Tea (Ajja remix).mp3: BPM=147.7, Key=C# Minor, Genre=Progressive
+  [3/25] 08 - Ajja - Bayaya.mp3: BPM=147.9, Key=F Major, Genre=Progressive
+  [4/25] 10 - Ajja - Three Dots.mp3: BPM=147.7, Key=D# Minor, Genre=Progressive
+  [5/25] 04 - Ajja - Surge.mp3: BPM=143.6, Key=F# Minor, Genre=Minimal
+  [6/25] 03 - Ajja - Wibblefish.mp3: BPM=143.6, Key=A# Major, Genre=Minimal
+  [7/25] 05 - Ajja - Disco Bunny.mp3: BPM=143.6, Key=D# Minor, Genre=Progressive
+  [8/25] 07 - Ajja - We Are All Aliens.mp3: BPM=143.6, Key=D# Major, Genre=Progressive
+  [9/25] 01 - Ajja & Menog - First Ride.mp3: BPM=143.6, Key=D Major, Genre=Minimal
+  [10/25] 03 - Ajja - Bazinga.mp3: BPM=142.1, Key=F Major, Genre=Minimal
+  [11/25] 03 - Ajja - Juicy Shrooms.mp3: BPM=143.6, Key=A# Minor, Genre=Progressive
+  [12/25] 07 - Ajja - Original Spin.mp3: BPM=147.7, Key=D# Major, Genre=Progressive
+  [13/25] 01 - Ajja - Juicy Shrooms (Alienatic remix).mp3: BPM=143.6, Key=A# Minor, Genre=Progressive
+  [14/25] 09 - Ajja & Cosmosis - Alien Jam.mp3: BPM=143.6, Key=A# Major, Genre=Minimal
+  [15/25] 03 - Ajja - Good Morning Albert.mp3: BPM=143.6, Key=A# Major, Genre=Progressive
+  [16/25] 04 - Ajja - Goa Head Ted.mp3: BPM=143.6, Key=G# Major, Genre=Progressive
+  [17/25] 09 - Ajja - Ninja Wobble.mp3: BPM=143.6, Key=A# Major, Genre=Progressive
+  [18/25] 01 - Ajja & Arcon - Maze of Mirrors.mp3: BPM=147.7, Key=D# Minor, Genre=Full-On
+  [19/25] 09 - Ajja - Widdershins.mp3: BPM=147.7, Key=F# Minor, Genre=Progressive
+  [20/25] 05 - Ajja - Spitfire.mp3: BPM=141.6, Key=F# Minor, Genre=Progressive
+  [21/25] 09 - Ajja - Mescaline Mantra.mp3: BPM=143.6, Key=F Major, Genre=Minimal
+  [22/25] 01 - Ajja - Context High.mp3: BPM=143.6, Key=D# Minor, Genre=Progressive
+  [23/25] 02 - Ajja - Mescaline Mélodica.mp3: BPM=143.6, Key=A# Major, Genre=Minimal
+  [24/25] 02 - Ajja - Forest Cure.mp3: BPM=143.6, Key=G# Major, Genre=Minimal
+  [25/25] 08 - Ajja - Trancilvania.mp3: BPM=143.6, Key=C Major, Genre=Minimal
+  [LOAD] 02 - Ajja - Mescaline Mélodica.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 09 - Ajja - Mescaline Mantra.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 03 - Ajja - Good Morning Albert.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 10 - Tripswitch - Shamanic Tea (Ajja remix).mp3 - SoundFile OK
+  [RB] rate=0.9820 (147.7 -> 145.0)
+  [LOAD] 08 - Ajja - Aria 51.mp3 - SoundFile OK
+  [RB] rate=0.9820 (147.7 -> 145.0)
+  [LOAD] 09 - Ajja - Widdershins.mp3 - SoundFile OK
+  [RB] rate=0.9820 (147.7 -> 145.0)
+  [LOAD] 05 - Ajja - Spitfire.mp3 - SoundFile OK
+  [RB] rate=1.0240 (141.6 -> 145.0)
+  [LOAD] 08 - Ajja - Bayaya.mp3 - SoundFile OK
+  [RB] rate=0.9804 (147.9 -> 145.0)
+  [LOAD] 07 - Ajja - We Are All Aliens.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 03 - Ajja - Wibblefish.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 04 - Ajja - Goa Head Ted.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 07 - Ajja - Original Spin.mp3 - SoundFile OK
+  [RB] rate=0.9820 (147.7 -> 145.0)
+  [LOAD] 03 - Ajja - Bazinga.mp3 - SoundFile OK
+  [RB] rate=1.0203 (142.1 -> 145.0)
+  [LOAD] 09 - Ajja - Ninja Wobble.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 09 - Ajja & Cosmosis - Alien Jam.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 08 - Ajja - Trancilvania.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 10 - Ajja - Three Dots.mp3 - SoundFile OK
+  [RB] rate=0.9820 (147.7 -> 145.0)
+  [LOAD] 01 - Ajja - Context High.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 05 - Ajja - Disco Bunny.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 01 - Ajja - Juicy Shrooms (Alienatic remix).mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 01 - Ajja & Arcon - Maze of Mirrors.mp3 - SoundFile OK
+  [RB] rate=0.9819 (147.7 -> 145.0)
+  [LOAD] 03 - Ajja - Juicy Shrooms.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 01 - Ajja & Menog - First Ride.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 04 - Ajja - Surge.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+  [LOAD] 02 - Ajja - Forest Cure.mp3 - SoundFile OK
+  [RB] rate=1.0101 (143.6 -> 145.0)
+ [SYNC] Nudge: 0ms
+ [KICK-SYNC] peaks: out=64 in=37 offsets=27 nudge=-1ms
+ [SYNC] Nudge: -1ms
+ [KICK-SYNC] peaks: out=33 in=48 offsets=30 nudge=-105ms
+ [SYNC] Nudge: -105ms
+ [PREFADE] 164ms ambient intro under outgoing track
+ [SYNC] Nudge: 0ms
+ [PREFADE] 120ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=28 in=28 offsets=13 nudge=-28ms
+ [SYNC] Nudge: -28ms
+ [PREFADE] 121ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=45 in=87 offsets=29 nudge=21ms
+ [SYNC] Nudge: 21ms
+ [KICK-SYNC] peaks: out=48 in=42 offsets=6 nudge=-99ms
+ [SYNC] Nudge: -99ms
+ [PREFADE] 18ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=16 in=83 offsets=12 nudge=4ms
+ [SYNC] Nudge: 4ms
+ [KICK-SYNC] peaks: out=88 in=79 offsets=28 nudge=-14ms
+ [SYNC] Nudge: -14ms
+ [PREFADE] 201ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=46 in=96 offsets=27 nudge=-34ms
+ [SYNC] Nudge: -34ms
+ [KICK-SYNC] peaks: out=69 in=99 offsets=28 nudge=5ms
+ [SYNC] Nudge: 5ms
+ [KICK-SYNC] peaks: out=47 in=82 offsets=24 nudge=19ms
+ [SYNC] Nudge: 19ms
+ [KICK-SYNC] peaks: out=67 in=47 offsets=21 nudge=1ms
+ [SYNC] Nudge: 1ms
+ [PREFADE] 40ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=71 in=24 offsets=10 nudge=-28ms
+ [SYNC] Nudge: -28ms
+ [PREFADE] 211ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=37 in=81 offsets=26 nudge=36ms
+ [SYNC] Nudge: 36ms
+ [KICK-SYNC] peaks: out=53 in=75 offsets=26 nudge=-46ms
+ [SYNC] Nudge: -46ms
+ [KICK-SYNC] peaks: out=23 in=6 offsets=3 nudge=-8ms
+ [SYNC] Nudge: -8ms
+ [SYNC] Nudge: 0ms
+ [PREFADE] 201ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=25 in=71 offsets=24 nudge=-139ms
+ [SYNC] Nudge: -139ms
+ [PREFADE] 255ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=28 in=68 offsets=27 nudge=-36ms
+ [SYNC] Nudge: -36ms
+ [SYNC] Nudge: 0ms
+ [PREFADE] 102ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=92 in=61 offsets=30 nudge=-50ms
+ [SYNC] Nudge: -50ms
+ [KICK-SYNC] peaks: out=77 in=25 offsets=14 nudge=52ms
+ [SYNC] Nudge: 52ms
+ [PREFADE] 4ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=44 in=34 offsets=11 nudge=8ms
+ [SYNC] Nudge: 8ms
+ [PREFADE] 79ms ambient intro under outgoing track
+[MASTERING] Normalizing final mix to target LUFS...
+[MASTERING] Final mix normalization complete.
+[*] Exporting 169.4 min mix to ./ajja_mix.flac...
+[*] Export complete!
+[*] Integration: Rekordbox XML exported to ./ajja_mix_rekordbox.xml
+
+Ajja complete: 169.4 min in 607s

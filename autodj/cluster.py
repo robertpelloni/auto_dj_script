@@ -1,4 +1,4 @@
-""" Distributed Rendering Cluster Manager for the Auto DJ system (7.0.0).
+""" Distributed Rendering Cluster Manager for the Auto DJ system (8.16.0).
 Coordinates rendering tasks across local threads (ThreadPoolExecutor for Windows compatibility).
 """
 

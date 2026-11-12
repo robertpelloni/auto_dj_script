@@ -1,0 +1,28 @@
+[*] Analyzing 4 tracks (Sequential)...
+  [1/4] Ajja - 2012 - Tulpa - 4 - Surge.flac: BPM=103.4, Key=F# Minor, Genre=Ambient
+  [2/4] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 5 - Around the Bend.flac: BPM=132.5, Key=D# Minor, Genre=Progressive
+  [3/4] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 9 - Alien Jam.flac: BPM=132.5, Key=A# Major, Genre=Progressive
+  [4/4] Ajja - 2012 - Tulpa - 9 - Widdershins.flac: BPM=132.5, Key=F# Minor, Genre=Minimal
+  [LOAD] Ajja - 2012 - Tulpa - 4 - Surge.flac - SoundFile OK
+  [RB] rate=1.2094 (103.4 -> 125.0)
+  [LOAD] Ajja - 2012 - Tulpa - 9 - Widdershins.flac - SoundFile OK
+  [RB] rate=0.9433 (132.5 -> 125.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 5 - Around the Bend.flac - SoundFile OK
+  [RB] rate=0.9433 (132.5 -> 125.0)
+  [LOAD] Ajja; Cosmosis - 2014 - The Alien Jams_ Live at the HR Giger Museum - 9 - Alien Jam.flac - SoundFile OK
+  [RB] rate=0.9433 (132.5 -> 125.0)
+ [KICK-SYNC] peaks: out=70 in=57 offsets=30 nudge=18ms
+ [SYNC] Nudge: 18ms
+ [PREFADE] 93ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=49 in=92 offsets=30 nudge=10ms
+ [SYNC] Nudge: 10ms
+ [PREFADE] 181ms ambient intro under outgoing track
+ [KICK-SYNC] peaks: out=46 in=21 offsets=4 nudge=-61ms
+ [SYNC] Nudge: -61ms
+ [PREFADE] 82ms ambient intro under outgoing track
+[MASTERING] Normalizing final mix to target LUFS...
+[MASTERING] Final mix normalization complete.
+[*] Exporting 31.1 min mix to ./part3.flac...
+[*] Export complete!
+[*] Integration: Rekordbox XML exported to ./part3_rekordbox.xml
+Part 3 complete: 31.1 min in 199s

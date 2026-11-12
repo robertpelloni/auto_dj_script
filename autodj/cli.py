@@ -44,6 +44,12 @@ def main():
     # Transition Arguments
     parser.add_argument("--transition-bars", type=int, default=config.TRANSITION_BARS, help="Number of bars for the crossfade transition.")
     parser.add_argument("--beats-per-bar", type=int, default=config.BEATS_PER_BAR, help="Number of beats per bar (e.g., 4 for 4/4 time).")
+    parser.add_argument(
+        "--bass-transition",
+        choices=["swap", "fade"],
+        default=getattr(config, "BASS_TRANSITION_STYLE", "swap"),
+        help="Low-frequency transition style: 'swap' for classic DJ bass swap or 'fade' for gradual equal-power bass crossfade.",
+    )
 
     # Mode Arguments
     parser.add_argument("--dry-run", action="store_true", help="Analyze tracks and log details without rendering audio.")

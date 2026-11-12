@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "autodj"
-version = "8.15.0"
+version = "8.16.0"
 description = "Automated seamless DJ transitions with frequency splitting and harmonic mixing."
 readme = "README.md"
 requires-python = ">=3.8"
@@ -27,3 +27,7 @@ dependencies = [
 
 [project.scripts]
 auto-dj = "autodj.cli:main"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+

@@ -1,20 +1,20 @@
+# Python & linter caches
 __pycache__/
-*.wav
-*.flac
-psyset_source/
-# AI tool artifacts
+*.py[cod]
+.pytest_cache/
+.ruff_cache/
+.pi-lens/cache/
+
+# Ephemeral startup markers
 .borg_startup_marker
-.pi/
-.jules/
-metamcp.db
-*.db
-# Large media files - use Git LFS or external storage
+
+# Staging audio folders & large media binaries
+psyset_source/
+dont_use_yet/
+test_playlist/
 *.m4a
 *.wav
 *.mp3
 *.flac
 *.ogg
 *.aiff
-.pi-lens/
-.pi-lens/
-.pi-lens/
