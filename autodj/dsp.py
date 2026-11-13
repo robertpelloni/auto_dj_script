@@ -1,12 +1,14 @@
-"""Digital Signal Processing (DSP) Module | Auto DJ Script (8.16.0 - Clean Transitions).
+"""Digital Signal Processing (DSP) Module | Auto DJ Script.
 ==============================================================
-Professional DJ-style transitions that sound like a real DJ mixer.
+Professional DJ-style transitions, 3-band dynamics mastering, and transition archetype plugins.
 
 Design philosophy:
-- Volume crossfade does 90% of the mixing work
-- Bass swap handles the kick drum transition
-- No aggressive filter sweeps — those are an effect, not a transition
-- A real DJ mixer has 3-band EQ (HI/MID/LO) and volume faders, nothing more
+- Default `progressive` archetype uses phase-coherent zero-phase (`filtfilt`) bass subtraction
+  paired with equal-power volume crossfading (what a real 2-channel DJ mixer does).
+- Additional registered `TransitionArchetype` plugins (`spectral_balance`, `classic`,
+  `echo_out`, `hpf_sweep`, `low_cut_build`) give creative control when requested via CLI/UI.
+- Multiband compression uses Linkwitz-style zero-phase 3-band splitting (`<200 Hz`, `200-3500 Hz`,
+  `>3500 Hz`) with soft-knee envelope gain reduction and genre-aware thresholds.
 """
 
 import numpy as np
@@ -18,6 +20,7 @@ class TransitionArchetype:
 
     name = "Base"
     display_name = "Base Archetype"
+    description = ""
 
     @staticmethod
     def apply(outro_array, intro_array, sr, **kwargs):
@@ -47,7 +50,7 @@ def apply_dsp_filter(audio_array, sr, filter_type="highpass", cutoff=150.0):
 
 
 def trim_silence(segment, silence_threshold=-65.0, chunk_size=10):
-    """Surgical silence removal using optimized NumPy analysis."""
+    """Surgical silence removal using vectorized NumPy threshold scan."""
     samples = np.array(segment.get_array_of_samples())
     if len(samples) == 0:
         return segment
@@ -69,13 +72,10 @@ def trim_silence(segment, silence_threshold=-65.0, chunk_size=10):
 
 
 def normalize_lufs(audio_array, sr, target_lufs=-14.0):
-    """Normalize audio to target LUFS using K-weighted RMS.
-    Uses a simplified ITU-R BS.1770 model: high-shelf + high-pass
-    filtering before RMS measurement for perceptually accurate loudness.
-    Processes in chunks to handle large files without OOM.
+    """Normalize audio to target LUFS using K-weighted RMS (ITU-R BS.1770 approximation).
+    Processes in chunks to handle multi-hour master streams without OOM.
     """
     if audio_array.ndim == 2:
-        # BS.1770: sum channel powers then convert to loudness
         ch_powers = []
         for ch in range(audio_array.shape[0]):
             ch_loudness = _measure_loudness_chunked(audio_array[ch], sr)
@@ -83,7 +83,6 @@ def normalize_lufs(audio_array, sr, target_lufs=-14.0):
         total_power = sum(ch_powers)
         if total_power < 1e-20:
             return audio_array
-        # -0.691dB channel sum correction per BS.1770 for stereo
         loudness = 10 * np.log10(total_power) - 0.691
     else:
         loudness = _measure_loudness_chunked(audio_array, sr)
@@ -92,12 +91,8 @@ def normalize_lufs(audio_array, sr, target_lufs=-14.0):
         return audio_array
 
     gain_db = target_lufs - loudness
-    gain_lin = 10 ** (gain_db / 20.0)
+    gain_lin = float(np.clip(10 ** (gain_db / 20.0), 0.1, 10.0))
 
-    # Clamp gain to avoid extreme adjustments
-    gain_lin = float(np.clip(gain_lin, 0.1, 10.0))
-
-    # Apply gain in-place to avoid copying the entire array
     audio_array = audio_array * gain_lin
     peak = float(np.max(np.abs(audio_array)))
     if peak > 0.99:
@@ -107,31 +102,22 @@ def normalize_lufs(audio_array, sr, target_lufs=-14.0):
 
 
 def _measure_loudness_chunked(audio, sr, chunk_seconds=120):
-    """Measure perceptual loudness using chunked processing to avoid OOM.
-    Processes audio through K-weighting filters in chunks with state carryover,
-    accumulating the weighted sum-of-squares for accurate RMS.
-    """
+    """Measure perceptual loudness using chunked K-weighting filters with state carryover."""
     from scipy.signal import bilinear, sosfilt, sosfilt_zi
 
-    # Get K-weighting filter coefficients as second-order sections
-    # Stage 1: high-shelf boost (~+4dB at 4kHz) - BS.1770 pre-filter
     if sr == 44100:
-        # Direct SOS coefficients for the shelf filter
         b_shelf = [1.53512485, -2.69161304, 1.19839265]
         a_shelf = [1.0, -1.69004453, 0.73249962]
     else:
         b_shelf = [1.0]
         a_shelf = [1.0]
 
-    # Stage 2: high-pass at ~60Hz
     try:
         b_hp, a_hp = bilinear([0, 1], [1, 1 / (2 * np.pi * 60)], sr=sr)
     except Exception:
         b_hp = [1.0]
         a_hp = [1.0]
 
-    # Convert to SOS format for numerical stability and state tracking
-    # Simple 2nd-order filters -> single SOS section each
     sos_shelf = np.array(
         [
             [
@@ -162,20 +148,14 @@ def _measure_loudness_chunked(audio, sr, chunk_seconds=120):
     weighted_sum_sq = 0.0
     total_weighted = 0
 
-    # Initialize filter states
-    zi_shelf = sosfilt_zi(sos_shelf) * 0  # zero initial state
+    zi_shelf = sosfilt_zi(sos_shelf) * 0
     zi_hp = sosfilt_zi(sos_hp) * 0
 
     for start in range(0, total_samples, chunk_size):
         end = min(start + chunk_size, total_samples)
         chunk = audio[start:end]
-
-        # Apply shelf filter with state carryover
         filtered, zi_shelf = sosfilt(sos_shelf, chunk, zi=zi_shelf)
-        # Apply HP filter with state carryover
         filtered, zi_hp = sosfilt(sos_hp, filtered, zi=zi_hp)
-
-        # Accumulate weighted sum of squares
         weighted_sum_sq += float(np.sum(filtered**2))
         total_weighted += end - start
 
@@ -187,6 +167,7 @@ def _measure_loudness_chunked(audio, sr, chunk_seconds=120):
 
 
 def apply_limiter(audio_array, threshold=0.99):
+    """Soft-clip hyperbolic tangent peak limiter preventing inter-sample clipping."""
     abs_audio = np.abs(audio_array)
     mask = abs_audio > threshold
     if np.any(mask):
@@ -203,15 +184,81 @@ def apply_limiter(audio_array, threshold=0.99):
     return audio_array
 
 
+def _compress_band_1d(band: np.ndarray, sr: int, threshold_db: float, ratio: float, makeup_db: float) -> np.ndarray:
+    """Applies smooth RMS-envelope soft-knee compression to a 1D band signal."""
+    if band.size == 0 or ratio <= 1.0:
+        return band
+    from scipy.signal import lfilter
+
+    # ~25ms envelope smoothing window prevents waveform-rate distortion on sub-bass
+    win = max(1, int(sr * 0.025))
+    alpha = 1.0 - np.exp(-1.0 / float(win))
+    env_sq = lfilter([alpha], [1.0, -(1.0 - alpha)], band.astype(np.float64) ** 2)
+    env_db = 10.0 * np.log10(np.maximum(env_sq, 1e-12))
+
+    over_db = np.maximum(0.0, env_db - threshold_db)
+    gain_red_db = -over_db * (1.0 - 1.0 / ratio) + makeup_db
+    gain_lin = (10.0 ** (gain_red_db / 20.0)).astype(band.dtype, copy=False)
+    return band * gain_lin
+
+
 def apply_multiband_compression(audio_array, sr, intensity=0.5, genre_profile=None):
-    return audio_array
+    """3-band zero-phase dynamics mastering (`<200 Hz`, `200-3500 Hz`, `>3500 Hz`).
+
+    Why zero-phase subtraction split:
+    Summing independent minimum-phase Butterworth bandpasses causes phase cancellation notches
+    at the crossover frequencies. Extracting `low` and `low+mid` with zero-phase `filtfilt`
+    and deriving the complementary bands algebraically guarantees exact unity reconstruction
+    (`low + mid + high == audio_array` to floating-point precision) when `intensity == 0`.
+    """
+    intensity = float(np.clip(intensity, 0.0, 1.0))
+    if intensity <= 0.01 or audio_array.size < 32:
+        return audio_array
+
+    profiles = {
+        "Ambient": {"thresh": (-16.0, -18.0, -20.0), "ratio": (1.6, 1.4, 1.4), "makeup": (0.5, 0.4, 0.3)},
+        "Downtempo": {"thresh": (-16.0, -18.0, -20.0), "ratio": (1.8, 1.6, 1.5), "makeup": (0.8, 0.6, 0.5)},
+        "Minimal": {"thresh": (-18.0, -19.0, -21.0), "ratio": (2.5, 2.0, 1.8), "makeup": (1.2, 0.9, 0.7)},
+        "Progressive": {"thresh": (-18.0, -20.0, -22.0), "ratio": (2.8, 2.2, 2.0), "makeup": (1.4, 1.0, 0.8)},
+        "Full-On": {"thresh": (-19.0, -21.0, -22.0), "ratio": (3.2, 2.5, 2.2), "makeup": (1.6, 1.2, 1.0)},
+        "Hi-Tech": {"thresh": (-20.0, -21.0, -23.0), "ratio": (3.5, 2.8, 2.4), "makeup": (1.8, 1.3, 1.1)},
+    }
+    prof = profiles.get(str(genre_profile or ""), profiles["Progressive"])
+
+    try:
+        from scipy.signal import butter, filtfilt
+
+        nyq = 0.5 * float(sr)
+        f_lo = min(200.0, nyq * 0.4)
+        f_hi = min(3500.0, nyq * 0.85)
+        b_lo, a_lo = butter(2, f_lo / nyq, btype="low")
+        b_lm, a_lm = butter(2, f_hi / nyq, btype="low")
+
+        def _proc_1d(sig: np.ndarray) -> np.ndarray:
+            low = filtfilt(b_lo, a_lo, sig)
+            low_mid = filtfilt(b_lm, a_lm, sig)
+            mid = low_mid - low
+            high = sig - low_mid
+
+            c_low = _compress_band_1d(low, sr, prof["thresh"][0], 1.0 + (prof["ratio"][0] - 1.0) * intensity, prof["makeup"][0] * intensity)
+            c_mid = _compress_band_1d(mid, sr, prof["thresh"][1], 1.0 + (prof["ratio"][1] - 1.0) * intensity, prof["makeup"][1] * intensity)
+            c_high = _compress_band_1d(high, sr, prof["thresh"][2], 1.0 + (prof["ratio"][2] - 1.0) * intensity, prof["makeup"][2] * intensity)
+            wet = c_low + c_mid + c_high
+            return (sig * (1.0 - intensity) + wet * intensity).astype(sig.dtype, copy=False)
+
+        if audio_array.ndim == 2:
+            out = np.empty_like(audio_array)
+            for ch in range(audio_array.shape[0]):
+                out[ch] = _proc_1d(audio_array[ch])
+            return apply_limiter(out)
+        return apply_limiter(_proc_1d(audio_array))
+    except Exception:
+        return audio_array
 
 
 def calculate_spectral_clash(outro_array, intro_array, sr):
-    """Analyzes frequency band overlap between two audio segments.
+    """Analyzes frequency band overlap between two audio segments (Low, Mid, High)."""
 
-    Returns a dictionary of energy ratios for Low, Mid, and High bands.
-    """
     def _get_bands(arr):
         low = apply_dsp_filter(arr, sr, "lowpass", 200.0)
         mid_high = apply_dsp_filter(arr, sr, "highpass", 200.0)
@@ -233,75 +280,65 @@ def calculate_spectral_clash(outro_array, intro_array, sr):
     }
 
 
+def _zero_phase_filter(arr: np.ndarray, sr: int, cutoff: float, btype: str = "low", order: int = 2) -> np.ndarray:
+    """Applies zero-phase Butterworth filtering along time axis for mono or stereo arrays."""
+    try:
+        from scipy.signal import butter, filtfilt
+
+        nyq = 0.5 * float(sr)
+        norm_c = float(np.clip(cutoff / nyq, 0.005, 0.98))
+        b, a = butter(order, norm_c, btype=btype)
+        if arr.ndim == 2:
+            out = np.zeros_like(arr)
+            for ch in range(arr.shape[0]):
+                out[ch] = filtfilt(b, a, arr[ch])
+            return out
+        return filtfilt(b, a, arr)
+    except Exception:
+        return apply_dsp_filter(arr, sr, "lowpass" if btype == "low" else "highpass", cutoff)
+
+
 def _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs):
-    """The core DJ transition: bass swap + volume crossfade.
-
-    This is how a real DJ mixes on a standard 2-channel mixer:
-    1. Intro starts playing with its LOW EQ cut (bass at -inf)
-    2. As the mix progresses, the intro's bass is brought in
-    3. Simultaneously the outro's bass is cut
-    4. The volume fader crossfades the mid/high smoothly
-    5. The "bass swap" moment is where the kick drum changes over
-
-    NO filter sweeps. NO resonant sweeps. Just EQ and faders.
-    """
+    """The core DJ transition: zero-phase bass swap + clean mid/high preservation."""
     out_len = outro_array.shape[1] if outro_array.ndim == 2 else len(outro_array)
     in_len = intro_array.shape[1] if intro_array.ndim == 2 else len(intro_array)
     if out_len == 0 or in_len == 0:
         return np.copy(outro_array), np.copy(intro_array)
 
-    # --- SPECTRAL: bass management only (single filter call, no per-block) ---
+    bass_style = kwargs.get("bass_transition", "swap")
+    cutoff = float(kwargs.get("highpass", 150.0) or 150.0)
 
-    # Build separate gain curves for outro and intro (they may differ in length)
     x_out = np.linspace(0, 1, out_len)
-    outro_bass_curve = np.ones(out_len)
-    mask = x_out > 0.4
-    outro_bass_curve[mask] = 0.5 * (1 + np.cos(np.pi * (x_out[mask] - 0.4) / 0.4))
-    outro_bass_curve[x_out > 0.8] = 0.02
-
     x_in = np.linspace(0, 1, in_len)
-    intro_bass_curve = np.zeros(in_len)
-    mask = x_in > 0.3
-    intro_bass_curve[mask] = 0.5 * (1 - np.cos(np.pi * (x_in[mask] - 0.3) / 0.4))
-    intro_bass_curve[x_in > 0.7] = 1.0
 
-    # Apply bass management using zero-phase subtraction crossover.
-    # Uses filtfilt (zero-phase) instead of lfilter to avoid the +2.1dB
-    # boost around 150-200Hz caused by lfilter's group delay misaligning
-    # the subtracted bass with the original signal.
-    # Formula: output = audio - bass * (1 - curve)
-    # When curve=1.0: output = audio (no change, exact)
-    # When curve=0.0: output = audio - bass (highpass effect)
-    try:
-        from scipy.signal import filtfilt, butter
+    if bass_style == "fade":
+        outro_bass_curve = np.cos(np.pi * x_out / 2.0)
+        intro_bass_curve = np.sin(np.pi * x_in / 2.0)
+    else:
+        outro_bass_curve = np.ones(out_len)
+        mask_o = x_out > 0.4
+        outro_bass_curve[mask_o] = 0.5 * (1 + np.cos(np.pi * (x_out[mask_o] - 0.4) / 0.4))
+        outro_bass_curve[x_out > 0.8] = 0.02
 
-        b_lo, a_lo = butter(2, 150.0 / (0.5 * sr), btype="low")
+        intro_bass_curve = np.zeros(in_len)
+        mask_i = x_in > 0.3
+        intro_bass_curve[mask_i] = 0.5 * (1 - np.cos(np.pi * (x_in[mask_i] - 0.3) / 0.4))
+        intro_bass_curve[x_in > 0.7] = 1.0
 
-        # Extract bass and subtract with gain curve
-        f_m = np.zeros_like(outro_array)
-        f_n = np.zeros_like(intro_array)
+    o_bass = _zero_phase_filter(outro_array, sr, cutoff, btype="low", order=2)
+    i_bass = _zero_phase_filter(intro_array, sr, cutoff, btype="low", order=2)
 
-        if outro_array.ndim == 2:
-            for ch in range(outro_array.shape[0]):
-                bass = filtfilt(b_lo, a_lo, outro_array[ch])
-                f_m[ch] = outro_array[ch] - bass * (1 - outro_bass_curve)
-        else:
-            bass = filtfilt(b_lo, a_lo, outro_array)
-            f_m = outro_array - bass * (1 - outro_bass_curve)
+    if outro_array.ndim == 2:
+        f_m = outro_array - o_bass * (1.0 - outro_bass_curve[np.newaxis, :])
+    else:
+        f_m = outro_array - o_bass * (1.0 - outro_bass_curve)
 
-        if intro_array.ndim == 2:
-            for ch in range(intro_array.shape[0]):
-                bass = filtfilt(b_lo, a_lo, intro_array[ch])
-                f_n[ch] = intro_array[ch] - bass * (1 - intro_bass_curve)
-        else:
-            bass = filtfilt(b_lo, a_lo, intro_array)
-            f_n = intro_array - bass * (1 - intro_bass_curve)
+    if intro_array.ndim == 2:
+        f_n = intro_array - i_bass * (1.0 - intro_bass_curve[np.newaxis, :])
+    else:
+        f_n = intro_array - i_bass * (1.0 - intro_bass_curve)
 
-        return f_m, f_n
-
-    except ImportError:
-        # No scipy: just return unmodified -- the volume crossfade will do all the work
-        return np.copy(outro_array), np.copy(intro_array)
+    return f_m, f_n
 
 
 def apply_bass_swap(outro, intro, sr, **kwargs):
@@ -310,12 +347,65 @@ def apply_bass_swap(outro, intro, sr, **kwargs):
     )
 
 
-def apply_echo_out(outro, sr, **kwargs):
-    return outro, None
+def apply_echo_out(outro, sr, bpm=145.0, feedback=0.42, taps=4, **kwargs):
+    """Applies a tempo-synced dotted-eighth dub delay wash over the second half of `outro`."""
+    n = outro.shape[1] if outro.ndim == 2 else len(outro)
+    if n == 0:
+        return np.copy(outro), None
+
+    # Dotted-eighth delay (3/4 of a beat) creates classic rhythmic psychedelic tail
+    delay_samples = max(1, int((60.0 / max(bpm, 60.0)) * 0.75 * sr))
+    wet = np.zeros_like(outro, dtype=np.float64)
+    high_outro = _zero_phase_filter(outro, sr, 280.0, btype="high", order=2)
+
+    for tap in range(1, taps + 1):
+        shift = delay_samples * tap
+        if shift >= n:
+            break
+        gain = feedback**tap
+        if outro.ndim == 2:
+            wet[:, shift:] += high_outro[:, : n - shift] * gain
+        else:
+            wet[shift:] += high_outro[: n - shift] * gain
+
+    ramp = np.linspace(0.0, 0.85, n)
+    if outro.ndim == 2:
+        mixed = outro + wet * ramp[np.newaxis, :]
+    else:
+        mixed = outro + wet * ramp
+    return apply_limiter(mixed.astype(outro.dtype, copy=False)), None
 
 
 def apply_hpf_sweep(outro, sr, **kwargs):
-    return outro, None
+    """Progressive high-pass wash on `outro` using smooth multi-band subtraction."""
+    n = outro.shape[1] if outro.ndim == 2 else len(outro)
+    if n == 0:
+        return np.copy(outro), None
+
+    low_band = _zero_phase_filter(outro, sr, 250.0, btype="low", order=2)
+    mid_band = _zero_phase_filter(outro, sr, 1200.0, btype="low", order=2) - low_band
+    x = np.linspace(0.0, 1.0, n)
+    low_cut = np.clip(x * 1.5, 0.0, 1.0)
+    mid_cut = np.clip((x - 0.35) * 1.4, 0.0, 0.85)
+
+    if outro.ndim == 2:
+        swept = outro - low_band * low_cut[np.newaxis, :] - mid_band * mid_cut[np.newaxis, :]
+    else:
+        swept = outro - low_band * low_cut - mid_band * mid_cut
+    return swept.astype(outro.dtype, copy=False), None
+
+
+@ArchetypeRegistry.register
+class ProgressiveBassSwap(TransitionArchetype):
+    """Default club-grade zero-phase DJ bass swap / fade transition."""
+
+    name = "progressive"
+    display_name = "Progressive DJ Bass Swap"
+    description = "Zero-phase sub-150Hz bass handoff with clean mid/high equal-power crossfade."
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        return _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs)
 
 
 @ArchetypeRegistry.register
@@ -324,6 +414,7 @@ class SpectralBalancedMix(TransitionArchetype):
 
     name = "spectral_balance"
     display_name = "Adaptive Spectral Balancing"
+    description = "Measures Low/Mid/High band overlap and dynamically carves clashing frequencies."
 
     @staticmethod
     def apply(outro_array, intro_array, sr, **kwargs):
@@ -333,29 +424,80 @@ class SpectralBalancedMix(TransitionArchetype):
         f_n = np.copy(intro_array)
 
         if clashes["low"] > 1.5:
-            try:
-                from scipy.signal import butter, filtfilt
-
-                b_hp, a_hp = butter(4, 150.0 / (0.5 * sr), btype="high")
-                if f_m.ndim == 2:
-                    for ch in range(f_m.shape[0]):
-                        f_m[ch] = filtfilt(b_hp, a_hp, f_m[ch])
-                else:
-                    f_m = filtfilt(b_hp, a_hp, f_m)
-            except ImportError:
-                f_m = apply_dsp_filter(f_m, sr, "highpass", 150.0)
+            f_m = _zero_phase_filter(f_m, sr, 150.0, btype="high", order=4)
 
         if clashes["high"] > 1.5:
-            try:
-                from scipy.signal import butter, filtfilt
+            f_m = _zero_phase_filter(f_m, sr, min(5000.0, 0.45 * sr), btype="low", order=4)
 
-                b_lp, a_lp = butter(4, min(5000.0, 0.45 * sr) / (0.5 * sr), btype="low")
-                if f_m.ndim == 2:
-                    for ch in range(f_m.shape[0]):
-                        f_m[ch] = filtfilt(b_lp, a_lp, f_m[ch])
-                else:
-                    f_m = filtfilt(b_lp, a_lp, f_m)
-            except ImportError:
-                f_m = apply_dsp_filter(f_m, sr, "lowpass", 5000.0)
+        return f_m, f_n
 
+
+@ArchetypeRegistry.register
+class ClassicCrossfade(TransitionArchetype):
+    """Unfiltered equal-power blend for ambient, chillout, or beatless transitions."""
+
+    name = "classic"
+    display_name = "Classic Unfiltered Blend"
+    description = "Pure equal-power full-spectrum crossfade without EQ carving (ideal for ambient/chill)."
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        return np.copy(outro_array), np.copy(intro_array)
+
+
+@ArchetypeRegistry.register
+class EchoOutTransition(TransitionArchetype):
+    """Tempo-synced dub delay tail on outgoing track + clean bass-managed incoming entry."""
+
+    name = "echo_out"
+    display_name = "Dub Delay / Echo Out"
+    description = "Adds a dotted-eighth high-passed echo tail to the outgoing track during bass handoff."
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        f_m, f_n = _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs)
+        f_m, _ = apply_echo_out(f_m, sr, bpm=float(kwargs.get("bpm", 145.0) or 145.0))
+        return f_m, f_n
+
+
+@ArchetypeRegistry.register
+class HPFSweepTransition(TransitionArchetype):
+    """Progressive high-pass wash on outgoing track while incoming drops in."""
+
+    name = "hpf_sweep"
+    display_name = "High-Pass Wash Out"
+    description = "Gradually strips sub-bass and low-mids from the outgoing track for airy lift transitions."
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        swept_out, _ = apply_hpf_sweep(outro_array, sr)
+        _, f_n = _apply_bass_swap_transition(outro_array, intro_array, sr, **kwargs)
+        return swept_out, f_n
+
+
+@ArchetypeRegistry.register
+class LowCutBuildTransition(TransitionArchetype):
+    """Cuts both sub-basses briefly before dropping incoming full-range bass at 65% mark."""
+
+    name = "low_cut_build"
+    display_name = "Low-Cut Tension Drop"
+    description = " Pulls low-end out in the middle of the phrase to build tension before dropping the incoming kick."
+
+    @staticmethod
+    def apply(outro_array, intro_array, sr, **kwargs):
+        out_len = outro_array.shape[1] if outro_array.ndim == 2 else len(outro_array)
+        in_len = intro_array.shape[1] if intro_array.ndim == 2 else len(intro_array)
+        if out_len == 0 or in_len == 0:
+            return np.copy(outro_array), np.copy(intro_array)
+
+        o_bass = _zero_phase_filter(outro_array, sr, 160.0, btype="low", order=2)
+        i_bass = _zero_phase_filter(intro_array, sr, 160.0, btype="low", order=2)
+
+        xo = np.linspace(0.0, 1.0, out_len)
+        xi = np.linspace(0.0, 1.0, in_len)
+        o_curve = np.clip(1.0 - xo * 2.2, 0.0, 1.0)
+        i_curve = np.clip((xi - 0.62) * 5.0, 0.0, 1.0)
+
+        f_m = outro_array - o_bass * (1.0 - o_curve[np.newaxis, :] if outro_array.ndim == 2 else (1.0 - o_curve))
+        f_n = intro_array - i_bass * (1.0 - i_curve[np.newaxis, :] if intro_array.ndim == 2 else (1.0 - i_curve))
         return f_m, f_n

@@ -1,18 +1,14 @@
-"""
-Modular Plugin System | Auto DJ Script (7.7.0)
+"""Modular Plugin System | Auto DJ Script.
 ==============================================
-This module provides the architectural foundation for extending Auto DJ
-with diverse input sources, output sinks, and third-party tools.
-
-Architecture:
-- SourcePlugin: For track discovery (Local Folder, Spotify, S3, etc.)
-- OutputPlugin: For mix delivery (Local File, Icecast, SoundCloud, etc.)
-- ToolPlugin: For hook-based utility integration.
+Provides extensible hooks for:
+- `SourcePlugin`: Track discovery (`local_folder`, `rekordbox_xml`, custom `plugins/*.py`).
+- `OutputPlugin`: Mix delivery (`local_file`, `icecast_stream`, custom `plugins/*.py`).
+- `ToolPlugin`: Lifecycle event hooks (`pre_mix`, `on_track_start`, `post_mix`).
 """
 
-import os
 import glob
 import importlib.util
+import os
 import subprocess
 import tempfile
 from typing import Dict, List, Type
@@ -32,7 +28,6 @@ class SourcePlugin(BasePlugin):
     """Plugins that provide audio tracks for the mixing engine."""
 
     def get_tracks(self, **kwargs) -> List[str]:
-        """Returns a list of file paths or identifiers for tracks."""
         raise NotImplementedError
 
 
@@ -40,7 +35,6 @@ class OutputPlugin(BasePlugin):
     """Plugins that handle the final mix output (export, stream, etc.)."""
 
     def export(self, master_audio, tracklist, enriched_metadata=None, **kwargs):
-        """Processes the final master audio and tracklist."""
         raise NotImplementedError
 
 
@@ -48,15 +42,12 @@ class ToolPlugin(BasePlugin):
     """Plugins that provide utility hooks during the mixing process."""
 
     def pre_mix(self, status_obj=None, **kwargs):
-        """Hook called before the mixing loop starts."""
         pass
 
     def post_mix(self, status_obj=None, **kwargs):
-        """Hook called after the mixing loop completes."""
         pass
 
     def on_track_start(self, track_meta, status_obj=None, **kwargs):
-        """Hook called when a new track starts in the mix."""
         pass
 
 
@@ -94,7 +85,7 @@ class PluginRegistry:
 
     @classmethod
     def load_plugins(cls, plugins_dir: str):
-        """Dynamically loads plugins from the specified directory."""
+        """Dynamically loads external `.py` plugins from `plugins_dir`."""
         if not os.path.exists(plugins_dir):
             try:
                 os.makedirs(plugins_dir, exist_ok=True)
@@ -107,7 +98,7 @@ class PluginRegistry:
         if plugins_dir not in sys.path:
             sys.path.append(plugins_dir)
 
-        for filename in os.listdir(plugins_dir):
+        for filename in sorted(os.listdir(plugins_dir)):
             if filename.endswith(".py") and filename != "__init__.py":
                 plugin_path = os.path.join(plugins_dir, filename)
                 module_name = filename[:-3]
@@ -126,12 +117,12 @@ class PluginRegistry:
 
 @PluginRegistry.register_output
 class LocalFileSink(OutputPlugin):
-    """Default output plugin that saves the mix to a local file and tracklist."""
+    """Default output plugin that saves lossless FLAC, tracklist TXT, Rekordbox XML, and optional MP3."""
 
     name = "local_file"
-    display_name = "Local File"
+    display_name = "Local Lossless FLAC (+ XML/TXT)"
     description = (
-        "Exports the final mix to a local FLAC file and generates a tracklist."
+        "Exports the final mix to a local FLAC file, generates timestamped tracklist & Rekordbox XML cues."
     )
 
     def export(self, master_audio, tracklist, enriched_metadata=None, **kwargs):
@@ -140,16 +131,19 @@ class LocalFileSink(OutputPlugin):
         all_files = kwargs.get("all_files", [])
         meta_list = kwargs.get("meta_list", [])
         processed_tracks = kwargs.get("processed_tracks", [])
+        export_mp3 = bool(kwargs.get("export_mp3", False))
 
         if not output_path:
             return
 
-        # Estimate file size to avoid 4GB WAV limit
-        # len(master_audio) is in milliseconds, convert to samples
+        out_dir = os.path.dirname(os.path.abspath(output_path))
+        if out_dir:
+            os.makedirs(out_dir, exist_ok=True)
+
         duration_ms = len(master_audio)
         sample_count = int(duration_ms * master_audio.frame_rate / 1000)
-        estimated_bytes = sample_count * 2 * 2  # stereo * 16-bit
-        max_wav_size = 3 * 1024 * 1024 * 1024  # 3GB safety limit
+        estimated_bytes = sample_count * 2 * 2
+        max_wav_size = 3 * 1024 * 1024 * 1024  # 3 GB WAV pipe threshold
 
         use_chunked_export = estimated_bytes > max_wav_size
 
@@ -158,28 +152,25 @@ class LocalFileSink(OutputPlugin):
         )
 
         if use_chunked_export:
-            # For large files, write FLAC directly using soundfile
-            # (bypasses pydub's WAV header, supports >4GB files)
             print(
-                "  [LARGE] Using soundfile for direct FLAC export to avoid size limit"
+                "  [LARGE] Using soundfile direct FLAC writer to bypass 4 GB WAV pipe limit"
             )
             self._export_soundfile(master_audio, output_path)
         else:
-            # Normal export for smaller files
             master_audio.export(output_path, format="flac")
             print("[*] Export complete!")
 
         # Standard Tracklist Export
         tl_path = os.path.splitext(output_path)[0] + "_tracklist.txt"
-        with open(tl_path, "w") as f:
+        with open(tl_path, "w", encoding="utf-8") as f:
             f.write(f"Auto DJ v{version} Master Tracklist\n{'=' * 40}\n")
             for item in tracklist:
                 f.write(
                     f"[{item['timestamp']}] {item['file']} ({item['key']}) [{item['genre']}]\n"
                 )
 
-        # Integration Bridge: Rekordbox XML Export
-        from .utils import export_rekordbox_xml
+        # Integration Bridge: Rekordbox XML Export with 3-point transition cues
+        from .utils import export_rekordbox_xml, transcode_to_mp3
 
         xml_path = os.path.splitext(output_path)[0] + "_rekordbox.xml"
         try:
@@ -188,8 +179,9 @@ class LocalFileSink(OutputPlugin):
                 entry = dict(item)
                 entry["path"] = all_files[i] if i < len(all_files) else ""
                 entry["bpm"] = str(meta_list[i]["bpm"]) if i < len(meta_list) else "0"
+                pt = processed_tracks[i] if i < len(processed_tracks) else None
                 entry["duration_ms"] = (
-                    len(processed_tracks[i][0]) if i < len(processed_tracks) else 0
+                    len(pt[0]) if (pt is not None and pt[0] is not None) else 0
                 )
                 enriched_tl.append(entry)
 
@@ -198,22 +190,24 @@ class LocalFileSink(OutputPlugin):
         except Exception as e:
             print(f"[WARN] Rekordbox export failed: {e}")
 
+        if export_mp3:
+            try:
+                mp3_out = transcode_to_mp3(output_path)
+                print(f"[*] Transcoded 320kbps MP3 copy to {mp3_out}")
+            except Exception as e:
+                print(f"[WARN] MP3 transcode failed: {e}")
+
     def _export_soundfile(self, master_audio, output_path):
-        """Write FLAC using soundfile directly, handles large files."""
-        import soundfile as sf
+        """Write FLAC using `soundfile` directly to handle multi-hour >4 GB renders."""
         import numpy as np
+        import soundfile as sf
 
-        # Get samples as numpy array - safest way to convert pydub data
-        # get_array_of_samples returns an array.array of the raw samples
         samples = np.array(master_audio.get_array_of_samples(), dtype=np.int16)
-
-        # Reshape for stereo if needed
         if master_audio.channels == 2:
             samples = samples.reshape(-1, 2)
         else:
             samples = samples.reshape(-1, 1)
 
-        # Write FLAC directly - soundfile handles large files natively
         sf.write(
             output_path,
             samples,
@@ -225,33 +219,26 @@ class LocalFileSink(OutputPlugin):
         print(f"[*] Export complete! ({size_gb:.2f} GB)")
 
     def _export_chunked(self, master_audio, output_path, version, tracklist):
-        """Export large files in chunks to avoid 4GB WAV header limit."""
-        chunk_duration = 60 * 30  # 30 minutes per chunk
-        chunk_ms = chunk_duration * 1000
+        """Fallback chunked FFmpeg FLAC concatenation."""
+        chunk_ms = 60 * 30 * 1000
         total_ms = len(master_audio)
         chunk_files = []
 
         with tempfile.TemporaryDirectory() as tmpdir:
-            # Split into chunks
             start_ms = 0
             chunk_idx = 0
             while start_ms < total_ms:
                 end_ms = min(start_ms + chunk_ms, total_ms)
                 chunk = master_audio[start_ms:end_ms]
                 chunk_path = os.path.join(tmpdir, f"chunk_{chunk_idx:03d}.flac")
-                print(
-                    f"  [CHUNK] Exporting {start_ms / 1000 / 60:.1f}-{end_ms / 1000 / 60:.1f} min..."
-                )
                 chunk.export(chunk_path, format="flac")
                 chunk_files.append(chunk_path)
                 start_ms = end_ms
                 chunk_idx += 1
 
-            # Concatenate using ffmpeg with re-encoding to handle mismatched boundaries
             file_list = os.path.join(tmpdir, "chunks.txt")
-            with open(file_list, "w") as f:
+            with open(file_list, "w", encoding="utf-8") as f:
                 for cf in chunk_files:
-                    # Windows paths with backslashes - use forward slashes for ffmpeg
                     posix_path = cf.replace("\\", "/")
                     f.write(f"file '{posix_path}'\n")
 
@@ -266,7 +253,7 @@ class LocalFileSink(OutputPlugin):
                     "-i",
                     file_list,
                     "-c:a",
-                    "flac",  # re-encode to handle mismatched boundaries
+                    "flac",
                     output_path,
                 ],
                 capture_output=True,
@@ -274,10 +261,68 @@ class LocalFileSink(OutputPlugin):
 
             if result.returncode != 0:
                 stderr = result.stderr.decode() if result.stderr else "unknown"
-                print(f"[ERROR] Chunk concatenation failed: {stderr}")
-                raise RuntimeError("Failed to concatenate audio chunks")
+                raise RuntimeError(f"Failed to concatenate audio chunks: {stderr}")
 
-        print(f"[*] Export complete! (chunked, {len(chunk_files)} segments)")
+
+@PluginRegistry.register_output
+class IcecastStreamSink(OutputPlugin):
+    """Streams the rendered master mix to an Icecast / Shoutcast / RTMP endpoint via FFmpeg."""
+
+    name = "icecast_stream"
+    display_name = "Icecast / RTMP Live Broadcast"
+    description = "Broadcasts real-time encoded audio to an Icecast2, Shoutcast, or RTMP URL via FFmpeg."
+
+    def export(self, master_audio, tracklist, enriched_metadata=None, **kwargs):
+        stream_url = kwargs.get("stream_url")
+        output_path = kwargs.get("output")
+
+        # Always preserve local lossless backup first when output_path is provided
+        if output_path:
+            LocalFileSink().export(
+                master_audio, tracklist, enriched_metadata=enriched_metadata, **kwargs
+            )
+
+        if not stream_url:
+            print("[WARN] IcecastStreamSink: No stream_url provided; skipped live push.")
+            return
+
+        src_file = output_path
+        tmp_ctx = None
+        if not src_file or not os.path.exists(src_file):
+            tmp_ctx = tempfile.NamedTemporaryFile(suffix=".flac", delete=False)
+            tmp_ctx.close()
+            master_audio.export(tmp_ctx.name, format="flac")
+            src_file = tmp_ctx.name
+
+        try:
+            fmt = "flv" if str(stream_url).startswith("rtmp://") else "mp3"
+            cmd = [
+                "ffmpeg",
+                "-re",
+                "-i",
+                src_file,
+                "-vn",
+                "-c:a",
+                "libmp3lame",
+                "-b:a",
+                "320k",
+                "-f",
+                fmt,
+                str(stream_url),
+            ]
+            print(f"[*] Broadcasting master stream to {stream_url}...")
+            proc = subprocess.run(cmd, capture_output=True, timeout=15)
+            if proc.returncode != 0:
+                err = (proc.stderr or b"").decode(errors="replace")[-300:]
+                print(f"[WARN] Live broadcast exited ({proc.returncode}): {err}")
+        except Exception as e:
+            print(f"[WARN] IcecastStreamSink broadcast warning: {e}")
+        finally:
+            if tmp_ctx and os.path.exists(tmp_ctx.name):
+                try:
+                    os.remove(tmp_ctx.name)
+                except OSError:
+                    pass
 
 
 @PluginRegistry.register_source
@@ -286,11 +331,11 @@ class LocalFolderSource(SourcePlugin):
 
     name = "local_folder"
     display_name = "Local Folder"
-    description = "Scans a local directory for supported audio formats."
+    description = "Scans a local directory for supported lossless and compressed audio formats."
 
     def get_tracks(self, **kwargs) -> List[str]:
         folder = kwargs.get("folder")
-        extensions = kwargs.get("extensions", [".flac", ".wav", ".mp3"])
+        extensions = kwargs.get("extensions", [".flac", ".wav", ".mp3", ".aiff", ".m4a"])
         if not folder or not os.path.exists(folder):
             return []
 
@@ -299,27 +344,33 @@ class LocalFolderSource(SourcePlugin):
             files.extend(glob.glob(os.path.join(folder, f"*{ext}")))
             files.extend(glob.glob(os.path.join(folder, f"*{ext.upper()}")))
 
-        return list(set(os.path.abspath(f) for f in files))
+        # Case-normalized deduplication on Windows while preserving deterministic alphabetical order
+        seen = {}
+        for f in sorted(os.path.abspath(p) for p in files):
+            norm_key = os.path.normcase(f)
+            if norm_key not in seen:
+                seen[norm_key] = f
+        return list(seen.values())
 
 
 @PluginRegistry.register_source
 class RekordboxSourcePlugin(SourcePlugin):
-    """
-    Source plugin that reads from a Rekordbox XML export (pioneer.xml).
-    Enables importing analyzed tracks, hot cues, and playlist structures.
-    """
+    """Source plugin that reads tracks from a Pioneer Rekordbox XML export (`pioneer.xml`)."""
 
     name = "rekordbox_xml"
     display_name = "Rekordbox XML"
-    description = "Imports tracks directly from a Rekordbox pioneer.xml export."
+    description = "Imports analyzed tracks and playlist ordering from a Rekordbox XML collection."
 
     def get_tracks(self, **kwargs) -> List[str]:
         xml_path = kwargs.get("xml_path")
-        if not xml_path or not os.path.exists(xml_path):
+        folder = kwargs.get("folder")
+        if (not xml_path or not os.path.exists(str(xml_path))) and folder and str(folder).lower().endswith(".xml"):
+            xml_path = folder
+        if not xml_path or not os.path.exists(str(xml_path)):
             return []
 
-        import xml.etree.ElementTree as ET
         import urllib.parse
+        import xml.etree.ElementTree as ET
 
         try:
             tree = ET.parse(xml_path)
@@ -329,11 +380,9 @@ class RekordboxSourcePlugin(SourcePlugin):
             for track in root.findall(".//TRACK"):
                 location = track.get("Location")
                 if location:
-                    # Handle file://localhost/... format
                     path = location.replace("file://localhost", "")
                     path = urllib.parse.unquote(path)
 
-                    # On Windows, path might start with /C:/
                     if os.name == "nt" and path.startswith("/") and ":" in path:
                         path = path[1:]
 

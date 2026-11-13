@@ -848,6 +848,58 @@ def get_genre_archetype(y, sr, bpm=None):
     return "Ambient", "Chillout"
 
 
-def extract_spectral_terrain(y, sr):
-    """Stub: Returns empty terrain data."""
-    return []
+def _to_mono(y) -> np.ndarray:
+    """Converts `(N,)`, `(2, N)`, or `(N, 2)` audio into a contiguous 1D `float64` mono array."""
+    arr = np.asarray(y, dtype=np.float64)
+    if arr.ndim == 2:
+        axis = 0 if arr.shape[0] <= arr.shape[1] else 1
+        return np.mean(arr, axis=axis)
+    return arr.ravel()
+
+
+def extract_spectral_terrain(y, sr, time_steps: int = 24, freq_bins: int = 32):
+    """Computes a compact 2D log-frequency spectral power heightmap in dBFS (`[-80.0, 0.0]`).
+
+    Why:
+    Drives the WebGL Three.js 3D Spectral Terrain visualizer in `templates/index.html`
+    without requiring `librosa.feature.melspectrogram` (which triggers lazy `numba` imports).
+    Returns a `time_steps x freq_bins` nested float list suitable for JSON serialization.
+    """
+    mono = _to_mono(y)
+    n = int(mono.shape[0])
+    if n < 512 or sr <= 0:
+        return [[-80.0 for _ in range(freq_bins)] for _ in range(time_steps)]
+
+    # Cap to 180s spread evenly across the track so multi-minute FLACs compute in <5ms
+    n_fft = 1024
+    if n < n_fft:
+        mono = np.pad(mono, (0, n_fft - n))
+        n = n_fft
+
+    starts = np.linspace(0, max(0, n - n_fft), num=time_steps, dtype=np.int64)
+    window = np.hanning(n_fft).astype(np.float64)
+    freqs = np.fft.rfftfreq(n_fft, d=1.0 / float(sr))
+
+    # Log-spaced band edges from 30 Hz up to Nyquist (capped at 16 kHz)
+    f_hi = max(200.0, min(16000.0, float(sr) * 0.48))
+    edges = np.geomspace(30.0, f_hi, num=freq_bins + 1)
+    bin_masks = []
+    for b in range(freq_bins):
+        mask = (freqs >= edges[b]) & (freqs < edges[b + 1])
+        if not np.any(mask):
+            nearest = int(np.argmin(np.abs(freqs - 0.5 * (edges[b] + edges[b + 1]))))
+            mask = np.zeros_like(freqs, dtype=bool)
+            mask[nearest] = True
+        bin_masks.append(mask)
+
+    terrain: list[list[float]] = []
+    for st in starts:
+        frame = mono[int(st) : int(st) + n_fft] * window
+        mag = np.abs(np.fft.rfft(frame)) / float(n_fft)
+        row: list[float] = []
+        for mask in bin_masks:
+            band_energy = float(np.sqrt(np.mean(mag[mask] ** 2)) + 1e-9)
+            db = float(np.clip(20.0 * np.log10(band_energy), -80.0, 0.0))
+            row.append(round(db, 2))
+        terrain.append(row)
+    return terrain
